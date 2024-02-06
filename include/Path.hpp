@@ -13,6 +13,9 @@ public:
     unsigned int getTrainDistance() const;           /* returns the distance between two stations connected by train */
     unsigned int getTaxiDistance() const;            /* returns the distance between two stations connected by taxi  */
     unsigned int getBusDistance() const;             /* returns the distance between two stations connected by bus   */
+    void setDijkstraList(std::string);               /* pushes a station into a list which is used for dijkstra algorithm */ 
+    void clearDijkstraList();                        /* clears the list if it updates  */
+    void printDijkstraList();                        /* prints the shortest path given from dijkstra algorithm  */
 private:
     unsigned int trainDistance;                      /* distance between two stations connected by train */
     unsigned int taxiDistance;                       /* distance between two stations connected by taxi  */
