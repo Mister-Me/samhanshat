@@ -7,8 +7,8 @@ include_directories(include/ )
 
 
 set(SOURCES
-   src/
-   
+   src/Path.cpp
+   src/Station.cpp
 )
 
 add_executable(app ${SOURCES})
