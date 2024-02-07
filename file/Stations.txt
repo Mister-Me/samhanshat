@@ -1,0 +1,59 @@
+Khajeh Abdollah-e Ansari_bus__
+Gha'em_bus_taxi_
+Pirouzi_bus_taxi_
+Shahid Rezaei_bus_taxi_
+Payaneh Javanmard_bus__
+Shahid Sadr_bus__
+Tajrish_bus_taxi_
+Mirdamad_bus_taxi_
+Meydan-e Hazrat-e ValiAsr_bus_taxi_
+Rahahan_bus_taxi_
+Shahrak-e Shari'ati_bus__
+Tehran Pars_bus__
+Ebn-e Sina_bus_taxi_
+Emam Hossein_bus_taxi_
+Darvazeh Dowlat_bus_taxi_
+Ferdowsi_bus_taxi_
+Meydan-e Enghelab-e Eslami_bus_taxi_
+Ostad Mo'in_bus_taxi_
+Meydan-e Azadi_bus_taxi_
+Bimeh_bus__
+Haram-e Hazrat-e Abdolazim__taxi_
+Meydan-e Shohada__taxi_
+Haftom-e Tir__taxi_
+Boostan-e laleh__taxi_
+Yadegar-e Emam__taxi_
+Kashani__taxi_
+Kouhsar__taxi_
+Gheytariyeh__taxi_
+Gholhak__taxi_
+Shahid Haghani__taxi_
+Shahid Beheshti__taxi_
+Shahid Mofatteh__taxi_
+Taleghani__taxi_
+Panzdah-e Khordad__taxi_
+Shoush__taxi_
+Jonoub Terminal__taxi_
+Shahr-e Rey__taxi_
+Kahrizak__taxi_
+Aghdasiyeh__taxi_
+Shahid Zeynoddin__taxi_
+Shahid Ghodousi__taxi_
+Sohrevardi__taxi_
+Merza-ye Shirazi__taxi_
+Meydan-e Jahad__taxi_
+Teatr-e Shahr__taxi_
+Moniriyeh__taxi_
+Mahdiyeh__taxi_
+Javadiyeh__taxi_
+Zamzam__taxi_
+Azadegan__taxi_
+Shahid Kolahdouz__taxi_
+Nirou Havaei__taxi_
+Nabard__taxi_
+Darvazeh Shemiran__taxi_
+Towhid__taxi_
+Shademan__taxi_
+Eram-e Sabz__taxi_
+Allameh Jafari__taxi_
+Chaharbagh__taxi_
