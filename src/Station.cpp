@@ -70,7 +70,6 @@ int Station::findIndex(string station,vector<Station>*S)
             return i;
 }
 
-
 void Station::readFromFile(std::vector <Station>*S,string filename)
 {
     try

@@ -70,3 +70,79 @@ void City::PrintAdjMatrix(vector <Station>* stations)
         cout << '\n';
     }
 }
+
+int City::MinDistance(int distance[],bool sptSet[]) 
+{
+    int min = INT_MAX, minIndex;
+
+    for (int i = 0; i < N; i++)
+    {
+        if (sptSet[i] == false && distance[i] <= min)
+        {
+            min = distance[i], minIndex = i;
+        }
+    }
+    return minIndex;
+}
+
+void City::Dijkstra(int source)
+{
+    bool sptSet[N]; 
+    // sptSet[i] will be true if vertex i is
+    // included in shortest
+    // path tree or shortest distance from src to i is
+    // finalized
+ 
+    // Initialize all distances as INFINITE and stpSet[] as
+    // false
+    for (int i = 0; i < N; i++)
+        dijkstraList[i] = INT_MAX, sptSet[i] = false;
+ 
+    // Distance of source vertex from itself is always 0
+    dijkstraList[source] = 0;
+ 
+    // Find shortest path for all vertices
+    for (int count = 0; count < N - 1; count++) {
+        // Pick the minimum distance vertex from the set of
+        // vertices not yet processed. u is always equal to
+        // src in the first iteration.
+        int u = MinDistance(dijkstraList, sptSet);
+ 
+        // Mark the picked vertex as processed
+        sptSet[u] = true;
+ 
+        // Update dist value of the adjacent vertices of the
+        // picked vertex.
+        for (int v = 0; v < N; v++)
+        {
+            int weight=0;
+            bool flag = false; // check existing path
+            if(adjMatrix[u][v].getBusDistance()!=0 )
+            {
+                weight = adjMatrix[u][v].getBusDistance();
+                flag= true;
+            }
+            else if(adjMatrix[u][v].getTrainTaxiDistance()!=0)
+            {
+                weight = adjMatrix[u][v].getTrainTaxiDistance();
+                flag = true;
+            }
+            else
+            {
+                flag = false;
+            }
+            if (!sptSet[v] && flag
+                && dijkstraList[u] != INT_MAX
+                && dijkstraList[u] + weight < dijkstraList[v])
+                dijkstraList[v] = dijkstraList[u] + weight;
+        }
+    }
+}
+void City::PrintPath(vector<Station> * S)
+{
+    for (int i = 0; i < N; i++)
+    {
+        cout << (*S)[i].GetName() << "  Distance :  " << dijkstraList[i] << '\n';
+    }
+    
+}

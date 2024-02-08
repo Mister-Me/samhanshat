@@ -17,6 +17,9 @@ int main()
     p.readFromFile(path,"../file/Distance.txt");
     City Tehran;
     Tehran.FillAdjMatrix(stations,path);
-    Tehran.PrintAdjMatrix(stations);
+    Tehran.Dijkstra(23);
+    //23 is Boostan-e laleh
+    //this number must get after searching in stations
+    Tehran.PrintPath(stations);
     return 0;
 }
