@@ -48,5 +48,6 @@
         "optional": "cpp",
         "string_view": "cpp",
         "numbers": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": true
 }

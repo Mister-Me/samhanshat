@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include "Path.hpp"
 
 class Station
 {
@@ -19,17 +18,14 @@ public:
     // delimeter is _
     // S is our station vector
 
-    // reads a single line from a file and then call function fillMatrix
-    void readFromFile(std::vector <Station>*);
-    // seprates line by delimeter which is '_' and starts to fill the adjacency matrix
-    void fillMatrix(std::string,std::vector <Station>*);
-    // finds the index of a specific station in the vector
-    int findIndex(std::string,std::vector <Station>*);
+    
+    void readFromFile(std::vector <Station>*,std::string);  // read from a file then split each line
+    
+    int findIndex(std::string,std::vector <Station>*);  // finds the index of a specific station in the vector
 private:
     std::string name = "";
     bool bus = false;
     bool taxi_subway = false;
-    Path Matrix[59][59];
 };
 
 #endif

@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <exception>
 #include "../include/Station.hpp"
 
 using namespace std;
@@ -70,61 +71,20 @@ int Station::findIndex(string station,vector<Station>*S)
 }
 
 
-// seprates line by delimeter which is '_' and starts to fill the adjacency matrix
-void Station::fillMatrix(string line,std::vector <Station>*S)
+void Station::readFromFile(std::vector <Station>*S,string filename)
 {
-    string split = ""; Path temp;
-    vector<string> stations;
-
-    for (int i = 0; i < line.length(); i++)
+    try
     {
-        if (line[i] != '_')
-            split += line[i];
-        else
-            stations.push_back(split), split = "";
+        ifstream in(filename);
+        string text; 
+        while(getline(in, text)) 
+        {  
+            Split(text,'_',S);
+        } 
+        in.close();
     }
-
-    // stations[2] is trainTaxiDistance in path class
-    temp.setTrainTaxiDistance(stoi(stations[2]));
-    //  stations[3] is busDistance in path class
-    temp.setBusDistance(stoi(stations[3]));
-
-    // index of the start station
-    int start = findIndex(stations[0],S);
-    // index of the destination
-    int end   = findIndex(stations[1],S);
-    
-    Matrix[start][end] = temp;
-    Matrix[end][start] = temp;
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
-
-
-// reads a single line from a file and then call function fillMatrix
-void Station::readFromFile(std::vector <Station>*S)
-{
-    string line = ""; ifstream myfile;
-    myfile.open("Distance.txt");
-
-    while (getline(myfile,line))
-        fillMatrix(line,S);
-}
-
-
-
-
-// int main()
-// {
-    //our Main vector for stations
-
-    // vector<Station>* Stations = new vector<Station>;
-
-    //examples for using function
-    // split("Shahid Rezaei_bus_taxi_",'_',Station);
-    // split("Shahid Haghani__taxi_",'_',Station);
-    //Outputs
-    // for (auto &&i : *Station)
-    // {
-    //     cout<< i.name << " " << i.bus << " " << i.taxi_subway << '\n';
-    // }
-    // return 0;
-// }
