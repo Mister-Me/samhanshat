@@ -85,71 +85,186 @@ int City::MinDistance(int distance[],bool sptSet[])
     return minIndex;
 }
 
+// void City::Dijkstra(int source)
+// {
+//     bool sptSet[N]; 
+//     // sptSet[i] will be true if vertex i is
+//     // included in shortest
+//     // path tree or shortest distance from src to i is
+//     // finalized
+ 
+//     // Initialize all distances as INFINITE and stpSet[] as
+//     // false
+//     for (int i = 0; i < N; i++)
+//     {
+//         dijkstraList[i] = INT_MAX;
+//         sptSet[i] = false;
+//         includeStations[i] = false;
+//     }
+ 
+//     // Distance of source vertex from itself is always 0
+//     dijkstraList[source] = 0;
+ 
+//     // Find shortest path for all vertices
+//     for (int count = 0; count < N - 1; count++) {
+//         // Pick the minimum distance vertex from the set of
+//         // vertices not yet processed. u is always equal to
+//         // src in the first iteration.
+//         int u = MinDistance(dijkstraList, sptSet);
+ 
+//         // Mark the picked vertex as processed
+//         sptSet[u] = true;
+ 
+//         // Update dist value of the adjacent vertices of the
+//         // picked vertex.
+//         for (int v = 0; v < N; v++)
+//         {
+//             int weight=0;
+//             bool flag = false; // check existing path
+//             if(adjMatrix[u][v].getBusDistance()!=0 )
+//             {
+//                 weight = adjMatrix[u][v].getBusDistance();
+//                 flag= true;
+//             }
+//             else if(adjMatrix[u][v].getTrainTaxiDistance()!=0)
+//             {
+//                 weight = adjMatrix[u][v].getTrainTaxiDistance();
+//                 flag = true;
+//             }
+//             else
+//             {
+//                 flag = false;
+//             }
+//             if (!sptSet[v] && flag
+//                 && dijkstraList[u] != INT_MAX
+//                 && dijkstraList[u] + weight < dijkstraList[v])
+//                 dijkstraList[v] = dijkstraList[u] + weight;
+//         }
+//     }
+// }
 void City::Dijkstra(int source)
 {
-    bool sptSet[N]; 
-    // sptSet[i] will be true if vertex i is
-    // included in shortest
-    // path tree or shortest distance from src to i is
-    // finalized
  
-    // Initialize all distances as INFINITE and stpSet[] as
-    // false
-    for (int i = 0; i < N; i++)
-    {
-        dijkstraList[i] = INT_MAX;
-        sptSet[i] = false;
-        includeStations[i] = false;
+    // added[i] will true if vertex i is
+    // included / in shortest path tree
+    // or shortest distance from src to
+    // i is finalized
+    vector<bool> added(N);
+ 
+    // Initialize all distances as
+    // INFINITE and added[] as false
+    for (int vertexIndex = 0; vertexIndex < N;
+         vertexIndex++) {
+        dijkstraList[vertexIndex] = INT_MAX;
+        added[vertexIndex] = false;
     }
  
-    // Distance of source vertex from itself is always 0
+    // Distance of source vertex from
+    // itself is always 0
     dijkstraList[source] = 0;
  
-    // Find shortest path for all vertices
-    for (int count = 0; count < N - 1; count++) {
-        // Pick the minimum distance vertex from the set of
-        // vertices not yet processed. u is always equal to
-        // src in the first iteration.
-        int u = MinDistance(dijkstraList, sptSet);
+    // The starting vertex does not
+    // have a parent
+    includedStations[source] = -1;
  
-        // Mark the picked vertex as processed
-        sptSet[u] = true;
+    // Find shortest path for all
+    // vertices
+    for (int i = 1; i < N; i++) {
  
-        // Update dist value of the adjacent vertices of the
+        // Pick the minimum distance vertex
+        // from the set of vertices not yet
+        // processed. nearestVertex is
+        // always equal to startNode in
+        // first iteration.
+        int nearestVertex = -1;
+        int shortestDistance = INT_MAX;
+        for (int vertexIndex = 0; vertexIndex < N;
+             vertexIndex++) {
+            if (!added[vertexIndex] && dijkstraList[vertexIndex] <shortestDistance) 
+            {
+                nearestVertex = vertexIndex;
+                shortestDistance = dijkstraList[vertexIndex];
+            }
+        }
+ 
+        // Mark the picked vertex as
+        // processed
+        added[nearestVertex] = true;
+ 
+        // Update dist value of the
+        // adjacent vertices of the
         // picked vertex.
-        for (int v = 0; v < N; v++)
+        for (int vertexIndex = 0; vertexIndex < N; vertexIndex++) 
         {
             int weight=0;
             bool flag = false; // check existing path
-            if(adjMatrix[u][v].getBusDistance()!=0 )
+            if(adjMatrix[nearestVertex][vertexIndex].getBusDistance()!=0 )
             {
-                weight = adjMatrix[u][v].getBusDistance();
+                weight = adjMatrix[nearestVertex][vertexIndex].getBusDistance();
                 flag= true;
             }
-            else if(adjMatrix[u][v].getTrainTaxiDistance()!=0)
+            else if(adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance()!=0)
             {
-                weight = adjMatrix[u][v].getTrainTaxiDistance();
+                weight = adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance();
                 flag = true;
             }
             else
             {
                 flag = false;
             }
-            if (!sptSet[v] && flag
-                && dijkstraList[u] != INT_MAX
-                && dijkstraList[u] + weight < dijkstraList[v])
-                dijkstraList[v] = dijkstraList[u] + weight;
+            int edgeDistance = weight;
+ 
+            if (flag && ((shortestDistance + edgeDistance) < dijkstraList[vertexIndex])) 
+            {
+                includedStations[vertexIndex] = nearestVertex;
+                dijkstraList[vertexIndex] = shortestDistance + edgeDistance;
+            }
+        }
+    }
+
+}
+
+void City::Print(vector<Station> * S,int currentVertex)
+{
+    if (currentVertex == -1) {
+        return;
+    }
+    Print(S,includedStations[currentVertex]);
+    cout << (*S)[currentVertex].GetName() << "  ";
+}
+void City::PrintAllPaths(vector<Station> * S,int origin)
+{
+    for (int vertexIndex = 0; vertexIndex < N; vertexIndex++) {
+        if (vertexIndex != origin) {
+            cout << "\n" << (*S)[origin].GetName() << " -> ";
+            cout << (*S)[vertexIndex].GetName() << " ";
+            cout << dijkstraList[vertexIndex] << '\n';
+            Print(S,vertexIndex);
+            cout << '\n';
         }
     }
 }
-void City::PrintPath(vector<Station> * S)
+void City::PrintPath(vector<Station> * S,int origin,int destination)
 {
-    for (int i = 0; i < N; i++)
+    for (int vertexIndex = 0; vertexIndex < N; vertexIndex++) 
     {
-        cout << (*S)[i].GetName() << "  Distance :  " << dijkstraList[i] << '\n';
+        if (vertexIndex != origin && vertexIndex == destination) {
+            cout << "\n" << (*S)[origin].GetName() << " -> ";
+            cout << (*S)[vertexIndex].GetName() << " ";
+            cout << dijkstraList[vertexIndex] << '\n';
+            Print(S,vertexIndex);
+            cout << '\n';
+        }
     }
-    
 }
+// void City::PrintPath(vector<Station> * S)
+// {
+//     for (int i = 0; i < N; i++)
+//     {
+//         cout << (*S)[i].GetName() << "  Distance :  " << dijkstraList[i] << '\n';
+//     }
+    
+// }
 
 int City::GetShortestDistance(int destination)
 {

@@ -19,11 +19,14 @@ public:
     int GetShortestDistance(int);
     //parameter is the destination number
     void Dijkstra(int);
-    void PrintPath(vector <Station>*);
+    void Print(vector <Station>*,int);
+    void PrintAllPaths(vector<Station> *,int);
+    void PrintPath(vector<Station> *,int,int);
+    // void PrintPath(vector <Station>*);
 private:
     vector < vector<Path> > adjMatrix;
     int dijkstraList[N];
-    bool includeStations[N]; 
+    int includedStations[N]; 
     //dijkstraList[i] will hold the shortest
     // distance from source to each station
 };

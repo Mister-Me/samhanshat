@@ -40,8 +40,8 @@ int main()
         int origin = st.findIndex(requests.front().GetOrigin(),stations);
         int destination= st.findIndex(requests.front().GetDestination(),stations);
         Tehran.Dijkstra(origin);
-        cout << "The shortest distance from "<<requests.front().GetOrigin()<<" to "
-        <<requests.front().GetDestination() <<" is : "<< Tehran.GetShortestDistance(destination) << '\n';
+        Tehran.PrintPath(stations,origin,destination);
+        // cout << Tehran.GetShortestDistance(destination) << '\n';
         requests.pop();
     }
     // Tehran.Dijkstra(23);
