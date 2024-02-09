@@ -16,11 +16,14 @@ public:
     vector < vector<Path> > GetAdjMatrix();
     void PrintAdjMatrix(vector <Station>*);
     int MinDistance(int distance[],bool sptSet[]);
+    int GetShortestDistance(int);
+    //parameter is the destination number
     void Dijkstra(int);
     void PrintPath(vector <Station>*);
 private:
     vector < vector<Path> > adjMatrix;
-    int dijkstraList[N]; 
+    int dijkstraList[N];
+    bool includeStations[N]; 
     //dijkstraList[i] will hold the shortest
     // distance from source to each station
 };

@@ -96,7 +96,11 @@ void City::Dijkstra(int source)
     // Initialize all distances as INFINITE and stpSet[] as
     // false
     for (int i = 0; i < N; i++)
-        dijkstraList[i] = INT_MAX, sptSet[i] = false;
+    {
+        dijkstraList[i] = INT_MAX;
+        sptSet[i] = false;
+        includeStations[i] = false;
+    }
  
     // Distance of source vertex from itself is always 0
     dijkstraList[source] = 0;
@@ -143,6 +147,18 @@ void City::PrintPath(vector<Station> * S)
     for (int i = 0; i < N; i++)
     {
         cout << (*S)[i].GetName() << "  Distance :  " << dijkstraList[i] << '\n';
+    }
+    
+}
+
+int City::GetShortestDistance(int destination)
+{
+    for (int i = 0; i < N; i++)
+    {
+        if(i == destination)
+        {
+            return dijkstraList[i];
+        }
     }
     
 }
