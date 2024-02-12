@@ -65,9 +65,15 @@ void Station::Split(string record, char delimeter, vector<Station> *S)
 // finds the index of a specific station in the vector
 int Station::findIndex(string station,vector<Station>*S)
 {
+
     for (int i = 0; i < (*S).size(); i++)
+    {
         if ((*S)[i].name == station)
+        {    
             return i;
+        }
+    }
+    return -1; //if station does not exist  
 }
 
 void Station::readFromFile(std::vector <Station>*S,string filename)

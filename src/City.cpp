@@ -29,14 +29,9 @@ void City::FillAdjMatrix(vector<Station> * stations, vector<Path> *path)
                     {
                         temp.setFirstST((*stations)[i].GetName());
                         temp.setSecondST((*stations)[j].GetName());
-                        if((*path)[k].getBusDistance() != 0)
+                        if((*path)[k].getBusDistance() >= 0 ||(*path)[k].getTrainTaxiDistance() >= 0)
                         {
                             temp.setBusDistance((*path)[k].getBusDistance());
-                            temp.setTrainTaxiDistance(0);
-                        }
-                        else if ((*path)[k].getTrainTaxiDistance() != 0)
-                        {
-                            temp.setBusDistance(0);
                             temp.setTrainTaxiDistance((*path)[k].getTrainTaxiDistance());
                         }
                         else
@@ -44,6 +39,8 @@ void City::FillAdjMatrix(vector<Station> * stations, vector<Path> *path)
                             temp.setBusDistance(0);
                             temp.setTrainTaxiDistance(0);
                         }
+                        temp.setSubway_Taxi_Line((*path)[k].getSubway_Taxi_Line());
+                        temp.setBus_Line((*path)[k].getBus_Line());
                     }
                 }
                 row.push_back(temp);
@@ -65,7 +62,8 @@ void City::PrintAdjMatrix(vector <Station>* stations)
         for (int j = 0; j < adjMatrix.size(); j++)
         {
             cout <<"firstST : "<<adjMatrix[i][j].getFirstST() << "  secondST : " << adjMatrix[i][j].getSecondST()
-             << "   " << adjMatrix[i][j].getTrainTaxiDistance() << ","<<adjMatrix[i][j].getBusDistance()<<'\n';
+             << "   " << adjMatrix[i][j].getTrainTaxiDistance() << ","<<adjMatrix[i][j].getBusDistance()
+             <<"     "<<adjMatrix[i][j].getSubway_Taxi_Line() <<" , " << adjMatrix[i][j].getBus_Line()<<'\n';
         }
         cout << '\n';
     }
@@ -165,7 +163,7 @@ void City::Dijkstra(int source)
  
     // The starting vertex does not
     // have a parent
-    includedStations[source] = -1;
+    includedStations[source].second.second = -1;
  
     // Find shortest path for all
     // vertices
@@ -198,15 +196,45 @@ void City::Dijkstra(int source)
         {
             int weight=0;
             bool flag = false; // check existing path
-            if(adjMatrix[nearestVertex][vertexIndex].getBusDistance()!=0 )
+            bool by_bus = false;
+            bool by_subway_taxi = false;
+            std::string line="";
+            if(adjMatrix[nearestVertex][vertexIndex].getBusDistance()!=0)
             {
-                weight = adjMatrix[nearestVertex][vertexIndex].getBusDistance();
-                flag= true;
+                if(adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() != 0
+                && adjMatrix[nearestVertex][vertexIndex].getBusDistance()<=
+                adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance())
+                {
+                    weight = adjMatrix[nearestVertex][vertexIndex].getBusDistance();
+                    flag= true;
+                    by_bus = true;
+                    by_subway_taxi = false;
+                    line = adjMatrix[nearestVertex][vertexIndex].getBus_Line();
+                }
+                else if(adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance()!=0)
+                {
+                    weight = adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance();
+                    flag = true;
+                    by_bus = false;
+                    by_subway_taxi = true;
+                    line = adjMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line();
+                }
+                else if (adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() == 0)
+                {
+                    weight = adjMatrix[nearestVertex][vertexIndex].getBusDistance();
+                    flag= true;
+                    by_bus = true;
+                    by_subway_taxi = false;
+                    line = adjMatrix[nearestVertex][vertexIndex].getBus_Line();
+                }
             }
-            else if(adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance()!=0)
+            else if (adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() != 0)
             {
                 weight = adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance();
                 flag = true;
+                by_bus = false;
+                by_subway_taxi = true;
+                line = adjMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line();
             }
             else
             {
@@ -214,9 +242,12 @@ void City::Dijkstra(int source)
             }
             int edgeDistance = weight;
  
-            if (flag && ((shortestDistance + edgeDistance) < dijkstraList[vertexIndex])) 
+            if (!added[vertexIndex]&& dijkstraList[nearestVertex] != INT_MAX && flag && ((shortestDistance + edgeDistance) < dijkstraList[vertexIndex])) 
             {
-                includedStations[vertexIndex] = nearestVertex;
+                includedStations[vertexIndex].second.second = nearestVertex;
+                includedStations[vertexIndex].second.first = line;
+                includedStations[vertexIndex].first.SetBusStatus(by_bus);
+                includedStations[vertexIndex].first.SetTaxi_SubwayStatus(by_subway_taxi);
                 dijkstraList[vertexIndex] = shortestDistance + edgeDistance;
             }
         }
@@ -229,16 +260,25 @@ void City::Print(vector<Station> * S,int currentVertex)
     if (currentVertex == -1) {
         return;
     }
-    Print(S,includedStations[currentVertex]);
-    cout << (*S)[currentVertex].GetName() << "  ";
+    Print(S,includedStations[currentVertex].second.second);
+    if(includedStations[currentVertex].first.GetBusStatus())
+    {
+        cout<<(*S)[currentVertex].GetName() << " ( "
+        <<includedStations[currentVertex].second.first<<" , Bus ) " << '\n';
+    }
+    else if(includedStations[currentVertex].first.GetTaxi_SubwayStatus())
+    {
+        cout<<(*S)[currentVertex].GetName() << " ( "
+        <<includedStations[currentVertex].second.first<<" , Taxi_Subway ) "<<'\n';
+    }
 }
 void City::PrintAllPaths(vector<Station> * S,int origin)
 {
     for (int vertexIndex = 0; vertexIndex < N; vertexIndex++) {
         if (vertexIndex != origin) {
             cout << "\n" << (*S)[origin].GetName() << " -> ";
-            cout << (*S)[vertexIndex].GetName() << " ";
-            cout << dijkstraList[vertexIndex] << '\n';
+            cout << (*S)[vertexIndex].GetName() << '\n';
+            cout << "Shortest-Distance : " << dijkstraList[vertexIndex] << '\n';
             Print(S,vertexIndex);
             cout << '\n';
         }
@@ -250,8 +290,8 @@ void City::PrintPath(vector<Station> * S,int origin,int destination)
     {
         if (vertexIndex != origin && vertexIndex == destination) {
             cout << "\n" << (*S)[origin].GetName() << " -> ";
-            cout << (*S)[vertexIndex].GetName() << " ";
-            cout << dijkstraList[vertexIndex] << '\n';
+            cout << (*S)[vertexIndex].GetName() << "   Shortest-Distance : "  
+            << dijkstraList[vertexIndex] << '\n'<< '\n';
             Print(S,vertexIndex);
             cout << '\n';
         }

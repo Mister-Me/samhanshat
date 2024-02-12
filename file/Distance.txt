@@ -1,71 +1,71 @@
-Haram-e Hazrat-e Abdolazim_Shahid Rezaei_10_0_
-Shahid Rezaei_Meydan-e Shohada_6_0_
-Meydan-e Shohada_Emam Hossein_2_0_
-Emam Hossein_Haftom-e Tir_5_0_
-Haftom-e Tir_Meydan-e Hazrat-e ValiAsr_2_0_
-Meydan-e Hazrat-e ValiAsr_Boostan-e laleh_2_0_
-Boostan-e laleh_Yadegar-e Emam_8_0_
-Yadegar-e Emam_Kashani_6_0_
-Kashani_Kouhsar_10_0_
-Tajrish_Gheytariyeh_2_0_
-Gheytariyeh_Gholhak_3_0_
-Gholhak_Mirdamad_4_0_
-Mirdamad_Shahid Haghani_5_0_
-Shahid Haghani_Shahid Beheshti_7_0_
-Shahid Beheshti_Shahid Mofatteh_2_0_
-Shahid Mofatteh_Haftom-e Tir_2_0_
-Haftom-e Tir_Taleghani_2_0_
-Taleghani_Darvazeh Dowlat_1_0_
-Darvazeh Dowlat_Panzdah-e Khordad_4_0_
-Panzdah-e Khordad_Shoush_6_0_
-Shoush_Jonoub Terminal_3_0_
-Jonoub Terminal_Shahr-e Rey_9_0_
-Shahr-e Rey_Kahrizak_13_0_
-Gha'em_Aghdasiyeh_4_0_
-Aghdasiyeh_Shahid Zeynoddin_10_0_
-Shahid Zeynoddin_Shahid Ghodousi_5_0_
-Shahid Ghodousi_Sohrevardi_2_0_
-Sohrevardi_Shahid Beheshti_1_0_
-Shahid Beheshti_Merza-ye Shirazi_3_0_
-Merza-ye Shirazi_Meydan-e Jahad_2_0_
-Meydan-e Jahad_Meydan-e Hazrat-e ValiAsr_1_0_
-Meydan-e Hazrat-e ValiAsr_Teatr-e Shahr_2_0_
-Teatr-e Shahr_Moniriyeh_4_0_
-Moniriyeh_Mahdiyeh_3_0_
-Mahdiyeh_Rahahan_1_0_
-Rahahan_Javadiyeh_2_0_
-Javadiyeh_Zamzam_2_0_
-Zamzam_Azadegan_8_0_
-Shahid Kolahdouz_Nirou Havaei_7_0_
-Nirou Havaei_Nabard_1_0_
-Nabard_Pirouzi_1_0_
-Pirouzi_Ebn-e Sina_3_0_
-Ebn-e Sina_Meydan-e Shohada_1_0_
-Meydan-e Shohada_Darvazeh Shemiran_2_0_
-Darvazeh Shemiran_Darvazeh Dowlat_2_0_
-Darvazeh Dowlat_Ferdowsi_1_1_
-Ferdowsi_Teatr-e Shahr_1_0_
-Teatr-e Shahr_Meydan-e Enghelab-e Eslami_3_0_
-Meydan-e Enghelab-e Eslami_Towhid_1_0_
-Towhid_Shademan_2_0_
-Shademan_Ostad Mo'in_4_0_
-Ostad Mo'in_Meydan-e Azadi_2_4_
-Meydan-e Azadi_Eram-e Sabz_6_0_
-Eram-e Sabz_Allameh Jafari_5_0_
-Allameh Jafari_Kashani_4_0_
-Kashani_Chaharbagh_5_0_
-Khajeh Abdollah-e Ansari_Gha'em_0_12_
-Gha'em_Pirouzi_0_19_
-Pirouzi_Shahid Rezaei_0_8_
-Shahid Rezaei_Payaneh Javanmard_0_8_
-Shahid Sadr_Tajrish_0_4_
-Tajrish_Mirdamad_0_8_
-Mirdamad_Meydan-e Hazrat-e ValiAsr _0_11_
-Meydan-e Hazrat-e ValiAsr_Rahahan_0_8_
-Rahahan_Shahrak-e Shari'ati_0_5_
-Tehran Pars_Ebn-e Sina_0_10_
-Ebn-e Sina_Emam Hossein_0_4_
-Emam Hossein_Darvazeh Dowlat_0_2_
-Ferdowsi_Meydan-e Enghelab-e Eslami_0_3_
-Meydan-e Enghelab-e Eslami_Ostad Mo'in_0_4_
-Meydan-e Azadi_Bimeh_0_3_
+Haram-e Hazrat-e Abdolazim_Shahid Rezaei_10_0_line6__
+Shahid Rezaei_Meydan-e Shohada_6_0_line6__
+Meydan-e Shohada_Emam Hossein_2_0_line6__
+Emam Hossein_Haftom-e Tir_5_0_line6__
+Haftom-e Tir_Meydan-e Hazrat-e ValiAsr_2_0_line6__
+Meydan-e Hazrat-e ValiAsr_Boostan-e laleh_2_0_line6__
+Boostan-e laleh_Yadegar-e Emam_8_0_line6__
+Yadegar-e Emam_Kashani_6_0_line6__
+Kashani_Kouhsar_10_0_line6__
+Tajrish_Gheytariyeh_2_0_line1__
+Gheytariyeh_Gholhak_3_0_line1__
+Gholhak_Mirdamad_4_0_line1__
+Mirdamad_Shahid Haghani_5_0_line1__
+Shahid Haghani_Shahid Beheshti_7_0_line1__
+Shahid Beheshti_Shahid Mofatteh_2_0_line1__
+Shahid Mofatteh_Haftom-e Tir_2_0_line1__
+Haftom-e Tir_Taleghani_2_0_line1__
+Taleghani_Darvazeh Dowlat_1_0_line1__
+Darvazeh Dowlat_Panzdah-e Khordad_4_0_line1__
+Panzdah-e Khordad_Shoush_6_0_line1__
+Shoush_Jonoub Terminal_3_0_line1__
+Jonoub Terminal_Shahr-e Rey_9_0_line1__
+Shahr-e Rey_Kahrizak_13_0_line1__
+Gha'em_Aghdasiyeh_4_0_line3__
+Aghdasiyeh_Shahid Zeynoddin_10_0_line3__
+Shahid Zeynoddin_Shahid Ghodousi_5_0_line3__
+Shahid Ghodousi_Sohrevardi_2_0_line3__
+Sohrevardi_Shahid Beheshti_1_0_line3__
+Shahid Beheshti_Merza-ye Shirazi_3_0_line3__
+Merza-ye Shirazi_Meydan-e Jahad_2_0_line3__
+Meydan-e Jahad_Meydan-e Hazrat-e ValiAsr_1_0_line3__
+Meydan-e Hazrat-e ValiAsr_Teatr-e Shahr_2_0_line3__
+Teatr-e Shahr_Moniriyeh_4_0_line3__
+Moniriyeh_Mahdiyeh_3_0_line3__
+Mahdiyeh_Rahahan_1_0_line3__
+Rahahan_Javadiyeh_2_0_line3__
+Javadiyeh_Zamzam_2_0_line3__
+Zamzam_Azadegan_8_0_line3__
+Shahid Kolahdouz_Nirou Havaei_7_0_line4__
+Nirou Havaei_Nabard_1_0_line4__
+Nabard_Pirouzi_1_0_line4__
+Pirouzi_Ebn-e Sina_3_0_line4__
+Ebn-e Sina_Meydan-e Shohada_1_0_line4__
+Meydan-e Shohada_Darvazeh Shemiran_2_0_line4__
+Darvazeh Shemiran_Darvazeh Dowlat_2_0_line4__
+Darvazeh Dowlat_Ferdowsi_1_1_line4_bus1_
+Ferdowsi_Teatr-e Shahr_1_0_line4__
+Teatr-e Shahr_Meydan-e Enghelab-e Eslami_3_0_line4__
+Meydan-e Enghelab-e Eslami_Towhid_1_0_line4__
+Towhid_Shademan_2_0_line4__
+Shademan_Ostad Mo'in_4_0_line4__
+Ostad Mo'in_Meydan-e Azadi_2_4_line4_bus1_
+Meydan-e Azadi_Eram-e Sabz_6_0_line4__
+Eram-e Sabz_Allameh Jafari_5_0_line4__
+Allameh Jafari_Kashani_4_0_line4__
+Kashani_Chaharbagh_5_0_line4__
+Khajeh Abdollah-e Ansari_Gha'em_0_12__bus2_
+Gha'em_Pirouzi_0_19__bus2_
+Pirouzi_Shahid Rezaei_0_8__bus2_
+Shahid Rezaei_Payaneh Javanmard_0_8__bus2_
+Shahid Sadr_Tajrish_0_4__bus3_
+Tajrish_Mirdamad_0_8__bus3_
+Mirdamad_Meydan-e Hazrat-e ValiAsr _0_11__bus3_
+Meydan-e Hazrat-e ValiAsr_Rahahan_0_8__bus3_
+Rahahan_Shahrak-e Shari'ati_0_5__bus3_
+Tehran Pars_Ebn-e Sina_0_10__bus1_
+Ebn-e Sina_Emam Hossein_0_4__bus1_
+Emam Hossein_Darvazeh Dowlat_0_2__bus1_
+Ferdowsi_Meydan-e Enghelab-e Eslami_0_3__bus1_
+Meydan-e Enghelab-e Eslami_Ostad Mo'in_0_4__bus1_
+Meydan-e Azadi_Bimeh_0_3__bus1_

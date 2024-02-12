@@ -37,16 +37,26 @@ int main()
     }
     while (!requests.empty())
     {
+        
         int origin = st.findIndex(requests.front().GetOrigin(),stations);
         int destination= st.findIndex(requests.front().GetDestination(),stations);
-        Tehran.Dijkstra(origin);
-        Tehran.PrintPath(stations,origin,destination);
-        // cout << Tehran.GetShortestDistance(destination) << '\n';
-        requests.pop();
+        if(origin != -1 && destination != -1)
+        {
+            if(origin == destination)
+            {
+                cout <<'\n'<< "Distance : 0 " << '\n';
+            }
+            else
+            {
+                Tehran.Dijkstra(origin);
+                Tehran.PrintPath(stations,origin,destination);
+            }
+        }
+        else
+        {
+            cout << "Station does not exist !" << '\n';
+        }
+        requests.pop();     
     }
-    // Tehran.Dijkstra(23);
-    //23 is Boostan-e laleh
-    //this number must get after searching in stations
-    // Tehran.PrintPath(stations);
     return 0;
 }

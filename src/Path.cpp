@@ -67,6 +67,22 @@ void Path::printDijkstraList()
     for (auto i : dijkstraList)
         std::cout << i << " ";
 }
+void Path::setSubway_Taxi_Line(std::string name)
+{
+    this->subway_taxi_line = name;
+}
+void Path::setBus_Line(std::string name)
+{
+    this->bus_line = name;
+}
+std::string Path::getBus_Line()
+{
+    return bus_line;
+}
+std::string Path::getSubway_Taxi_Line()
+{
+    return subway_taxi_line;
+}
 void Path::Split(std::string record, char delimeter, std::vector<Path> *P)
 {
     Path temp;
@@ -89,6 +105,8 @@ void Path::Split(std::string record, char delimeter, std::vector<Path> *P)
     temp.setSecondST(parameters[1]);
     temp.setTrainTaxiDistance(stoi(parameters[2]));
     temp.setBusDistance(stoi(parameters[3]));
+    temp.setSubway_Taxi_Line(parameters[4]);
+    temp.setBus_Line(parameters[5]);
 
     P->push_back(temp); 
 }

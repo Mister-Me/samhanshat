@@ -12,6 +12,10 @@ public:
     void setSecondST(std::string secondst);
     std::string getFirstST();
     std::string getSecondST();
+    void setSubway_Taxi_Line(std::string);
+    void setBus_Line(std::string);
+    std::string getSubway_Taxi_Line();
+    std::string getBus_Line();
     void setTrainTaxiDistance(unsigned int);         /* sets the distance between two stations connected by train or taxi */
     void setBusDistance(unsigned int);               /* sets the distance between two stations connected by bus   */
     unsigned int getTrainTaxiDistance() const;       /* returns the distance between two stations connected by train or taxi */
@@ -23,6 +27,8 @@ public:
     void readFromFile(std::vector <Path>*,std::string);
 private:
     std::string firstST="",secondST="";
+    std::string subway_taxi_line="";
+    std::string bus_line="";
     unsigned int trainTaxiDistance=0;                  /* distance between two stations connected by train */
     unsigned int busDistance=0;                        /* distance between two stations connected by bus   */
     std::vector<std::string> dijkstraList;           /* list for showing the stations after dijkstra algorithm */

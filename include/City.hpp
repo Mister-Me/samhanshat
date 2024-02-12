@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <limits.h>
+#include <utility>
 
 #include "Path.hpp"
 #include "Station.hpp"
@@ -26,7 +27,7 @@ public:
 private:
     vector < vector<Path> > adjMatrix;
     int dijkstraList[N];
-    int includedStations[N]; 
+    pair<Station,pair<std::string,int>> includedStations[N]; 
     //dijkstraList[i] will hold the shortest
     // distance from source to each station
 };
