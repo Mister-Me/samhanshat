@@ -1,12 +1,12 @@
 #include "../include/City.hpp"
 
-void City::FillAdjMatrix(vector<Station> * stations, vector<Path> *path)
+void City::FillAdjMatrix(std::vector<Station> * stations, std::vector<Path> *path)
 {
     //filling the matrix with indices from stations
     //each adjMatrix[i][j] is a Path object that filling from Distance.txt
     for (int i = 0; i < stations->size(); i++)
     {
-        vector <Path> row;
+        std::vector <Path> row;
         for (int j = 0; j < stations->size(); j++)
         {
             Path tempPath;
@@ -53,21 +53,21 @@ void City::FillAdjMatrix(vector<Station> * stations, vector<Path> *path)
     }
 }
 
-vector < vector<Path> > City::GetAdjMatrix()
+std::vector < std::vector<Path> > City::GetAdjMatrix()
 {
     return this->adjMatrix;
 }
-void City::PrintAdjMatrix(vector <Station>* stations)
+void City::PrintAdjMatrix(std::vector <Station>* stations)
 {
     for (int i = 0; i < adjMatrix.size(); i++)
     {
-        cout << (*stations)[i].GetName() <<'\n';
+        std::cout << (*stations)[i].GetName() <<'\n';
         for (int j = 0; j < adjMatrix.size(); j++)
         {
-            cout <<"firstST : "<<adjMatrix[i][j].getFirstST() << "  secondST : " << adjMatrix[i][j].getSecondST()
+            std::cout <<"firstST : "<<adjMatrix[i][j].getFirstST() << "  secondST : " << adjMatrix[i][j].getSecondST()
              << "   " << adjMatrix[i][j].getTrainTaxiDistance() << ","<<adjMatrix[i][j].getBusDistance()<<'\n';
         }
-        cout << '\n';
+        std::cout << '\n';
     }
 }
 
@@ -149,7 +149,7 @@ void City::Dijkstra(int source)
     // included / in shortest path tree
     // or shortest distance from src to
     // i is finalized
-    vector<bool> added(N);
+    std::vector<bool> added(N);
  
     // Initialize all distances as
     // INFINITE and added[] as false
@@ -224,36 +224,36 @@ void City::Dijkstra(int source)
 
 }
 
-void City::Print(vector<Station> * S,int currentVertex)
+void City::Print(std::vector<Station> * S,int currentVertex)
 {
     if (currentVertex == -1) {
         return;
     }
     Print(S,includedStations[currentVertex]);
-    cout << (*S)[currentVertex].GetName() << "  ";
+    std::cout << (*S)[currentVertex].GetName() << "  ";
 }
-void City::PrintAllPaths(vector<Station> * S,int origin)
+void City::PrintAllPaths(std::vector<Station> * S,int origin)
 {
     for (int vertexIndex = 0; vertexIndex < N; vertexIndex++) {
         if (vertexIndex != origin) {
-            cout << "\n" << (*S)[origin].GetName() << " -> ";
-            cout << (*S)[vertexIndex].GetName() << " ";
-            cout << dijkstraList[vertexIndex] << '\n';
+            std::cout << "\n" << (*S)[origin].GetName() << " -> ";
+            std::cout << (*S)[vertexIndex].GetName() << " ";
+            std::cout << dijkstraList[vertexIndex] << '\n';
             Print(S,vertexIndex);
-            cout << '\n';
+            std::cout << '\n';
         }
     }
 }
-void City::PrintPath(vector<Station> * S,int origin,int destination)
+void City::PrintPath(std::vector<Station> * S,int origin,int destination)
 {
     for (int vertexIndex = 0; vertexIndex < N; vertexIndex++) 
     {
         if (vertexIndex != origin && vertexIndex == destination) {
-            cout << "\n" << (*S)[origin].GetName() << " -> ";
-            cout << (*S)[vertexIndex].GetName() << " ";
-            cout << dijkstraList[vertexIndex] << '\n';
+            std::cout << "\n" << (*S)[origin].GetName() << " -> ";
+            std::cout << (*S)[vertexIndex].GetName() << " ";
+            std::cout << dijkstraList[vertexIndex] << '\n';
             Print(S,vertexIndex);
-            cout << '\n';
+            std::cout << '\n';
         }
     }
 }
@@ -276,4 +276,70 @@ int City::GetShortestDistance(int destination)
         }
     }
     
+}
+
+
+
+
+void City::fillCostMatrix(std::vector <Station>* station, std::vector<Cost>* cost)
+{
+    std::vector<Cost> row; Cost temp;
+
+    for (int i = 0; i < (station->size()); i++)
+    {
+        for (int j = 0; j < (station->size()); j++)
+        {
+            if (i == j)
+            {
+                temp.setOrigin((*station)[i].GetName());
+                temp.setDestination((*station)[i].GetName());
+                temp.setMinimumCost(0.0);
+                row.push_back(temp);
+            }
+            else
+            {
+                for (int k = 0; k < (cost->size()); k++)
+                {
+                    if(((*cost)[k].getOrigin() == (*station)[i].GetName() && (*cost)[k].getDestination() == (*station)[j].GetName())
+                    ||((*cost)[k].getOrigin() == (*station)[j].GetName() && (*cost)[k].getDestination() == (*station)[i].GetName()))
+                    {
+                        temp.setOrigin((*station)[i].GetName());
+                        temp.setDestination((*station)[j].GetName());
+                        temp.setMinimumCost((*cost)[k].getMinimumCost());
+                    }
+                }
+                row.push_back(temp);
+            }
+        }
+        costMatrix.push_back(row); row.clear();
+    }   
+}
+
+
+
+
+void City::dijkstraOnCost(int source)
+{
+    for (int i = 0; i < N; i++)
+        dijkstraCost[i] = DBL_MAX;
+    
+    std::vector<bool> finalized(N,false);
+    dijkstraCost[source] = 0; int min = -1;
+
+    for (int i = 0; i < N-1; i++)
+    {
+        min = -1;
+        for (int j = 0; j < N; j++)
+        {
+            if (!finalized[j] and (min == -1 or dijkstraCost[j] < dijkstraCost[min]))
+                min = j;
+        }
+        finalized[min] = true;
+        for (int  k = 0; k < N; k++)
+        {
+            if (costMatrix[min][k].getMinimumCost() != 0.0 and !finalized[k])
+                if (dijkstraCost[min] + costMatrix[min][k].getMinimumCost() < dijkstraCost[k])
+                    dijkstraCost[k] = dijkstraCost[min] + costMatrix[min][k].getMinimumCost();        
+        }
+    }
 }
