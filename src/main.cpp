@@ -7,6 +7,7 @@
 #include "../include/Path.hpp"
 #include "../include/City.hpp"
 #include "../include/Request.hpp"
+#include "../include/Time.hpp"
 using namespace std;
 
 int main()

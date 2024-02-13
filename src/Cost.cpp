@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include "Cost.hpp"
+
+#include "../include/Cost.hpp"
 
 void Cost::setOrigin(std::string origin)
 {
