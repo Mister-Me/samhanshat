@@ -84,6 +84,14 @@ int City::MinDistance(int distance[],bool sptSet[])
     }
     return minIndex;
 }
+void City::setArrivingTime(Time t)
+{
+    arriving_time = t;
+}
+Time City::getArrivingTime()
+{
+    return arriving_time;
+}
 void City::Dijkstra(int source)
 {
  
@@ -190,8 +198,9 @@ void City::Dijkstra(int source)
             {
                 includedStations[vertexIndex].second.second = nearestVertex;
                 includedStations[vertexIndex].second.first = line;
-                includedStations[vertexIndex].first.SetBusStatus(by_bus);
-                includedStations[vertexIndex].first.SetTaxi_SubwayStatus(by_subway_taxi);
+                includedStations[vertexIndex].first.first.SetBusStatus(by_bus);
+                includedStations[vertexIndex].first.first.SetTaxi_SubwayStatus(by_subway_taxi);
+                includedStations[vertexIndex].first.second = edgeDistance;
                 dijkstraList[vertexIndex] = shortestDistance + edgeDistance;
             }
         }
@@ -205,16 +214,88 @@ void City::Print(std::vector<Station> * S,int currentVertex)
         return;
     }
     Print(S,includedStations[currentVertex].second.second);
-    if(includedStations[currentVertex].first.GetBusStatus())
+    if(includedStations[currentVertex].first.first.GetBusStatus())
     {
         cout<<(*S)[currentVertex].GetName() << " ( "
         <<includedStations[currentVertex].second.first<<" , Bus ) " << '\n';
+        // check changing in subway to bus
+        if (includedStations[includedStations[currentVertex].second.second].first.first.GetTaxi_SubwayStatus())
+        {
+            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+            {
+                arriving_time = arriving_time + 24 ;
+                arriving_time = arriving_time + 30 ;
+            }
+            else
+            {
+                arriving_time = arriving_time + 8 ;
+                arriving_time = arriving_time + 15 ;
+            }
+            
+        }
+        // check changing in one bus's line to another
+        else if(includedStations[includedStations[currentVertex].second.second].second.first != ""
+        &&(includedStations[includedStations[currentVertex].second.second].second.first != 
+        includedStations[currentVertex].second.first))
+        {
+            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+            {
+                arriving_time = arriving_time + 30 ;
+                arriving_time = arriving_time + 30 ;
+            }
+            else
+            {
+                arriving_time = arriving_time + 15 ;
+                arriving_time = arriving_time + 15 ;
+            }
+        }
+
+        if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+        {
+            arriving_time = arriving_time + (includedStations[currentVertex].first.second * 8);
+        }
+        else
+        {
+            arriving_time = arriving_time + (includedStations[currentVertex].first.second * 4);
+        }
     }
-    else if(includedStations[currentVertex].first.GetTaxi_SubwayStatus())
+    else if(includedStations[currentVertex].first.first.GetTaxi_SubwayStatus())
     {
         cout<<(*S)[currentVertex].GetName() << " ( "
-        <<includedStations[currentVertex].second.first<<" , Taxi_Subway ) "<<'\n';
+        <<includedStations[currentVertex].second.first<<" , Subway ) "<<'\n';
+        //check changing in bus to subway
+        if (includedStations[includedStations[currentVertex].second.second].first.first.GetBusStatus())
+        {
+            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+            {
+                arriving_time = arriving_time + 24 ;
+                arriving_time = arriving_time + 30 ;
+            }
+            else
+            {
+                arriving_time = arriving_time + 8 ;
+                arriving_time = arriving_time + 15 ;
+            }
+        }
+        // check changing in one subway's line to another
+        else if(includedStations[includedStations[currentVertex].second.second].second.first != ""
+            &&(includedStations[includedStations[currentVertex].second.second].second.first != 
+        includedStations[currentVertex].second.first))
+        {
+            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+            {
+                arriving_time = arriving_time + 24 ;
+                arriving_time = arriving_time + 24 ;
+            }
+            else
+            {
+                arriving_time = arriving_time + 8 ;
+                arriving_time = arriving_time + 8 ;
+            }
+        }
+        arriving_time = arriving_time + (includedStations[currentVertex].first.second * 1);
     }
+     
 }
 void City::PrintAllPaths(std::vector<Station> * S,int origin)
 {
@@ -238,6 +319,8 @@ void City::PrintPath(std::vector<Station> * S,int origin,int destination)
             << dijkstraList[vertexIndex] << '\n'<< '\n';
             Print(S,vertexIndex);
             std::cout << '\n';
+            cout << "Arriving Time : ";
+            arriving_time.printTime();
         }
     }
 }

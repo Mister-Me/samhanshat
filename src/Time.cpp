@@ -38,7 +38,7 @@ void Time::setAm_Pm(std::string str)
     {
         am_pm = str;
     }
-    else
+    else if(str != "none")
     {
         std::cout << "input is invalid use am or pm" << '\n';
     }
@@ -69,6 +69,13 @@ Time::Time(std::string am_pm, int hour, int minute)
 std::string Time::getHour()
 {
     return Hour;
+}
+
+void Time::operator=(Time const & t)
+{
+    this->am_pm = t.am_pm;
+    this->Hour = t.Hour; //because setHour return -1 if hour is greater than 12 i don't use setHour function
+    this->setMinute(stoi(t.Minute));
 }
 std::string Time::getMinute()
 {
@@ -101,6 +108,7 @@ Time operator+(Time const &t1, int minute)
     Time temp;
     temp.Hour = std::to_string(hour);
     temp.Minute = std::to_string(min);
+    temp.am_pm = "none";
     return(temp);
 }
 void Time::printTime()

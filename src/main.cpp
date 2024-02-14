@@ -38,7 +38,6 @@ int main()
     }
     while (!requests.empty())
     {
-        
         int origin = st.findIndex(requests.front().GetOrigin(),stations);
         int destination= st.findIndex(requests.front().GetDestination(),stations);
         if(origin != -1 && destination != -1)
@@ -49,6 +48,7 @@ int main()
             }
             else
             {
+                Tehran.setArrivingTime(requests.front().GetTime());
                 Tehran.Dijkstra(origin);
                 Tehran.PrintPath(stations,origin,destination);
             }
@@ -59,5 +59,6 @@ int main()
         }
         requests.pop();     
     }
+
     return 0;
 }

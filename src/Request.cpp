@@ -6,7 +6,13 @@
 using namespace std;
 void Request::SetTime(std::string Time)
 {
-    this->time = Time;
+    std::vector<std::string> params = Split(Time,' ');
+    std::vector<std::string> numbers = Split(params[0],':');
+    time.setAm_Pm(params[1]);
+    if(time.setHour(stoi(numbers[0])) == -1 || time.setMinute(stoi(numbers[1])) == -1)
+    {
+        std:: cout << "input is invalid";
+    }
 }
 void Request::SetOrigin(std::string Origin)
 {
@@ -16,7 +22,7 @@ void Request::SetDestination(std::string Destination)
 {
     this->destination = Destination;
 }
-std::string Request::GetTime()
+Time Request::GetTime()
 {
     return this->time;
 }
@@ -28,9 +34,10 @@ std::string Request::GetDestination()
 {
     return this->destination;
 }
-std::string Request::Split(string Time, char delimeter)
+std::vector<std::string> Request::Split(string Time, char delimeter)
 {
-    string parameter="";
+    std::vector<std::string> parameters;
+    std::string parameter="";
     for (int i = 0; i < Time.size(); i++)
     {
         if(Time[i] != delimeter)
@@ -39,8 +46,10 @@ std::string Request::Split(string Time, char delimeter)
         }
         else
         {
+            parameters.push_back(parameter);
             parameter = "";
         }
     }
-    return parameter;
+    parameters.push_back(parameter);
+    return parameters;
 }
