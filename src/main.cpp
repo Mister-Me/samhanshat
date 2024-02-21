@@ -8,6 +8,7 @@
 #include "../include/City.hpp"
 #include "../include/Request.hpp"
 #include "../include/Time.hpp"
+#include "../include/Vehicle.hpp"
 using namespace std;
 
 int main()
@@ -59,6 +60,5 @@ int main()
         }
         requests.pop();     
     }
-
     return 0;
 }
