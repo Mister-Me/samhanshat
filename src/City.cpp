@@ -194,7 +194,8 @@ void City::Dijkstra(int source)
             }
             int edgeDistance = weight;
  
-            if (!added[vertexIndex]&& dijkstraList[nearestVertex] != INT_MAX && flag && ((shortestDistance + edgeDistance) < dijkstraList[vertexIndex])) 
+            if (!added[vertexIndex]&& dijkstraList[nearestVertex] != INT_MAX && flag
+             && ((shortestDistance + edgeDistance) < dijkstraList[vertexIndex])) 
             {
                 includedStations[vertexIndex].second.second = nearestVertex;
                 includedStations[vertexIndex].second.first = line;
@@ -208,12 +209,68 @@ void City::Dijkstra(int source)
 
 }
 
-void City::Print(std::vector<Station> * S,int currentVertex)
+void City::Print(std::vector<Station> * S,int currentVertex,int destination)
 {
+    Bus bus;
+    Subway subway;
     if (currentVertex == -1) {
         return;
     }
-    Print(S,includedStations[currentVertex].second.second);
+
+    //below code gives path between origin and next station
+    if (includedStations[includedStations[currentVertex].second.second].second.second == -1)
+    {
+        if (includedStations[currentVertex].first.first.GetBusStatus())
+        {
+            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+            {
+                arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff_Traffic() ;
+            }
+            else
+            {
+                arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff();
+            }
+        }
+        else if (includedStations[currentVertex].first.first.GetTaxi_SubwayStatus())
+        {
+            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+            {
+                arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff_Traffic() ;
+            }
+            else
+            {
+                arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff();
+            }
+        }
+        
+    }
+    
+    Print(S,includedStations[currentVertex].second.second,destination);
+    if(currentVertex == destination)
+    {
+        if (includedStations[currentVertex].first.first.GetBusStatus())
+        {
+            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+            {
+                arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff_Traffic() ;
+            }
+            else
+            {
+                arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff();
+            }
+        }
+        else if (includedStations[currentVertex].first.first.GetTaxi_SubwayStatus())
+        {
+            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+            {
+                arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff_Traffic() ;
+            }
+            else
+            {
+                arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff();
+            }
+        }
+    }
     if(includedStations[currentVertex].first.first.GetBusStatus())
     {
         cout<<(*S)[currentVertex].GetName() << " ( "
@@ -304,7 +361,7 @@ void City::PrintAllPaths(std::vector<Station> * S,int origin)
             cout << "\n" << (*S)[origin].GetName() << " -> ";
             cout << (*S)[vertexIndex].GetName() << '\n';
             cout << "Shortest-Distance : " << dijkstraList[vertexIndex] << '\n';
-            Print(S,vertexIndex);
+            Print(S,vertexIndex,vertexIndex);
             std::cout << '\n';
         }
     }
@@ -317,7 +374,7 @@ void City::PrintPath(std::vector<Station> * S,int origin,int destination)
             cout << "\n" << (*S)[origin].GetName() << " -> ";
             cout << (*S)[vertexIndex].GetName() << "   Shortest-Distance : "  
             << dijkstraList[vertexIndex] << '\n'<< '\n';
-            Print(S,vertexIndex);
+            Print(S,vertexIndex,destination);
             std::cout << '\n';
             cout << "Arriving Time : ";
             arriving_time.printTime();

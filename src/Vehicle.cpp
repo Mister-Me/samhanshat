@@ -101,5 +101,5 @@ Subway::Subway()
     setMinute_per_km(1);
     setMinute_per_km_Traffic(1);
     setMinute_gettingOn_gettingOff(8);
-    setMinute_gettingOn_gettingOff_Traffic(16);
+    setMinute_gettingOn_gettingOff_Traffic(24);
 }

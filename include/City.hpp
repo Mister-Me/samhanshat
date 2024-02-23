@@ -10,6 +10,7 @@
 #include "Station.hpp"
 #include "Cost.hpp"
 #include "Time.hpp"
+#include "Vehicle.hpp"
 using namespace std;
 class City
 {
@@ -21,7 +22,7 @@ public:
     int GetShortestDistance(int);
     //parameter is the destination number
     void Dijkstra(int);
-    void Print(std::vector<Station>* ,int);
+    void Print(std::vector<Station>* ,int,int);
     void PrintAllPaths(std::vector<Station> * ,int);
     void PrintPath(std::vector<Station> *, int, int);
     // void PrintPath(vector <Station>*);
@@ -35,7 +36,7 @@ private:
     std::vector<double> dijkstraCost; 
     int dijkstraList[N];
     //dijkstraList[i] will hold the shortest
-    // distance from source to each station
+    //distance from source to each station
     pair<pair<Station,int>,pair<std::string,int>> includedStations[N];
     // first.first is station name 
     // first.second is the distance
