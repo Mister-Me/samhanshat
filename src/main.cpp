@@ -22,7 +22,7 @@ int main()
     Besttime bestTime;
     st.readFromFile(stations,"../file/Stations.txt");
     p.readFromFile(path,"../file/Distance.txt");
-    bestTime.FillAdjMatrix(stations,path);
+    //bestTime.FillAdjMatrix(stations,path);
     // bestTime.Dijkstra(17,"subway");
     // bestTime.printDijkstra(stations);
     City Tehran;
@@ -58,6 +58,7 @@ int main()
                 Tehran.setArrivingTime(requests.front().GetTime());
                 Tehran.Dijkstra(origin);
                 Tehran.PrintPath(stations,origin,destination);
+                Tehran.dijkstraOnTime(origin,destination,stations,path,requests.front().GetTime());
             }
         }
         else

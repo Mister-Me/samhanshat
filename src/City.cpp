@@ -216,7 +216,6 @@ void City::Print(std::vector<Station> * S,int currentVertex,int destination)
     if (currentVertex == -1) {
         return;
     }
-
     //below code gives path between origin and next station
     if (includedStations[includedStations[currentVertex].second.second].second.second == -1)
     {
@@ -244,114 +243,111 @@ void City::Print(std::vector<Station> * S,int currentVertex,int destination)
         }
         
     }
-    
     Print(S,includedStations[currentVertex].second.second,destination);
-    if(currentVertex == destination)
-    {
-        if (includedStations[currentVertex].first.first.GetBusStatus())
-        {
-            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
-            {
-                arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff_Traffic() ;
-            }
-            else
-            {
-                arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff();
-            }
-        }
-        else if (includedStations[currentVertex].first.first.GetTaxi_SubwayStatus())
-        {
-            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
-            {
-                arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff_Traffic() ;
-            }
-            else
-            {
-                arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff();
-            }
-        }
-    }
-    if(includedStations[currentVertex].first.first.GetBusStatus())
-    {
-        cout<<(*S)[currentVertex].GetName() << " ( "
-        <<includedStations[currentVertex].second.first<<" , Bus ) " << '\n';
-        // check changing in subway to bus
-        if (includedStations[includedStations[currentVertex].second.second].first.first.GetTaxi_SubwayStatus())
-        {
-            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
-            {
-                arriving_time = arriving_time + 24 ;
-                arriving_time = arriving_time + 30 ;
-            }
-            else
-            {
-                arriving_time = arriving_time + 8 ;
-                arriving_time = arriving_time + 15 ;
-            }
-            
-        }
-        // check changing in one bus's line to another
-        else if(includedStations[includedStations[currentVertex].second.second].second.first != ""
-        &&(includedStations[includedStations[currentVertex].second.second].second.first != 
-        includedStations[currentVertex].second.first))
-        {
-            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
-            {
-                arriving_time = arriving_time + 30 ;
-                arriving_time = arriving_time + 30 ;
-            }
-            else
-            {
-                arriving_time = arriving_time + 15 ;
-                arriving_time = arriving_time + 15 ;
-            }
-        }
 
-        if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+    // else
+    // {
+
+        // if(currentVertex == destination)
+        // {
+        //     if (includedStations[currentVertex].first.first.GetBusStatus())
+        //     {
+        //         if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+        //         {
+        //             arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff_Traffic() ;
+        //         }
+        //         else
+        //         {
+        //             arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff();
+        //         }
+        //     }
+        //     else if (includedStations[currentVertex].first.first.GetTaxi_SubwayStatus())
+        //     {
+        //         if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+        //         {
+        //             arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff_Traffic() ;
+        //         }
+        //         else
+        //         {
+        //             arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff();
+        //         }
+        //     }
+        // }
+        if(includedStations[currentVertex].first.first.GetBusStatus())
         {
-            arriving_time = arriving_time + (includedStations[currentVertex].first.second * 8);
-        }
-        else
-        {
-            arriving_time = arriving_time + (includedStations[currentVertex].first.second * 4);
-        }
-    }
-    else if(includedStations[currentVertex].first.first.GetTaxi_SubwayStatus())
-    {
-        cout<<(*S)[currentVertex].GetName() << " ( "
-        <<includedStations[currentVertex].second.first<<" , Subway ) "<<'\n';
-        //check changing in bus to subway
-        if (includedStations[includedStations[currentVertex].second.second].first.first.GetBusStatus())
-        {
-            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+            cout<<(*S)[currentVertex].GetName() << " ( "
+            <<includedStations[currentVertex].second.first<<" , Bus ) " << '\n';
+            // check changing in subway to bus
+            if (includedStations[includedStations[currentVertex].second.second].first.first.GetTaxi_SubwayStatus())
             {
-                arriving_time = arriving_time + 24 ;
-                arriving_time = arriving_time + 30 ;
+                if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+                {
+                    arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff_Traffic() ;
+                }
+                else
+                {
+                    arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff() ;
+                }
+                
             }
-            else
-            {
-                arriving_time = arriving_time + 8 ;
-                arriving_time = arriving_time + 15 ;
-            }
-        }
-        // check changing in one subway's line to another
-        else if(includedStations[includedStations[currentVertex].second.second].second.first != ""
+            // check changing in one bus's line to another
+            else if(includedStations[includedStations[currentVertex].second.second].second.first != ""
             &&(includedStations[includedStations[currentVertex].second.second].second.first != 
-        includedStations[currentVertex].second.first))
-        {
+            includedStations[currentVertex].second.first))
+            {
+                if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+                {
+                    arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff_Traffic();
+                }
+                else
+                {
+                    
+                    arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff() ;
+                }
+            }
+
             if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
             {
-                arriving_time = arriving_time + 24 ;
-                arriving_time = arriving_time + 24 ;
+                arriving_time = arriving_time + (includedStations[currentVertex].first.second * bus.getMinute_per_km_Traffic());
             }
             else
             {
-                arriving_time = arriving_time + 8 ;
-                arriving_time = arriving_time + 8 ;
+                arriving_time = arriving_time + (includedStations[currentVertex].first.second * bus.getMinute_per_km());
             }
         }
-        arriving_time = arriving_time + (includedStations[currentVertex].first.second * 1);
-    }
+        else if(includedStations[currentVertex].first.first.GetTaxi_SubwayStatus())
+        {
+            cout<<(*S)[currentVertex].GetName() << " ( "
+            <<includedStations[currentVertex].second.first<<" , Subway ) "<<'\n';
+            //check changing in bus to subway
+            if (includedStations[includedStations[currentVertex].second.second].first.first.GetBusStatus())
+            {
+                if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+                {
+                    arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff_Traffic() ;
+                }
+                else
+                {
+                    arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff() ;
+                }
+            }
+            // check changing in one subway's line to another
+            else if(includedStations[includedStations[currentVertex].second.second].second.first != ""
+                &&(includedStations[includedStations[currentVertex].second.second].second.first != 
+            includedStations[currentVertex].second.first))
+            {
+                if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+                {
+                    arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff_Traffic() ;
+                }
+                else
+                {
+                    arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff() ;
+                }
+            }
+            arriving_time = arriving_time + (includedStations[currentVertex].first.second * 1);
+        }
+    // }
      
 }
 void City::PrintAllPaths(std::vector<Station> * S,int origin)
@@ -429,6 +425,7 @@ void City::fillCostMatrix(std::vector <Station>* station, std::vector<Cost>* cos
 }
 
 void City::dijkstraOnCost(int source)
+
 {
     for (int i = 0; i < N; i++)
         dijkstraCost[i] = DBL_MAX;
@@ -452,4 +449,57 @@ void City::dijkstraOnCost(int source)
                     dijkstraCost[k] = dijkstraCost[min] + costMatrix[min][k].getMinimumCost();        
         }
     }
+}
+
+void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stations,std::vector<Path>* path,Time t)
+{
+    Besttime start_with_bus;
+    Besttime start_with_taxi;
+    Besttime start_with_subway;
+    start_with_bus.setArrivingTime(t);
+    start_with_taxi.setArrivingTime(t);
+    start_with_subway.setArrivingTime(t);
+    start_with_bus.FillAdjMatrix(stations,path);
+    start_with_taxi.FillAdjMatrix(stations,path);
+    start_with_subway.FillAdjMatrix(stations,path);
+    int bestTime_start_bus = 0 ;
+    int bestTime_start_taxi = 0 ;
+    int bestTime_start_subway = 0 ;
+    if ((*stations)[source].GetBusStatus())
+    {
+        start_with_bus.Dijkstra(source,"bus");
+        bestTime_start_bus = start_with_bus.getDijkstraList()[destination];
+    }
+    else
+    {
+        bestTime_start_bus = INT_MAX;
+    }
+    if((*stations)[source].GetTaxi_SubwayStatus())
+    {
+        start_with_taxi.Dijkstra(source,"taxi");
+        start_with_subway.Dijkstra(source,"subway");
+        bestTime_start_taxi = start_with_taxi.getDijkstraList()[destination];
+        bestTime_start_subway = start_with_subway.getDijkstraList()[destination];
+        
+    }
+    else
+    {
+        bestTime_start_taxi = INT_MAX;
+        bestTime_start_subway = INT_MAX;
+    }
+    if(bestTime_start_bus < bestTime_start_taxi && bestTime_start_bus < bestTime_start_subway)
+    {
+        start_with_bus.PrintPath(stations,source,destination);
+    }
+    if (bestTime_start_taxi < bestTime_start_bus && bestTime_start_taxi < bestTime_start_subway) 
+    {
+        start_with_taxi.PrintPath(stations,source,destination);
+
+    }
+    if (bestTime_start_subway < bestTime_start_bus && bestTime_start_subway < bestTime_start_taxi)
+    {
+        start_with_subway.PrintPath(stations,source,destination);
+    }
+    
+    
 }

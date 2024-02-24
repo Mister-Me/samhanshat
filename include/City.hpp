@@ -11,6 +11,7 @@
 #include "Cost.hpp"
 #include "Time.hpp"
 #include "Vehicle.hpp"
+#include "Besttime.hpp"
 using namespace std;
 class City
 {
@@ -22,6 +23,7 @@ public:
     int GetShortestDistance(int);
     //parameter is the destination number
     void Dijkstra(int);
+    void dijkstraOnTime(int,int,std::vector<Station> *,std::vector<Path>*,Time);
     void Print(std::vector<Station>* ,int,int);
     void PrintAllPaths(std::vector<Station> * ,int);
     void PrintPath(std::vector<Station> *, int, int);

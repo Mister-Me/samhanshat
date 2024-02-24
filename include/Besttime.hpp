@@ -20,6 +20,12 @@ public:
     void PrintAdjMatrix(std::vector <Station>*);
     void Dijkstra(int,string);
     void printDijkstra(std::vector <Station>*);
+    void Print(std::vector<Station>* ,int,int);
+    void PrintPath(std::vector<Station> *, int, int);
+    int* getDijkstraList ();
+    void setArrivingTime(Time);
+    Time getArrivingTime();
+    pair<pair<TimedPath,int>,pair<bool,int>> * getParents();
 private:
     std::vector<std::vector<TimedPath>> adjMatrix;
     int dijkstraList[N];
