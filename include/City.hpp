@@ -12,6 +12,7 @@
 #include "Time.hpp"
 #include "Vehicle.hpp"
 #include "Besttime.hpp"
+#include "Cost.hpp"
 using namespace std;
 
 class City

@@ -32,6 +32,7 @@ int main()
     // bestTime.Dijkstra(17,"subway");
     // bestTime.printDijkstra(stations);
     City Tehran;
+    City Map;
     Tehran.FillAdjMatrix(stations,path);
     Map.fillCostMatrix(stations,cost);
     int NumberOfOrders = 0;
