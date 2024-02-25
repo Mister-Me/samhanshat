@@ -9,6 +9,9 @@
 #include "../include/Request.hpp"
 #include "../include/Time.hpp"
 #include "../include/Cost.hpp"
+#include "../include/Vehicle.hpp"
+#include "../include/TimedPath.hpp"
+#include "../include/Besttime.hpp"
 using namespace std;
 
 int main()
@@ -18,11 +21,13 @@ int main()
     vector<Cost> *cost = new vector <Cost>;
     Station st;
     Path p;
-    Cost cst;
+    Besttime bestTime;
     st.readFromFile(stations,"../file/Stations.txt");
     p.readFromFile(path,"../file/Distance.txt");
-    cst.readFromFile(cost,"../file/Cost.txt");
-    City Tehran,Map;
+    //bestTime.FillAdjMatrix(stations,path);
+    // bestTime.Dijkstra(17,"subway");
+    // bestTime.printDijkstra(stations);
+    City Tehran;
     Tehran.FillAdjMatrix(stations,path);
     Map.fillCostMatrix(stations,cost);
     int NumberOfOrders = 0;
@@ -59,6 +64,7 @@ int main()
                 Map.dijkstraOnCost(origin,destination,path);
                 Map.printPath(origin,destination);
                 Map.calculateTime();
+                Tehran.dijkstraOnTime(origin,destination,stations,path,requests.front().GetTime());
             }
         }
         else
@@ -67,6 +73,5 @@ int main()
         }
         requests.pop();     
     }
-
     return 0;
 }

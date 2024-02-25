@@ -10,6 +10,8 @@
 #include "Station.hpp"
 #include "Cost.hpp"
 #include "Time.hpp"
+#include "Vehicle.hpp"
+#include "Besttime.hpp"
 using namespace std;
 
 class City
@@ -23,7 +25,8 @@ public:
     int MinDistance(int distance[], bool sptSet[]);
     int GetShortestDistance(int);
     void Dijkstra(int);
-    void Print(std::vector<Station>* ,int);
+    void dijkstraOnTime(int,int,std::vector<Station> *,std::vector<Path>*,Time);
+    void Print(std::vector<Station>* ,int,int);
     void PrintAllPaths(std::vector<Station> * ,int);
     void PrintPath(std::vector<Station> *, int, int);
     void setArrivingTime(Time);
