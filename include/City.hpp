@@ -8,7 +8,7 @@
 #include <cfloat>
 #include "Path.hpp"
 #include "Station.hpp"
-#include "Cost.hpp"
+#include "LowestCost.hpp"
 #include "Time.hpp"
 #include "Vehicle.hpp"
 #include "Besttime.hpp"
@@ -30,11 +30,11 @@ public:
     // void PrintPath(vector <Station>*);
     void setArrivingTime(Time);
     Time getArrivingTime();
-    void fillCostMatrix(std::vector <Station>*, std::vector<Cost>*);
-    void dijkstraOnCost(int);
+    //void fillCostMatrix(std::vector <Station>*, std::vector<Cost>*);
+    //void dijkstraOnCost(int);
 private:
     std::vector<std::vector<Path>> adjMatrix;
-    std::vector<std::vector<Cost>> costMatrix;
+    //std::vector<std::vector<Cost>> costMatrix;
     std::vector<double> dijkstraCost; 
     int dijkstraList[N];
     //dijkstraList[i] will hold the shortest

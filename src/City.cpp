@@ -390,66 +390,6 @@ int City::GetShortestDistance(int destination)
     
 }
 
-void City::fillCostMatrix(std::vector <Station>* station, std::vector<Cost>* cost)
-{
-    std::vector<Cost> row; Cost temp;
-
-    for (int i = 0; i < (station->size()); i++)
-    {
-        for (int j = 0; j < (station->size()); j++)
-        {
-            if (i == j)
-            {
-                temp.setOrigin((*station)[i].GetName());
-                temp.setDestination((*station)[i].GetName());
-                temp.setMinimumCost(0.0);
-                row.push_back(temp);
-            }
-            else
-            {
-                for (int k = 0; k < (cost->size()); k++)
-                {
-                    if(((*cost)[k].getOrigin() == (*station)[i].GetName() && (*cost)[k].getDestination() == (*station)[j].GetName())
-                    ||((*cost)[k].getOrigin() == (*station)[j].GetName() && (*cost)[k].getDestination() == (*station)[i].GetName()))
-                    {
-                        temp.setOrigin((*station)[i].GetName());
-                        temp.setDestination((*station)[j].GetName());
-                        temp.setMinimumCost((*cost)[k].getMinimumCost());
-                    }
-                }
-                row.push_back(temp);
-            }
-        }
-        costMatrix.push_back(row); row.clear();
-    }   
-}
-
-void City::dijkstraOnCost(int source)
-
-{
-    for (int i = 0; i < N; i++)
-        dijkstraCost[i] = DBL_MAX;
-    
-    std::vector<bool> finalized(N,false);
-    dijkstraCost[source] = 0; int min = -1;
-
-    for (int i = 0; i < N-1; i++)
-    {
-        min = -1;
-        for (int j = 0; j < N; j++)
-        {
-            if (!finalized[j] and (min == -1 or dijkstraCost[j] < dijkstraCost[min]))
-                min = j;
-        }
-        finalized[min] = true;
-        for (int  k = 0; k < N; k++)
-        {
-            if (costMatrix[min][k].getMinimumCost() != 0.0 and !finalized[k])
-                if (dijkstraCost[min] + costMatrix[min][k].getMinimumCost() < dijkstraCost[k])
-                    dijkstraCost[k] = dijkstraCost[min] + costMatrix[min][k].getMinimumCost();        
-        }
-    }
-}
 
 void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stations,std::vector<Path>* path,Time t)
 {
