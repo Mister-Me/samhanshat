@@ -1,7 +1,7 @@
-
-
 #include "../include/City.hpp"
 
+/*======================================================================== Distance ========================================================================*/
+/* filling adjacency matrix for calculating the best distance path */
 void City::FillAdjMatrix(std::vector<Station> * stations, std::vector<Path> *path)
 {
     //filling the matrix with indices from stations
@@ -52,10 +52,15 @@ void City::FillAdjMatrix(std::vector<Station> * stations, std::vector<Path> *pat
     }
 }
 
+//-------------------------------------------------------------
+
 std::vector < std::vector<Path> > City::GetAdjMatrix()
 {
     return this->adjMatrix;
 }
+
+//-------------------------------------------------------------
+
 void City::PrintAdjMatrix(std::vector <Station>* stations)
 {
     for (int i = 0; i < adjMatrix.size(); i++)
@@ -71,6 +76,8 @@ void City::PrintAdjMatrix(std::vector <Station>* stations)
     }
 }
 
+//-------------------------------------------------------------
+
 int City::MinDistance(int distance[],bool sptSet[]) 
 {
     int min = INT_MAX, minIndex;
@@ -84,14 +91,23 @@ int City::MinDistance(int distance[],bool sptSet[])
     }
     return minIndex;
 }
+
+//-------------------------------------------------------------
+
 void City::setArrivingTime(Time t)
 {
     arriving_time = t;
 }
+
+//-------------------------------------------------------------
+
 Time City::getArrivingTime()
 {
     return arriving_time;
 }
+
+//-------------------------------------------------------------
+
 void City::Dijkstra(int source)
 {
  
@@ -205,8 +221,9 @@ void City::Dijkstra(int source)
             }
         }
     }
-
 }
+
+//-------------------------------------------------------------
 
 void City::Print(std::vector<Station> * S,int currentVertex)
 {
@@ -297,6 +314,9 @@ void City::Print(std::vector<Station> * S,int currentVertex)
     }
      
 }
+
+//-------------------------------------------------------------
+
 void City::PrintAllPaths(std::vector<Station> * S,int origin)
 {
     for (int vertexIndex = 0; vertexIndex < N; vertexIndex++) {
@@ -309,6 +329,9 @@ void City::PrintAllPaths(std::vector<Station> * S,int origin)
         }
     }
 }
+
+//-------------------------------------------------------------
+
 void City::PrintPath(std::vector<Station> * S,int origin,int destination)
 {
     for (int vertexIndex = 0; vertexIndex < N; vertexIndex++) 
@@ -325,6 +348,8 @@ void City::PrintPath(std::vector<Station> * S,int origin,int destination)
     }
 }
 
+//-------------------------------------------------------------
+
 int City::GetShortestDistance(int destination)
 {
     for (int i = 0; i < N; i++)
@@ -337,6 +362,8 @@ int City::GetShortestDistance(int destination)
     
 }
 
+/*========================================================================== Cost ==========================================================================*/
+/* filling adjacency matrix for calculating the best cost path */
 void City::fillCostMatrix(std::vector <Station>* station, std::vector<Cost>* cost)
 {
     std::vector<Cost> row; Cost temp;
@@ -371,28 +398,191 @@ void City::fillCostMatrix(std::vector <Station>* station, std::vector<Cost>* cos
     }   
 }
 
-void City::dijkstraOnCost(int source)
+//-------------------------------------------------------------
+/* dijkstra implementation for the best cost path and invoks the print function */
+void City::dijkstraOnCost(int source, int destination,vector<Path>* p)
 {
     for (int i = 0; i < N; i++)
-        dijkstraCost[i] = DBL_MAX;
+        dijkstraList[i] = DBL_MAX;
     
     std::vector<bool> finalized(N,false);
-    dijkstraCost[source] = 0; int min = -1;
+    dijkstraList[source] = 0; int min = -1;
+    parent[source].second.second = -1;
+    parent[source].first.setOrigin(costMatrix[source][0].getOrigin());
+    string org, des;
 
     for (int i = 0; i < N-1; i++)
     {
         min = -1;
         for (int j = 0; j < N; j++)
         {
-            if (!finalized[j] and (min == -1 or dijkstraCost[j] < dijkstraCost[min]))
+            if (!finalized[j] and (min == -1 or dijkstraList[j] < dijkstraList[min]))
                 min = j;
         }
         finalized[min] = true;
         for (int  k = 0; k < N; k++)
         {
-            if (costMatrix[min][k].getMinimumCost() != 0.0 and !finalized[k])
-                if (dijkstraCost[min] + costMatrix[min][k].getMinimumCost() < dijkstraCost[k])
-                    dijkstraCost[k] = dijkstraCost[min] + costMatrix[min][k].getMinimumCost();        
+            if (costMatrix[min][1].getMinimumCost() != 0.0 and !finalized[1])
+            {
+                parent[k].first.setOrigin(costMatrix[min][k].getOrigin());
+                parent[k].first.setDestination(costMatrix[min][k].getDestination());
+                parent[k].first.setVehicle(costMatrix[min][k].getVehicle());
+                parent[k].first.setLine(costMatrix[min][k].getLine());
+                parent[k].second.first = findDistance(p,costMatrix[min][k].getOrigin(),costMatrix[min][k].getDestination()); 
+                parent[k].second.second = min;
+
+                if (min == source)  
+                {
+                    if (dijkstraList[min] + costMatrix[min][k].getMinimumCost() < dijkstraList[k])
+                        dijkstraList[k] = dijkstraList[min] + costMatrix[min][k].getMinimumCost();
+                }
+                else if (costMatrix[parent[min].second.second][min].getLine() == costMatrix[min][k].getLine())
+                {
+                    if (parent[min].second.second != source)
+                        dijkstraList[k] = dijkstraList[min];
+                    else
+                        dijkstraList[k] = costMatrix[parent[min].second.second][min].getMinimumCost();
+                }
+                else if((costMatrix[parent[min].second.second][min].getLine() != costMatrix[min][k].getLine()))
+                {
+                    if (dijkstraList[min] + costMatrix[min][k].getMinimumCost() < dijkstraList[k])
+                        dijkstraList[k] = dijkstraList[min] + costMatrix[min][k].getMinimumCost();
+                }
+            }       
         }
     }
+    // print(source,destination);
+}
+
+//-------------------------------------------------------------
+/* prints only the path from source to destination */
+void City::printPath(int source,int destination)
+{
+    if (destination == source)
+        return;
+
+    printPath(source,parent[destination].second.second);
+    path.push_back(parent[destination]);
+    cout << parent[destination].first.getDestination() << "( ";
+    cout << parent[destination].first.getVehicle() <<  ", Line";
+    cout << parent[destination].first.getLine() << ")\n";
+}
+
+//-------------------------------------------------------------
+/* prints some basics and printPath and calculateTime functions */
+void City::print(int source, int destination)
+{
+    cout << endl << endl << endl;
+    cout << parent[source].first.getOrigin() << " -> " << parent[destination].first.getDestination() << "    ";
+    cout << "Low-Cost : " << dijkstraList[destination] << endl;
+    // printPath(source,destination); 
+    cout << endl;
+    // calculateTime();
+    
+}
+
+//-------------------------------------------------------------
+/* finds the distance between to stations in vector path */
+int City::findDistance(vector<Path>* p, string origin, string destination)
+{
+    int distance = 0;
+    for (int i = 0; i < (*p).size(); i++)
+    {
+        if (((*p)[i].getFirstST() == origin and (*p)[i].getSecondST() == destination) or ((*p)[i].getFirstST() == destination and (*p)[i].getSecondST() == origin))
+        {
+            if ((*p)[i].getBusDistance() < (*p)[i].getTrainTaxiDistance())
+                distance  = (*p)[i].getBusDistance();
+            else
+                distance = (*p)[i].getTrainTaxiDistance();
+        }
+    }
+    return distance;
+}
+
+//-------------------------------------------------------------
+/* calculates the arriving time when user reach destination */
+void City::calculateTime()
+{
+    int i = 0;
+    for (i = 0; i < path.size()-1; i++)
+    {
+        if (stoi(arriving_time.getHour()) >= 6 and stoi(arriving_time.getHour()) <=8)
+        {
+            if (path[i].first.getLine() == path[i+1].first.getLine())
+            {   
+                if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "metro")
+                    arriving_time = arriving_time + (path[i].second.first);
+
+                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "bus")
+                    arriving_time = arriving_time + (path[i].second.first*8);
+
+                else if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "bus")
+                    arriving_time = arriving_time + (path[i].second.first) + 30;
+
+                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "metro")
+                    arriving_time = arriving_time + (path[i].second.first*8) + 24;
+            }
+            else if(path[i].first.getLine() != path[i+1].first.getLine())
+            {
+                if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "metro")  
+                    arriving_time = arriving_time + (path[i].second.first) + 24;
+                
+                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "bus")
+                    arriving_time = arriving_time + (path[i].second.first*8) + 30;
+                
+                else if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "bus")
+                    arriving_time = arriving_time + (path[i].second.first) + 30;
+                
+                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "metro")
+                    arriving_time = arriving_time + (path[i].second.first*8) + 24;
+            }   
+        }
+        else
+        {
+            if (path[i].first.getLine() == path[i+1].first.getLine())
+            {
+                if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "metro")
+                    arriving_time = arriving_time + (path[i].second.first);
+
+                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "bus")
+                    arriving_time = arriving_time + (path[i].second.first*4);
+
+                else if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "bus")
+                    arriving_time = arriving_time + (path[i].second.first) + 15;
+
+                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "metro")
+                    arriving_time = arriving_time + (path[i].second.first*4) + 8;
+            }
+            else if(path[i].first.getLine() != path[i+1].first.getLine())
+            {
+                if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "metro")  
+                    arriving_time = arriving_time + (path[i].second.first) + 8;
+                
+                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "bus")
+                    arriving_time = arriving_time + (path[i].second.first*4) + 15;
+                
+                else if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "bus")
+                    arriving_time = arriving_time + (path[i].second.first) + 15;
+                
+                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "metro")
+                    arriving_time = arriving_time + (path[i].second.first*4) + 8;
+            } 
+        }
+    }
+    if (stoi(arriving_time.getHour()) >= 6 and stoi(arriving_time.getHour()) <=8)
+    {
+        if (path[i+1].first.getVehicle() == "metro") 
+            arriving_time = arriving_time + (path[i+1].second.first); 
+        else
+            arriving_time = arriving_time + (path[i+1].second.first*8);                 
+    }
+    else
+    {
+        if (path[i+1].first.getVehicle() == "metro") 
+            arriving_time = arriving_time + (path[i+1].second.first); 
+        else
+            arriving_time = arriving_time + (path[i+1].second.first*4); 
+    }
+    cout << "Arriving Time : ";
+    arriving_time.printTime();
 }

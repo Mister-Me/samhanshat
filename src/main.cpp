@@ -8,18 +8,23 @@
 #include "../include/City.hpp"
 #include "../include/Request.hpp"
 #include "../include/Time.hpp"
+#include "../include/Cost.hpp"
 using namespace std;
 
 int main()
 {
     vector <Station>* stations = new vector <Station>;
     vector <Path>* path = new vector <Path>;
+    vector<Cost> *cost = new vector <Cost>;
     Station st;
     Path p;
+    Cost cst;
     st.readFromFile(stations,"../file/Stations.txt");
     p.readFromFile(path,"../file/Distance.txt");
-    City Tehran;
+    cst.readFromFile(cost,"../file/Cost.txt");
+    City Tehran,Map;
     Tehran.FillAdjMatrix(stations,path);
+    Map.fillCostMatrix(stations,cost);
     int NumberOfOrders = 0;
     queue<Request> requests;
     cout << "Please Enter Number of orders : " << '\n';
@@ -51,6 +56,9 @@ int main()
                 Tehran.setArrivingTime(requests.front().GetTime());
                 Tehran.Dijkstra(origin);
                 Tehran.PrintPath(stations,origin,destination);
+                Map.dijkstraOnCost(origin,destination,path);
+                Map.printPath(origin,destination);
+                Map.calculateTime();
             }
         }
         else
