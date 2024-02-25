@@ -1,71 +1,71 @@
-Haram-e Hazrat-e Abdolazim_Shahid Rezaei_3267_metro_
-Shahid Rezaei_Meydan-e Shohada_3267_metro_
-Meydan-e Shohada_Emam Hossein_3267_metro_
-Emam Hossein_Haftom-e Tir_3267_metro_
-Haftom-e Tir_Meydan-e Hazrat-e ValiAsr_3267_metro_
-Meydan-e Hazrat-e ValiAsr_Boostan-e laleh_3267_metro_
-Boostan-e laleh_Yadegar-e Emam_3267_metro_
-Yadegar-e Emam_Kashani_3267_metro_
-Kashani_Kouhsar_3267_metro_
-Tajrish_Gheytariyeh_3267_metro_
-Gheytariyeh_Gholhak_3267_metro_
-Gholhak_Mirdamad_3267_metro_
-Mirdamad_Shahid Haghani_3267_metro_
-Shahid Haghani_Shahid Beheshti_3267_metro_
-Shahid Beheshti_Shahid Mofatteh_3267_metro_
-Shahid Mofatteh_Haftom-e Tir_3267_metro_
-Haftom-e Tir_Taleghani_3267_metro_
-Taleghani_Darvazeh Dowlat_3267_metro_
-Darvazeh Dowlat_Panzdah-e Khordad_3267_metro_
-Panzdah-e Khordad_Shoush_3267_metro_
-Shoush_Jonoub Terminal_3267_metro_
-Jonoub Terminal_Shahr-e Rey_3267_metro_
-Shahr-e Rey_Kahrizak_3267_metro_
-Gha'em_Aghdasiyeh_3267_metro_
-Aghdasiyeh_Shahid Zeynoddin_3267_metro_
-Shahid Zeynoddin_Shahid Ghodousi_3267_metro_
-Shahid Ghodousi_Sohrevardi_3267_metro_
-Sohrevardi_Shahid Beheshti_3267_metro_
-Shahid Beheshti_Merza-ye Shirazi_3267_metro_
-Merza-ye Shirazi_Meydan-e Jahad_3267_metro_
-Meydan-e Jahad_Meydan-e Hazrat-e ValiAsr_3267_metro_
-Meydan-e Hazrat-e ValiAsr_Teatr-e Shahr_3267_metro_
-Teatr-e Shahr_Moniriyeh_3267_metro_
-Moniriyeh_Mahdiyeh_3267_metro_
-Mahdiyeh_Rahahan_3267_metro_
-Rahahan_Javadiyeh_3267_metro_
-Javadiyeh_Zamzam_3267_metro_
-Zamzam_Azadegan_3267_metro_
-Shahid Kolahdouz_Nirou Havaei_3267_metro_
-Nirou Havaei_Nabard_3267_metro_
-Nabard_Pirouzi_3267_metro_
-Pirouzi_Ebn-e Sina_3267_metro_
-Ebn-e Sina_Meydan-e Shohada_3267_metro_
-Meydan-e Shohada_Darvazeh Shemiran_3267_metro_
-Darvazeh Shemiran_Darvazeh Dowlat_3267_metro_
-Darvazeh Dowlat_Ferdowsi_2250_bus_
-Ferdowsi_Teatr-e Shahr_3267_metro_
-Teatr-e Shahr_Meydan-e Enghelab-e Eslami_3267_metro_
-Meydan-e Enghelab-e Eslami_Towhid_3267_metro_
-Towhid_Shademan_3267_metro_
-Shademan_Ostad Mo'in_3267_metro_
-Ostad Mo'in_Meydan-e Azadi_2250_bus_
-Meydan-e Azadi_Eram-e Sabz_3267_metro_
-Eram-e Sabz_Allameh Jafari_3267_metro_
-Allameh Jafari_Kashani_3267_metro_
-Kashani_Chaharbagh_3267_metro_
-Khajeh Abdollah-e Ansari_Gha'em_2250_bus_
-Gha'em_Pirouzi_2250_bus_
-Pirouzi_Shahid Rezaei_2250_bus_
-Shahid Rezaei_Payaneh Javanmard_2250_bus_
-Shahid Sadr_Tajrish_2250_bus_
-Tajrish_Mirdamad_2250_bus_
-Mirdamad_Meydan-e Hazrat-e ValiAsr_2250_bus_
-Meydan-e Hazrat-e ValiAsr_Rahahan_2250_bus_
-Rahahan_Shahrak-e Shari'ati_2250_bus_
-Tehran Pars_Ebn-e Sina_2250_bus_
-Ebn-e Sina_Emam Hossein_2250_bus_
-Emam Hossein_Darvazeh Dowlat_2250_bus_
-Ferdowsi_Meydan-e Enghelab-e Eslami_2250_bus_
-Meydan-e Enghelab-e Eslami_Ostad Mo'in_2250_bus_
-Meydan-e Azadi_Bimeh_2250_bus_
+Haram-e Hazrat-e Abdolazim_Shahid Rezaei_3267_6_metro_
+Shahid Rezaei_Meydan-e Shohada_3267_6_metro_
+Meydan-e Shohada_Emam Hossein_3267_6_metro_
+Emam Hossein_Haftom-e Tir_3267_6_metro_
+Haftom-e Tir_Meydan-e Hazrat-e ValiAsr_3267_6_metro_
+Meydan-e Hazrat-e ValiAsr_Boostan-e laleh_3267_6_metro_
+Boostan-e laleh_Yadegar-e Emam_3267_6_metro_
+Yadegar-e Emam_Kashani_3267_6_metro_
+Kashani_Kouhsar_3267_6_metro_
+Tajrish_Gheytariyeh_3267_1_metro_
+Gheytariyeh_Gholhak_3267_1_metro_
+Gholhak_Mirdamad_3267_1_metro_
+Mirdamad_Shahid Haghani_3267_1_metro_
+Shahid Haghani_Shahid Beheshti_3267_1_metro_
+Shahid Beheshti_Shahid Mofatteh_3267_1_metro_
+Shahid Mofatteh_Haftom-e Tir_3267_1_metro_
+Haftom-e Tir_Taleghani_3267_1_metro_
+Taleghani_Darvazeh Dowlat_3267_1_metro_
+Darvazeh Dowlat_Panzdah-e Khordad_3267_1_metro_
+Panzdah-e Khordad_Shoush_3267_1_metro_
+Shoush_Jonoub Terminal_3267_1_metro_
+Jonoub Terminal_Shahr-e Rey_3267_1_metro_
+Shahr-e Rey_Kahrizak_3267_1_metro_
+Gha'em_Aghdasiyeh_3267_3_metro_
+Aghdasiyeh_Shahid Zeynoddin_3267_3_metro_
+Shahid Zeynoddin_Shahid Ghodousi_3267_3_metro_
+Shahid Ghodousi_Sohrevardi_3267_3_metro_
+Sohrevardi_Shahid Beheshti_3267_3_metro_
+Shahid Beheshti_Merza-ye Shirazi_3267_3_metro_
+Merza-ye Shirazi_Meydan-e Jahad_3267_3_metro_
+Meydan-e Jahad_Meydan-e Hazrat-e ValiAsr_3267_3_metro_
+Meydan-e Hazrat-e ValiAsr_Teatr-e Shahr_3267_3_metro_
+Teatr-e Shahr_Moniriyeh_3267_3_metro_
+Moniriyeh_Mahdiyeh_3267_3_metro_
+Mahdiyeh_Rahahan_3267_3_metro_
+Rahahan_Javadiyeh_3267_3_metro_
+Javadiyeh_Zamzam_3267_3_metro_
+Zamzam_Azadegan_3267_3_metro_
+Shahid Kolahdouz_Nirou Havaei_3267_4_metro_
+Nirou Havaei_Nabard_3267_4_metro_
+Nabard_Pirouzi_3267_4_metro_
+Pirouzi_Ebn-e Sina_3267_4_metro_
+Ebn-e Sina_Meydan-e Shohada_3267_4_metro_
+Meydan-e Shohada_Darvazeh Shemiran_3267_4_metro_
+Darvazeh Shemiran_Darvazeh Dowlat_3267_4_metro_
+Darvazeh Dowlat_Ferdowsi_2250_1_bus_
+Ferdowsi_Teatr-e Shahr_3267_4_metro_
+Teatr-e Shahr_Meydan-e Enghelab-e Eslami_3267_4_metro_
+Meydan-e Enghelab-e Eslami_Towhid_3267_4_metro_
+Towhid_Shademan_3267_4_metro_
+Shademan_Ostad Mo'in_3267_4_metro_
+Ostad Mo'in_Meydan-e Azadi_2250_1_bus_
+Meydan-e Azadi_Eram-e Sabz_3267_4_metro_
+Eram-e Sabz_Allameh Jafari_3267_4_metro_
+Allameh Jafari_Kashani_3267_4_metro_
+Kashani_Chaharbagh_3267_4_metro_
+Khajeh Abdollah-e Ansari_Gha'em_2250_2_bus_
+Gha'em_Pirouzi_2250_2_bus_
+Pirouzi_Shahid Rezaei_2250_2_bus_
+Shahid Rezaei_Payaneh Javanmard_2250_2_bus_
+Shahid Sadr_Tajrish_2250_3_bus_
+Tajrish_Mirdamad_2250_3_bus_
+Mirdamad_Meydan-e Hazrat-e ValiAsr_2250_3_bus_
+Meydan-e Hazrat-e ValiAsr_Rahahan_2250_3_bus_
+Rahahan_Shahrak-e Shari'ati_2250_3_bus_
+Tehran Pars_Ebn-e Sina_2250_1_bus_
+Ebn-e Sina_Emam Hossein_2250_1_bus_
+Emam Hossein_Darvazeh Dowlat_2250_1_bus_
+Ferdowsi_Meydan-e Enghelab-e Eslami_2250_1_bus_
+Meydan-e Enghelab-e Eslami_Ostad Mo'in_2250_1_bus_
+Meydan-e Azadi_Bimeh_2250_1_bus_
