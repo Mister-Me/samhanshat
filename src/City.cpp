@@ -639,3 +639,56 @@ void City::calculateTime()
     cout << "Arriving Time : ";
     arriving_time.printTime();
 }
+
+void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stations,std::vector<Path>* path,Time t)
+{
+    Besttime start_with_bus;
+    Besttime start_with_taxi;
+    Besttime start_with_subway;
+    start_with_bus.setArrivingTime(t);
+    start_with_taxi.setArrivingTime(t);
+    start_with_subway.setArrivingTime(t);
+    start_with_bus.FillAdjMatrix(stations,path);
+    start_with_taxi.FillAdjMatrix(stations,path);
+    start_with_subway.FillAdjMatrix(stations,path);
+    int bestTime_start_bus = 0 ;
+    int bestTime_start_taxi = 0 ;
+    int bestTime_start_subway = 0 ;
+    if ((*stations)[source].GetBusStatus())
+    {
+        start_with_bus.Dijkstra(source,"bus");
+        bestTime_start_bus = start_with_bus.getDijkstraList()[destination];
+    }
+    else
+    {
+        bestTime_start_bus = INT_MAX;
+    }
+    if((*stations)[source].GetTaxi_SubwayStatus())
+    {
+        start_with_taxi.Dijkstra(source,"taxi");
+        start_with_subway.Dijkstra(source,"subway");
+        bestTime_start_taxi = start_with_taxi.getDijkstraList()[destination];
+        bestTime_start_subway = start_with_subway.getDijkstraList()[destination];
+        
+    }
+    else
+    {
+        bestTime_start_taxi = INT_MAX;
+        bestTime_start_subway = INT_MAX;
+    }
+    if(bestTime_start_bus < bestTime_start_taxi && bestTime_start_bus < bestTime_start_subway)
+    {
+        start_with_bus.PrintPath(stations,source,destination);
+    }
+    if (bestTime_start_taxi < bestTime_start_bus && bestTime_start_taxi < bestTime_start_subway) 
+    {
+        start_with_taxi.PrintPath(stations,source,destination);
+
+    }
+    if (bestTime_start_subway < bestTime_start_bus && bestTime_start_subway < bestTime_start_taxi)
+    {
+        start_with_subway.PrintPath(stations,source,destination);
+    }
+    
+    
+}
