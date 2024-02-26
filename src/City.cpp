@@ -178,33 +178,13 @@ void City::Dijkstra(int source)
             
             if(busDistance != INT_MAX && busDistance < subway_taxiDistance)
             {
-                // if(adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() != 0
-                // && adjMatrix[nearestVertex][vertexIndex].getBusDistance()<=
-                // adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance())
-                // {
                     
-                    weight = busDistance;
-                    flag= true;
-                    by_bus = true;
-                    by_subway_taxi = false;
-                    line = adjMatrix[nearestVertex][vertexIndex].getBus_Line();
-                // }
-                // else if(adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance()!=0)
-                // {
-                //     weight = adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance();
-                //     flag = true;
-                //     by_bus = false;
-                //     by_subway_taxi = true;
-                //     line = adjMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line();
-                // }
-                // else if (adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() == 0)
-                // {
-                //     weight = adjMatrix[nearestVertex][vertexIndex].getBusDistance();
-                //     flag= true;
-                //     by_bus = true;
-                //     by_subway_taxi = false;
-                //     line = adjMatrix[nearestVertex][vertexIndex].getBus_Line();
-                // }
+                weight = busDistance;
+                flag= true;
+                by_bus = true;
+                by_subway_taxi = false;
+                line = adjMatrix[nearestVertex][vertexIndex].getBus_Line();
+
             }
             else if (subway_taxiDistance != INT_MAX && subway_taxiDistance <= busDistance)
             {

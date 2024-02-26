@@ -69,9 +69,6 @@ int main()
                 Tehran.PrintPath(stations,origin,destination);
                 Map.setArrivingTime(requests.front().GetTime());
                 Map.dijkstraOnCost(origin,destination,path);
-                Map.print(origin,destination);
-                //Map.printPath(origin,destination);
-                // Map.calculateTime();
                 Tehran.dijkstraOnTime(origin,destination,stations,path,requests.front().GetTime());
             }
         }
