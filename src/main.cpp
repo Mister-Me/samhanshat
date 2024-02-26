@@ -12,6 +12,7 @@
 #include "../include/Vehicle.hpp"
 #include "../include/TimedPath.hpp"
 #include "../include/Besttime.hpp"
+#include "../include/LowestCost.hpp"
 using namespace std;
 
 int main()
@@ -22,12 +23,16 @@ int main()
     Station st;
     Path p;
     Besttime bestTime;
+    LowestCost lowestCost;
     st.readFromFile(stations,"../file/Stations.txt");
     p.readFromFile(path,"../file/Distance.txt");
+    lowestCost.FillAdjMatrix(stations,path);
+    lowestCost.PrintAdjMatrix(stations);
     //bestTime.FillAdjMatrix(stations,path);
     // bestTime.Dijkstra(17,"subway");
     // bestTime.printDijkstra(stations);
-    City Tehran,Map;
+    City Tehran;
+    City Map;
     Tehran.FillAdjMatrix(stations,path);
     Map.fillCostMatrix(stations,cost);
     int NumberOfOrders = 0;
