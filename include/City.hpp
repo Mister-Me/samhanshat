@@ -38,7 +38,7 @@ public:
     void fillCostMatrix(std::vector <Station>*, std::vector<Cost>*);                                    /* filling adjacency matrix for calculating the best cost path */                             
     void dijkstraOnCost(int,int,vector<Path>*);                                                         /* dijkstra implementation for the best cost path and invoks the print function */
     void printPath(int,int);                                                                            /* prints only the path from source to destination */
-    void print(int,int);                                                                                /* prints some basics and printPath and calculateTime functions */
+    void print(int,int,vector<Station>*);                                                               /* prints some basics and printPath and calculateTime functions */
     void calculateTime();                                                                               /* calculates the arriving time when user reach destination */
     int findDistance(vector<Path>*,string,string);                                                      /* finds the distance between to stations in vector path */
 
@@ -47,7 +47,7 @@ public:
 private:
     std::vector<std::vector<Path>> adjMatrix;                                                           /* adjacency matrix for distance */
     std::vector<std::vector<Cost>> costMatrix;                                                          /* adjacency matrix for cost */   
-    double dijkstraList[N];                                                                             /* dijkstraList[i] will hold the shortest distance/cost form source to i */                           
+    int dijkstraList[N];                                                                             /* dijkstraList[i] will hold the shortest distance/cost form source to i */                           
     Time arriving_time;                                                                                 /* the time when user reach the destination */
     pair<Cost,pair<int,int>> parent[N];                                                                 /* first is object of cost class, second.first is distance, second.second is parent number */                                                                                                                                                      
     vector<pair<Cost,pair<int,int>>> path;

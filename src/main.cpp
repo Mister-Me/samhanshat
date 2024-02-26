@@ -22,6 +22,7 @@ int main()
     vector<Cost> *cost = new vector <Cost>;
     Station st;
     Path p;
+    Cost c;
     Besttime bestTime;
     LowestCost lowestCost;
     st.readFromFile(stations,"../file/Stations.txt");
