@@ -167,58 +167,68 @@ void City::Dijkstra(int source)
             bool by_bus = false;
             bool by_subway_taxi = false;
             std::string line="";
-            if(adjMatrix[nearestVertex][vertexIndex].getBusDistance()!=0)
+            int busDistance = adjMatrix[nearestVertex][vertexIndex].getBusDistance();
+            int subway_taxiDistance = adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance();
+            busDistance = busDistance != 0 ? busDistance : INT_MAX;
+            subway_taxiDistance = subway_taxiDistance != 0 ? subway_taxiDistance : INT_MAX;
+            if (nearestVertex == source)
             {
-                if(adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() != 0
-                && adjMatrix[nearestVertex][vertexIndex].getBusDistance()<=
-                adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance())
-                {
-                    weight = adjMatrix[nearestVertex][vertexIndex].getBusDistance();
-                    flag= true;
-                    by_bus = true;
-                    by_subway_taxi = false;
-                    line = adjMatrix[nearestVertex][vertexIndex].getBus_Line();
-                }
-                else if(adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance()!=0)
-                {
-                    weight = adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance();
-                    flag = true;
-                    by_bus = false;
-                    by_subway_taxi = true;
-                    line = adjMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line();
-                }
-                else if (adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() == 0)
-                {
-                    weight = adjMatrix[nearestVertex][vertexIndex].getBusDistance();
-                    flag= true;
-                    by_bus = true;
-                    by_subway_taxi = false;
-                    line = adjMatrix[nearestVertex][vertexIndex].getBus_Line();
-                }
+                cout << "bus distance " << busDistance << endl;
             }
-            else if (adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() != 0)
+            
+            if(busDistance != INT_MAX && busDistance < subway_taxiDistance)
             {
-                weight = adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance();
+                // if(adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() != 0
+                // && adjMatrix[nearestVertex][vertexIndex].getBusDistance()<=
+                // adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance())
+                // {
+                    
+                    weight = busDistance;
+                    flag= true;
+                    by_bus = true;
+                    by_subway_taxi = false;
+                    line = adjMatrix[nearestVertex][vertexIndex].getBus_Line();
+                // }
+                // else if(adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance()!=0)
+                // {
+                //     weight = adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance();
+                //     flag = true;
+                //     by_bus = false;
+                //     by_subway_taxi = true;
+                //     line = adjMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line();
+                // }
+                // else if (adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() == 0)
+                // {
+                //     weight = adjMatrix[nearestVertex][vertexIndex].getBusDistance();
+                //     flag= true;
+                //     by_bus = true;
+                //     by_subway_taxi = false;
+                //     line = adjMatrix[nearestVertex][vertexIndex].getBus_Line();
+                // }
+            }
+            else if (subway_taxiDistance != INT_MAX && subway_taxiDistance <= busDistance)
+            {
+                weight = subway_taxiDistance;
                 flag = true;
                 by_bus = false;
                 by_subway_taxi = true;
                 line = adjMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line();
             }
-            else
+            else if (subway_taxiDistance == INT_MAX && busDistance == INT_MAX)
             {
                 flag = false;
             }
-            int edgeDistance = weight;
+            //int edgeDistance = weight;
  
             if (!added[vertexIndex]&& dijkstraList[nearestVertex] != INT_MAX && flag
-             && ((shortestDistance + edgeDistance) < dijkstraList[vertexIndex])) 
+             && ((shortestDistance + weight) < dijkstraList[vertexIndex])) 
             {
                 includedStations[vertexIndex].second.second = nearestVertex;
                 includedStations[vertexIndex].second.first = line;
                 includedStations[vertexIndex].first.first.SetBusStatus(by_bus);
                 includedStations[vertexIndex].first.first.SetTaxi_SubwayStatus(by_subway_taxi);
-                includedStations[vertexIndex].first.second = edgeDistance;
-                dijkstraList[vertexIndex] = shortestDistance + edgeDistance;
+                includedStations[vertexIndex].first.second = weight;
+                dijkstraList[vertexIndex] = shortestDistance + weight;
             }
         }
     }
@@ -528,7 +538,7 @@ void City::print(int source, int destination)
     cout << endl << endl << endl;
     cout << parent[source].first.getOrigin() << " -> " << parent[destination].first.getDestination() << "    ";
     cout << "Low-Cost : " << dijkstraList[destination] << endl;
-    // printPath(source,destination); 
+    //printPath(source,destination); 
     cout << endl;
     // calculateTime();
     

@@ -26,8 +26,8 @@ int main()
     LowestCost lowestCost;
     st.readFromFile(stations,"../file/Stations.txt");
     p.readFromFile(path,"../file/Distance.txt");
-    lowestCost.FillAdjMatrix(stations,path);
-    lowestCost.PrintAdjMatrix(stations);
+    //lowestCost.FillAdjMatrix(stations,path);
+    //lowestCost.PrintAdjMatrix(stations);
     //bestTime.FillAdjMatrix(stations,path);
     // bestTime.Dijkstra(17,"subway");
     // bestTime.printDijkstra(stations);
@@ -66,9 +66,11 @@ int main()
                 Tehran.setArrivingTime(requests.front().GetTime());
                 Tehran.Dijkstra(origin);
                 Tehran.PrintPath(stations,origin,destination);
+                Map.setArrivingTime(requests.front().GetTime());
                 Map.dijkstraOnCost(origin,destination,path);
-                Map.printPath(origin,destination);
-                Map.calculateTime();
+                Map.print(origin,destination);
+                //Map.printPath(origin,destination);
+                // Map.calculateTime();
                 Tehran.dijkstraOnTime(origin,destination,stations,path,requests.front().GetTime());
             }
         }

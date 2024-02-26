@@ -60,7 +60,7 @@ Pirouzi_Shahid Rezaei_0_8__bus2_
 Shahid Rezaei_Payaneh Javanmard_0_8__bus2_
 Shahid Sadr_Tajrish_0_4__bus3_
 Tajrish_Mirdamad_0_8__bus3_
-Mirdamad_Meydan-e Hazrat-e ValiAsr _0_11__bus3_
+Mirdamad_Meydan-e Hazrat-e ValiAsr_0_11__bus3_
 Meydan-e Hazrat-e ValiAsr_Rahahan_0_8__bus3_
 Rahahan_Shahrak-e Shari'ati_0_5__bus3_
 Tehran Pars_Ebn-e Sina_0_10__bus1_

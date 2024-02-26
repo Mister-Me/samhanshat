@@ -1,8 +1,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "Cost.hpp"
-#include "Station.hpp"
+#include "../include/Cost.hpp"
+#include "../include/Station.hpp"
 
 /* =========================================================================== Sets ===========================================================================*/
 /* sets the origin of user's path */
