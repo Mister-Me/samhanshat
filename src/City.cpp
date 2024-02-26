@@ -418,37 +418,42 @@ int City::GetShortestDistance(int destination)
 /*========================================================================== Cost ==========================================================================*/
 /* filling adjacency matrix for calculating the best cost path */
 void City::fillCostMatrix(std::vector <Station>* station, std::vector<Cost>* cost)
-{
-    std::vector<Cost> row; Cost temp;
-
+{ 
     for (int i = 0; i < (station->size()); i++)
     {
+        std::vector<Cost> row;
         for (int j = 0; j < (station->size()); j++)
         {
+            Cost temp_1;
             if (i == j)
             {
-                temp.setOrigin((*station)[i].GetName());
-                temp.setDestination((*station)[i].GetName());
-                temp.setMinimumCost(0.0);
-                row.push_back(temp);
+                temp_1.setOrigin((*station)[i].GetName());
+                temp_1.setDestination((*station)[i].GetName());
+                temp_1.setLine(0);
+                temp_1.setVehicle("non");
+                temp_1.setMinimumCost(0.0);
+                row.push_back(temp_1);
             }
             else
             {
+                Cost temp_2;
                 for (int k = 0; k < (cost->size()); k++)
                 {
                     if(((*cost)[k].getOrigin() == (*station)[i].GetName() && (*cost)[k].getDestination() == (*station)[j].GetName())
                     ||((*cost)[k].getOrigin() == (*station)[j].GetName() && (*cost)[k].getDestination() == (*station)[i].GetName()))
                     {
-                        temp.setOrigin((*station)[i].GetName());
-                        temp.setDestination((*station)[j].GetName());
-                        temp.setMinimumCost((*cost)[k].getMinimumCost());
+                        temp_2.setOrigin((*station)[i].GetName());
+                        temp_2.setDestination((*station)[j].GetName());
+                        temp_2.setLine((*cost)[k].getLine());
+                        temp_2.setVehicle((*cost)[k].getVehicle());
+                        temp_2.setMinimumCost((*cost)[k].getMinimumCost());
                     }
                 }
-                row.push_back(temp);
+                row.push_back(temp_2);
             }
         }
-        costMatrix.push_back(row); row.clear();
-    }   
+        costMatrix.push_back(row);
+    }  
 }
 
 //-------------------------------------------------------------
@@ -456,13 +461,11 @@ void City::fillCostMatrix(std::vector <Station>* station, std::vector<Cost>* cos
 void City::dijkstraOnCost(int source, int destination,vector<Path>* p)
 {
     for (int i = 0; i < N; i++)
-        dijkstraList[i] = DBL_MAX;
+        dijkstraList[i] = INT_MAX;
     
     std::vector<bool> finalized(N,false);
     dijkstraList[source] = 0; int min = -1;
     parent[source].second.second = -1;
-    parent[source].first.setOrigin(costMatrix[source][0].getOrigin());
-    string org, des;
 
     for (int i = 0; i < N-1; i++)
     {
@@ -475,7 +478,7 @@ void City::dijkstraOnCost(int source, int destination,vector<Path>* p)
         finalized[min] = true;
         for (int  k = 0; k < N; k++)
         {
-            if (costMatrix[min][1].getMinimumCost() != 0.0 and !finalized[1])
+            if ((costMatrix[min][k].getMinimumCost() != 0.0) and (!finalized[k]))
             {
                 parent[k].first.setOrigin(costMatrix[min][k].getOrigin());
                 parent[k].first.setDestination(costMatrix[min][k].getDestination());
@@ -504,7 +507,6 @@ void City::dijkstraOnCost(int source, int destination,vector<Path>* p)
             }       
         }
     }
-    // print(source,destination);
 }
 
 //-------------------------------------------------------------
@@ -516,21 +518,21 @@ void City::printPath(int source,int destination)
 
     printPath(source,parent[destination].second.second);
     path.push_back(parent[destination]);
-    cout << parent[destination].first.getDestination() << "( ";
+    cout << parent[destination].first.getDestination() << " (";
     cout << parent[destination].first.getVehicle() <<  ", Line";
     cout << parent[destination].first.getLine() << ")\n";
 }
 
 //-------------------------------------------------------------
 /* prints some basics and printPath and calculateTime functions */
-void City::print(int source, int destination)
+void City::print(int source, int destination, vector<Station>*S)
 {
     cout << endl << endl << endl;
-    cout << parent[source].first.getOrigin() << " -> " << parent[destination].first.getDestination() << "    ";
+    cout << (*S)[source].GetName() << " -> " << parent[destination].first.getDestination() << "    ";
     cout << "Low-Cost : " << dijkstraList[destination] << endl;
-    // printPath(source,destination); 
+    printPath(source,destination); 
     cout << endl;
-    // calculateTime();
+    calculateTime();
     
 }
 
@@ -557,7 +559,8 @@ int City::findDistance(vector<Path>* p, string origin, string destination)
 void City::calculateTime()
 {
     int i = 0;
-    for (i = 0; i < path.size()-1; i++)
+    int size = path.size()-1;
+    for (i = 0; i < size; i++)
     {
         if (stoi(arriving_time.getHour()) >= 6 and stoi(arriving_time.getHour()) <=8)
         {
@@ -624,17 +627,17 @@ void City::calculateTime()
     }
     if (stoi(arriving_time.getHour()) >= 6 and stoi(arriving_time.getHour()) <=8)
     {
-        if (path[i+1].first.getVehicle() == "metro") 
-            arriving_time = arriving_time + (path[i+1].second.first); 
+        if (path[i].first.getVehicle() == "metro") 
+            arriving_time = arriving_time + (path[i].second.first); 
         else
-            arriving_time = arriving_time + (path[i+1].second.first*8);                 
+            arriving_time = arriving_time + (path[i].second.first*8);                 
     }
     else
     {
-        if (path[i+1].first.getVehicle() == "metro") 
-            arriving_time = arriving_time + (path[i+1].second.first); 
+        if (path[i].first.getVehicle() == "metro") 
+            arriving_time = arriving_time + (path[i].second.first); 
         else
-            arriving_time = arriving_time + (path[i+1].second.first*4); 
+            arriving_time = arriving_time + (path[i].second.first*4); 
     }
     cout << "Arriving Time : ";
     arriving_time.printTime();

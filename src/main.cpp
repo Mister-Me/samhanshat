@@ -22,12 +22,14 @@ int main()
     vector<Cost> *cost = new vector <Cost>;
     Station st;
     Path p;
+    Cost c;
     Besttime bestTime;
     LowestCost lowestCost;
     st.readFromFile(stations,"../file/Stations.txt");
     p.readFromFile(path,"../file/Distance.txt");
+    c.readFromFile(cost,"../include/Cost.txt");
     lowestCost.FillAdjMatrix(stations,path);
-    lowestCost.PrintAdjMatrix(stations);
+    // lowestCost.PrintAdjMatrix(stations);
     //bestTime.FillAdjMatrix(stations,path);
     // bestTime.Dijkstra(17,"subway");
     // bestTime.printDijkstra(stations);
@@ -63,13 +65,14 @@ int main()
             }
             else
             {
-                Tehran.setArrivingTime(requests.front().GetTime());
-                Tehran.Dijkstra(origin);
-                Tehran.PrintPath(stations,origin,destination);
+                // Tehran.setArrivingTime(requests.front().GetTime());
+                // Tehran.Dijkstra(origin);
+                // Tehran.PrintPath(stations,origin,destination);
+                Map.setArrivingTime(requests.front().GetTime());
                 Map.dijkstraOnCost(origin,destination,path);
                 Map.printPath(origin,destination);
-                Map.calculateTime();
-                Tehran.dijkstraOnTime(origin,destination,stations,path,requests.front().GetTime());
+                // Map.calculateTime();
+                // Tehran.dijkstraOnTime(origin,destination,stations,path,requests.front().GetTime());
             }
         }
         else
