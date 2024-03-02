@@ -1,7 +1,7 @@
 #ifndef CITY_HPP
 #define CITY_HPP
 #define N 59 
-
+#define taxi_cost_coefficient_traffic 1.5
 #include <string>
 #include <vector>
 #include <limits.h>
@@ -32,27 +32,14 @@ public:
     void PrintPath(std::vector<Station> *, int, int);
     void setArrivingTime(Time);
     Time getArrivingTime();
-
-/*===================================================== Cost =====================================================*/
-                                                                        
-    void fillCostMatrix(std::vector <Station>*, std::vector<Cost>*);                                    /* filling adjacency matrix for calculating the best cost path */                             
-    void dijkstraOnCost(int,int,vector<Path>*);                                                         /* dijkstra implementation for the best cost path and invoks the print function */
-    void printPath(int,int);                                                                            /* prints only the path from source to destination */
-    void print(int,int,vector<Station>*);                                                               /* prints some basics and printPath and calculateTime functions */
-    void calculateTime();                                                                               /* calculates the arriving time when user reach destination */
-    int findDistance(vector<Path>*,string,string);                                                      /* finds the distance between to stations in vector path */
-
-/*===================================================== Time =====================================================*/
-
+    void Dijkstra_FloydWarshall(int,int,std::vector <Station>*,std::vector<Path>*,Time);
 private:
-    std::vector<std::vector<Path>> adjMatrix;                                                           /* adjacency matrix for distance */
-    std::vector<std::vector<Cost>> costMatrix;                                                          /* adjacency matrix for cost */   
-    int dijkstraList[N];                                                                             /* dijkstraList[i] will hold the shortest distance/cost form source to i */                           
-    Time arriving_time;                                                                                 /* the time when user reach the destination */
-    pair<Cost,pair<int,int>> parent[N];                                                                 /* first is object of cost class, second.first is distance, second.second is parent number */                                                                                                                                                      
-    vector<pair<Cost,pair<int,int>>> path;
-    pair<pair<Station,int>,pair<std::string,int>> includedStations[N];                                  /* distance from source to each station. first.first is station name first.second is the distance,
-                                                                                                           second.first is the name of line, second.second is the number of station's parent. */   
+    std::vector<std::vector<Path>> adjMatrix;/* adjacency matrix for distance */
+    int dijkstraList[N];/* dijkstraList[i] will hold the shortest distance/cost form source to i */                           
+    Time arriving_time;/* the time when user reach the destination */
+    pair<pair<Station,int>,pair<std::string,int>> includedStations[N]; 
+    /*first.first is station name first.second is the distance,
+    second.first is the name of line, second.second is the number of station's parent. */   
 }; 
 
 #endif

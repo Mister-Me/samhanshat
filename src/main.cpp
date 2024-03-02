@@ -35,7 +35,9 @@ int main()
     City Tehran;
     City Map;
     Tehran.FillAdjMatrix(stations,path);
-    Map.fillCostMatrix(stations,cost);
+    //Tehran.fillCostMatrix(stations,path);
+    //Tehran.printCostMatrix(stations);
+    // Map.fillCostMatrix(stations,cost);
     int NumberOfOrders = 0;
     queue<Request> requests;
     cout << "Please Enter Number of orders : " << '\n';
@@ -65,10 +67,26 @@ int main()
             else
             {
                 Tehran.setArrivingTime(requests.front().GetTime());
+                Map.setArrivingTime(requests.front().GetTime());
                 Tehran.Dijkstra(origin);
                 Tehran.PrintPath(stations,origin,destination);
-                Map.setArrivingTime(requests.front().GetTime());
-                Map.dijkstraOnCost(origin,destination,path);
+                // Tehran.dijkstraOnCost(origin);
+                // Tehran.print_path_cost(stations,origin,destination);
+
+                // LowestCost l;
+                // l.fillCostMatrix(stations,path);
+                // l.setArrivingTime(requests.front().GetTime());
+                // l.dijkstra(2);
+                // l.dijkstraOnCost(2,"subway");
+                // l.printDijkstraOnCost(stations);
+                // cout << l.getParents()[destination].first.second << endl
+                // <<l.getParents()[destination].second.second << endl;
+                // Tehran.printDijkstraOnCost(stations);
+                //Map.setArrivingTime(requests.front().GetTime());
+                //Map.dijkstraOnCost(origin,destination,path);
+                
+                // Tehran.Dijkstra_FloydWarshall(origin,destination,stations,path,requests.front().GetTime());
+                Map.Dijkstra_FloydWarshall(origin,destination,stations,path,requests.front().GetTime());
                 Tehran.dijkstraOnTime(origin,destination,stations,path,requests.front().GetTime());
             }
         }

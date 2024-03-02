@@ -1,5 +1,4 @@
 #include "../include/City.hpp"
-
 /*======================================================================== Distance ========================================================================*/
 /* filling adjacency matrix for calculating the best distance path */
 void City::FillAdjMatrix(std::vector<Station> * stations, std::vector<Path> *path)
@@ -171,11 +170,6 @@ void City::Dijkstra(int source)
             int subway_taxiDistance = adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance();
             busDistance = busDistance != 0 ? busDistance : INT_MAX;
             subway_taxiDistance = subway_taxiDistance != 0 ? subway_taxiDistance : INT_MAX;
-            if (nearestVertex == source)
-            {
-                cout << "bus distance " << busDistance << endl;
-            }
-            
             if(busDistance != INT_MAX && busDistance < subway_taxiDistance)
             {
                     
@@ -228,7 +222,8 @@ void City::Print(std::vector<Station> * S,int currentVertex,int destination)
     {
         if (includedStations[currentVertex].first.first.GetBusStatus())
         {
-            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<8
+            ||(stoi(arriving_time.getHour())== 8 && stoi(arriving_time.getMinute())== 0))
             {
                 arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff_Traffic() ;
             }
@@ -239,7 +234,8 @@ void City::Print(std::vector<Station> * S,int currentVertex,int destination)
         }
         else if (includedStations[currentVertex].first.first.GetTaxi_SubwayStatus())
         {
-            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<8
+            ||(stoi(arriving_time.getHour())== 8 && stoi(arriving_time.getMinute())== 0))
             {
                 arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff_Traffic() ;
             }
@@ -287,7 +283,8 @@ void City::Print(std::vector<Station> * S,int currentVertex,int destination)
             // check changing in subway to bus
             if (includedStations[includedStations[currentVertex].second.second].first.first.GetTaxi_SubwayStatus())
             {
-                if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+                if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<8
+            ||(stoi(arriving_time.getHour())== 8 && stoi(arriving_time.getMinute())== 0))
                 {
                     arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff_Traffic() ;
                 }
@@ -302,7 +299,8 @@ void City::Print(std::vector<Station> * S,int currentVertex,int destination)
             &&(includedStations[includedStations[currentVertex].second.second].second.first != 
             includedStations[currentVertex].second.first))
             {
-                if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+                if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<8
+            ||(stoi(arriving_time.getHour())== 8 && stoi(arriving_time.getMinute())== 0))
                 {
                     arriving_time = arriving_time + bus.getMinute_gettingOn_gettingOff_Traffic();
                 }
@@ -313,7 +311,8 @@ void City::Print(std::vector<Station> * S,int currentVertex,int destination)
                 }
             }
 
-            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+            if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<8
+            ||(stoi(arriving_time.getHour())== 8 && stoi(arriving_time.getMinute())== 0))
             {
                 arriving_time = arriving_time + (includedStations[currentVertex].first.second * bus.getMinute_per_km_Traffic());
             }
@@ -329,7 +328,8 @@ void City::Print(std::vector<Station> * S,int currentVertex,int destination)
             //check changing in bus to subway
             if (includedStations[includedStations[currentVertex].second.second].first.first.GetBusStatus())
             {
-                if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+                if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<8
+            ||(stoi(arriving_time.getHour())== 8 && stoi(arriving_time.getMinute())== 0))
                 {
                     arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff_Traffic() ;
                 }
@@ -343,7 +343,8 @@ void City::Print(std::vector<Station> * S,int currentVertex,int destination)
                 &&(includedStations[includedStations[currentVertex].second.second].second.first != 
             includedStations[currentVertex].second.first))
             {
-                if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<=8)
+                if (stoi(arriving_time.getHour()) >= 6 && stoi(arriving_time.getHour())<8
+            ||(stoi(arriving_time.getHour())== 8 && stoi(arriving_time.getMinute())== 0))
                 {
                     arriving_time = arriving_time + subway.getMinute_gettingOn_gettingOff_Traffic() ;
                 }
@@ -405,232 +406,487 @@ int City::GetShortestDistance(int destination)
     
 }
 
-/*========================================================================== Cost ==========================================================================*/
-/* filling adjacency matrix for calculating the best cost path */
-void City::fillCostMatrix(std::vector <Station>* station, std::vector<Cost>* cost)
-{ 
-    for (int i = 0; i < (station->size()); i++)
+void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Station>* stations,std::vector<Path>* path,Time time)
+{
+    //arriving_Time
+    
+    LowestCost primary_start_with_bus;
+    LowestCost primary_start_with_taxi;
+    LowestCost primary_start_with_subway;
+
+    primary_start_with_bus.setArrivingTime(time);
+    primary_start_with_taxi.setArrivingTime(time);
+    primary_start_with_subway.setArrivingTime(time);
+
+    primary_start_with_bus.fillCostMatrix(stations,path);
+    primary_start_with_taxi.fillCostMatrix(stations,path);
+    primary_start_with_subway.fillCostMatrix(stations,path);
+
+    LowestCost intermediate;
+    LowestCost intermediate_start_with_taxi;
+    LowestCost intermediate_start_with_subway;
+
+    intermediate.fillCostMatrix(stations,path);
+    intermediate_start_with_taxi.fillCostMatrix(stations,path);
+    intermediate_start_with_subway.fillCostMatrix(stations,path);
+
+    intermediate.setArrivingTime(time);
+    intermediate_start_with_taxi.setArrivingTime(time);
+    intermediate_start_with_subway.setArrivingTime(time);
+
+    // intermediate.dijkstra(2);
+    pair<pair<Cost,int>,pair<int,int>> first_copy_parents[N];
+    pair<pair<Cost,int>,pair<int,int>> second_copy_parents[N];
+    pair<pair<Cost,int>,pair<int,int>> third_copy_parents[N];
+    pair<pair<Cost,int>,pair<int,int>> forth_copy_parents[N];
+    Bus bus;
+    Taxi taxi;
+    Subway subway;
+    int min_cost = INT_MAX;
+    int min_time = INT_MAX;
+    int index_min_cost = -1;
+    // intermediate.dijkstraOnCost(14,"subway");
+    // intermediate.printDijkstraOnCost(stations);
+    // intermediate.print_cost(51,stations,intermediate.getParents());
+    if ((*stations)[origin].GetBusStatus())
     {
-        std::vector<Cost> row;
-        for (int j = 0; j < (station->size()); j++)
+        primary_start_with_bus.dijkstraOnCost(origin,"bus");
+    }
+    if((*stations)[origin].GetTaxi_SubwayStatus())
+    {
+        primary_start_with_taxi.dijkstraOnCost(origin,"taxi");
+        primary_start_with_subway.dijkstraOnCost(origin,"subway");
+    }
+    // cout << "out " << primary_start_with_subway.getParents()[44].first.second << " time " << '\n';
+    
+    for (int i = 0; i < N; i++)
+    {
+        if ( i != destination)
         {
-            Cost temp_1;
-            if (i == j)
-            {
-                temp_1.setOrigin((*station)[i].GetName());
-                temp_1.setDestination((*station)[i].GetName());
-                temp_1.setLine(0);
-                temp_1.setVehicle("non");
-                temp_1.setMinimumCost(0.0);
-                row.push_back(temp_1);
-            }
-            else
-            {
-                Cost temp_2;
-                for (int k = 0; k < (cost->size()); k++)
+            int time_to_i = 0;
+            int time_to_destination = 0;
+
+            int cost_to_i = 0;
+
+            int LowestCost_start_bus = 0 ;
+            int LowestCost_start_taxi = 0 ;
+            int LowestCost_start_subway = 0 ;
+
+            bool bus_status_to_i;
+            bool taxi_status_to_i;
+            bool subway_status_to_i ;
+            std::string bus_line_to_i ;
+            std::string subway_taxi_line_to_i ;
+
+            int cost_to_destination = 0;
+
+            bool bus_status_to_destination = false;
+            bool taxi_status_to_destination = false;
+            bool subway_status_to_destination = false;
+            std::string bus_line_to_destination = "";
+            std::string subway_taxi_line_to_destination ="";
+
+            int LowestCost_destination= 0 ;
+            int LowestCost_start_taxi_destination = 0 ;
+            int LowestCost_start_subway_destination = 0 ;
+            // if (i != origin)
+            // {
+                if ((*stations)[origin].GetBusStatus())
                 {
-                    if(((*cost)[k].getOrigin() == (*station)[i].GetName() && (*cost)[k].getDestination() == (*station)[j].GetName())
-                    ||((*cost)[k].getOrigin() == (*station)[j].GetName() && (*cost)[k].getDestination() == (*station)[i].GetName()))
+                    LowestCost_start_bus = primary_start_with_bus.getCostDijkstraList()[i];
+                }
+                else
+                {
+                    LowestCost_start_bus = INT_MAX;
+                }
+                if((*stations)[origin].GetTaxi_SubwayStatus())
+                {
+                    LowestCost_start_taxi = primary_start_with_taxi.getCostDijkstraList()[i];
+                    LowestCost_start_subway = primary_start_with_subway.getCostDijkstraList()[i];
+                }
+                else
+                {
+                    LowestCost_start_taxi = INT_MAX;
+                    LowestCost_start_subway = INT_MAX;
+                }
+                // cout << LowestCost_start_bus << " " << LowestCost_start_taxi << " " << LowestCost_start_subway<< '\n';
+                if(LowestCost_start_bus < LowestCost_start_taxi && LowestCost_start_bus < LowestCost_start_subway)
+                {
+                    cost_to_i = LowestCost_start_bus;
+                    bus_status_to_i = primary_start_with_bus.getParents()[i].first.first.getBusStatus();
+                    taxi_status_to_i = primary_start_with_bus.getParents()[i].first.first.getTaxiStatus();
+                    subway_status_to_i = primary_start_with_bus.getParents()[i].first.first.getSubwayStatus();
+                    bus_line_to_i = primary_start_with_bus.getParents()[i].first.first.getBus_Line();
+                    subway_taxi_line_to_i = primary_start_with_bus.getParents()[i].first.first.getSubway_Taxi_Line() ;
+                    for (int j = 0; j < N; j++)
                     {
-                        temp_2.setOrigin((*station)[i].GetName());
-                        temp_2.setDestination((*station)[j].GetName());
-                        temp_2.setLine((*cost)[k].getLine());
-                        temp_2.setVehicle((*cost)[k].getVehicle());
-                        temp_2.setMinimumCost((*cost)[k].getMinimumCost());
+                        first_copy_parents[j] = primary_start_with_bus.getParents()[j];
+                    }
+                    time_to_i = primary_start_with_bus.getParents()[i].first.second;
+                    // cout << primary_start_with_bus.getParents()[i].first.second << " time primary bus" << '\n';
+                }
+                if (LowestCost_start_taxi < LowestCost_start_bus && LowestCost_start_taxi < LowestCost_start_subway) 
+                {
+                    cost_to_i = LowestCost_start_taxi;
+                    bus_status_to_i = primary_start_with_taxi.getParents()[i].first.first.getBusStatus();
+                    taxi_status_to_i = primary_start_with_taxi.getParents()[i].first.first.getTaxiStatus();
+                    subway_status_to_i = primary_start_with_taxi.getParents()[i].first.first.getSubwayStatus();
+                    bus_line_to_i = primary_start_with_taxi.getParents()[i].first.first.getBus_Line();
+                    subway_taxi_line_to_i = primary_start_with_taxi.getParents()[i].first.first.getSubway_Taxi_Line() ;
+                    for (int j = 0; j < N; j++)
+                    {
+                        first_copy_parents[j] = primary_start_with_taxi.getParents()[j];
+                    }
+                    time_to_i = primary_start_with_taxi.getParents()[i].first.second;
+                    // cout << primary_start_with_taxi.getParents()[i].first.second << " time primary taxi" << '\n';
+                }
+                if (LowestCost_start_subway < LowestCost_start_bus && LowestCost_start_subway < LowestCost_start_taxi)
+                {
+                    cost_to_i = LowestCost_start_subway;
+                    bus_status_to_i = primary_start_with_subway.getParents()[i].first.first.getBusStatus();
+                    taxi_status_to_i = primary_start_with_subway.getParents()[i].first.first.getTaxiStatus();
+                    subway_status_to_i = primary_start_with_subway.getParents()[i].first.first.getSubwayStatus();
+                    bus_line_to_i = primary_start_with_subway.getParents()[i].first.first.getBus_Line();
+                    subway_taxi_line_to_i = primary_start_with_subway.getParents()[i].first.first.getSubway_Taxi_Line() ;
+                    for (int j = 0; j < N; j++)
+                    {
+                        first_copy_parents[j] = primary_start_with_subway.getParents()[j];
+                    }
+                    time_to_i = primary_start_with_subway.getParents()[i].first.second;
+                    // cout << primary_start_with_subway.getParents()[i].first.second << " time primary subway" << '\n';
+                }
+                
+                //arriving time must update for new dijkstra
+
+                // LowestCost intermediate;
+                // intermediate.fillCostMatrix(stations,path);
+                // intermediate.setArrivingTime(time);
+                // intermediate.dijkstra(i);
+                // cost_to_destination = intermediate.getCostDijkstraList()[destination];
+                // int j = intermediate.getIndexFromParents(i,destination);
+                // bus_status_to_destination = intermediate.getParents()[j].first.first.getBusStatus();
+                // taxi_status_to_destination = intermediate.getParents()[j].first.first.getTaxiStatus();
+                // subway_status_to_destination = intermediate.getParents()[j].first.first.getSubwayStatus();
+                // bus_line_to_destination = intermediate.getParents()[j].first.first.getBus_Line();
+                // subway_taxi_line_to_destination = intermediate.getParents()[j].first.first.getSubway_Taxi_Line();
+                int j;
+                if ((*stations)[i].GetBusStatus())
+                {
+                    if (LowestCost_start_bus < LowestCost_start_taxi && LowestCost_start_bus == LowestCost_start_subway)
+                    {
+                        intermediate.setArrivingTime(time + primary_start_with_bus.getParents()[i].first.second);
+
+                    }
+                    else
+                    {
+                        intermediate.setArrivingTime(time + time_to_i);
+                    }
+                    // intermediate.getArrivingTime().printTime();
+                    // cout  << "arriving time" << '\n';
+                    intermediate.dijkstra(i);
+                    LowestCost_destination = intermediate.getCostDijkstraList()[destination];
+                    // cout << intermediate.getParents()[destination].first.second << "intermediate dijkstra" << '\n';
+                }
+                else
+                {
+                    LowestCost_destination = INT_MAX;
+                }
+                if((*stations)[i].GetTaxi_SubwayStatus())
+                {
+                    if (LowestCost_start_bus < LowestCost_start_taxi && LowestCost_start_bus == LowestCost_start_subway)
+                    {
+                        intermediate_start_with_subway.setArrivingTime(time + primary_start_with_subway.getParents()[i].first.second);
+
+                    }
+                    else
+                    {
+                        intermediate_start_with_subway.setArrivingTime(time + time_to_i);
+                    }
+                    // intermediate_start_with_subway.getArrivingTime().printTime();
+                    // cout  << "arriving time" << '\n';
+                    intermediate_start_with_subway.dijkstraOnCost(i,"subway");
+                    LowestCost_start_subway_destination = intermediate_start_with_subway.getCostDijkstraList()[destination];
+                    // cout << intermediate_start_with_subway.getParents()[destination].first.second << "intermediate subway dijkstra" << '\n';
+                }
+                else
+                {
+                    LowestCost_start_subway_destination = INT_MAX;
+                }
+                if ((*stations)[i].GetTaxi_SubwayStatus())
+                {
+                    intermediate_start_with_taxi.setArrivingTime(time + time_to_i);
+                    // intermediate_start_with_taxi.getArrivingTime().printTime();
+                    // cout  << "arriving time" << '\n';
+                    intermediate_start_with_taxi.dijkstraOnCost(i,"taxi");
+                    LowestCost_start_taxi_destination = intermediate_start_with_taxi.getCostDijkstraList()[destination];
+                    // cout << intermediate_start_with_taxi.getParents()[destination].first.second << "intermediate taxi dijkstra" << '\n';
+                }
+                else
+                {
+                    LowestCost_start_taxi_destination = INT_MAX;
+                }
+                if(LowestCost_destination < LowestCost_start_taxi_destination && 
+                LowestCost_destination < LowestCost_start_subway_destination)
+                {
+                    cost_to_destination = LowestCost_destination;
+                    j = intermediate.getIndexFromParents(i,destination);
+                    bus_status_to_destination = intermediate.getParents()[j].first.first.getBusStatus();
+                    taxi_status_to_destination = intermediate.getParents()[j].first.first.getTaxiStatus();
+                    subway_status_to_destination = intermediate.getParents()[j].first.first.getSubwayStatus();
+                    bus_line_to_destination = intermediate.getParents()[j].first.first.getBus_Line();
+                    subway_taxi_line_to_destination =intermediate.getParents()[j].first.first.getSubway_Taxi_Line();
+                    for (int j = 0; j < N; j++)
+                    {
+                        second_copy_parents[j] = intermediate.getParents()[j];
+                    }
+                    time_to_destination = intermediate.getParents()[destination].first.second;
+                    // cout << intermediate.getParents()[destination].first.second <<" j : "<<j<< " time intermediate" << '\n';
+                }
+                else if (LowestCost_start_taxi_destination < LowestCost_destination 
+                && LowestCost_start_taxi_destination < LowestCost_start_subway_destination) 
+                {
+                    cost_to_destination = LowestCost_start_taxi_destination;
+                    j = intermediate_start_with_taxi.getIndexFromParents(i,destination);
+                    bus_status_to_destination = intermediate_start_with_taxi.getParents()[j].first.first.getBusStatus();
+                    taxi_status_to_destination = intermediate_start_with_taxi.getParents()[j].first.first.getTaxiStatus();
+                    subway_status_to_destination = intermediate_start_with_taxi.getParents()[j].first.first.getSubwayStatus();
+                    bus_line_to_destination = intermediate_start_with_taxi.getParents()[j].first.first.getBus_Line();
+                    subway_taxi_line_to_destination =intermediate_start_with_taxi.getParents()[j].first.first.getSubway_Taxi_Line();
+                    for (int j = 0; j < N; j++)
+                    {
+                        second_copy_parents[j] = intermediate_start_with_taxi.getParents()[j];
+                    }
+                    time_to_destination = intermediate_start_with_taxi.getParents()[destination].first.second;
+                    // cout << intermediate_start_with_taxi.getParents()[destination].first.second << " time intermediate taxi" << '\n';
+                }
+                else if (LowestCost_start_subway_destination < LowestCost_destination
+                 && LowestCost_start_subway_destination < LowestCost_start_taxi_destination)
+                {
+                    cost_to_destination = LowestCost_start_subway_destination;
+                    j = intermediate_start_with_subway.getIndexFromParents(i,destination);
+                    bus_status_to_destination = intermediate_start_with_subway.getParents()[j].first.first.getBusStatus();
+                    taxi_status_to_destination = intermediate_start_with_subway.getParents()[j].first.first.getTaxiStatus();
+                    subway_status_to_destination = intermediate_start_with_subway.getParents()[j].first.first.getSubwayStatus();
+                    bus_line_to_destination = intermediate_start_with_subway.getParents()[j].first.first.getBus_Line();
+                    subway_taxi_line_to_destination =intermediate_start_with_subway.getParents()[j].first.first.getSubway_Taxi_Line();
+                    for (int j = 0; j < N; j++)
+                    {
+                        second_copy_parents[j] = intermediate_start_with_subway.getParents()[j];
+                    }
+                    time_to_destination = intermediate_start_with_subway.getParents()[destination].first.second;
+                    // cout << intermediate_start_with_subway.getParents()[destination].first.second << " time intermediate subway" << '\n';
+                }
+                if (LowestCost_start_bus < LowestCost_start_taxi && LowestCost_start_bus == LowestCost_start_subway)
+                {
+                    if (bus_status_to_destination)
+                    {
+                        cost_to_i = LowestCost_start_bus;
+                        bus_status_to_i = primary_start_with_bus.getParents()[i].first.first.getBusStatus();
+                        taxi_status_to_i = primary_start_with_bus.getParents()[i].first.first.getTaxiStatus();
+                        subway_status_to_i = primary_start_with_bus.getParents()[i].first.first.getSubwayStatus();
+                        bus_line_to_i = primary_start_with_bus.getParents()[i].first.first.getBus_Line();
+                        subway_taxi_line_to_i = primary_start_with_bus.getParents()[i].first.first.getSubway_Taxi_Line() ;
+                        for (int j = 0; j < N; j++)
+                        {
+                            first_copy_parents[j] = primary_start_with_bus.getParents()[j];
+                        }
+                        time_to_i = primary_start_with_bus.getParents()[i].first.second;
+                        // cout << primary_start_with_bus.getParents()[i].first.second << " time primary bus" << '\n';
+                    }
+                    if (subway_status_to_destination)
+                    {
+                        cost_to_i = LowestCost_start_subway;
+                        bus_status_to_i = primary_start_with_subway.getParents()[i].first.first.getBusStatus();
+                        taxi_status_to_i = primary_start_with_subway.getParents()[i].first.first.getTaxiStatus();
+                        subway_status_to_i = primary_start_with_subway.getParents()[i].first.first.getSubwayStatus();
+                        bus_line_to_i = primary_start_with_subway.getParents()[i].first.first.getBus_Line();
+                        subway_taxi_line_to_i = primary_start_with_subway.getParents()[i].first.first.getSubway_Taxi_Line() ;
+                        for (int j = 0; j < N; j++)
+                        {
+                            first_copy_parents[j] = primary_start_with_subway.getParents()[j];
+                        }
+                        time_to_i = primary_start_with_subway.getParents()[i].first.second;
+                        // cout << primary_start_with_subway.getParents()[i].first.second << " time primary subway" << '\n';
                     }
                 }
-                row.push_back(temp_2);
-            }
-        }
-        costMatrix.push_back(row);
-    }  
-}
-
-//-------------------------------------------------------------
-/* dijkstra implementation for the best cost path and invoks the print function */
-void City::dijkstraOnCost(int source, int destination,vector<Path>* p)
-{
-    for (int i = 0; i < N; i++)
-        dijkstraList[i] = INT_MAX;
-    
-    std::vector<bool> finalized(N,false);
-    dijkstraList[source] = 0; int min = -1;
-    parent[source].second.second = -1;
-
-    for (int i = 0; i < N-1; i++)
-    {
-        min = -1;
-        for (int j = 0; j < N; j++)
-        {
-            if (!finalized[j] and (min == -1 or dijkstraList[j] < dijkstraList[min]))
-                min = j;
-        }
-        finalized[min] = true;
-        for (int  k = 0; k < N; k++)
-        {
-            if ((costMatrix[min][k].getMinimumCost() != 0.0) and (!finalized[k]))
+                if(LowestCost_destination < LowestCost_start_taxi_destination && 
+                LowestCost_destination == LowestCost_start_subway_destination)
+                {
+                    if (bus_status_to_i)
+                    {
+                        cost_to_destination = LowestCost_destination;
+                        j = intermediate.getIndexFromParents(i,destination);
+                        bus_status_to_destination = intermediate.getParents()[j].first.first.getBusStatus();
+                        taxi_status_to_destination = intermediate.getParents()[j].first.first.getTaxiStatus();
+                        subway_status_to_destination = intermediate.getParents()[j].first.first.getSubwayStatus();
+                        bus_line_to_destination = intermediate.getParents()[j].first.first.getBus_Line();
+                        subway_taxi_line_to_destination =intermediate.getParents()[j].first.first.getSubway_Taxi_Line();
+                        for (int j = 0; j < N; j++)
+                        {
+                            second_copy_parents[j] = intermediate.getParents()[j];
+                        }
+                        time_to_destination = intermediate.getParents()[destination].first.second;
+                        // cout << intermediate.getParents()[destination].first.second << " time intermediate" << '\n';
+                    }
+                    if (subway_status_to_i)
+                    {
+                        cost_to_destination = LowestCost_start_subway_destination;
+                        j = intermediate_start_with_subway.getIndexFromParents(i,destination);
+                        bus_status_to_destination = intermediate_start_with_subway.getParents()[j].first.first.getBusStatus();
+                        taxi_status_to_destination = intermediate_start_with_subway.getParents()[j].first.first.getTaxiStatus();
+                        subway_status_to_destination = intermediate_start_with_subway.getParents()[j].first.first.getSubwayStatus();
+                        bus_line_to_destination = intermediate_start_with_subway.getParents()[j].first.first.getBus_Line();
+                        subway_taxi_line_to_destination =intermediate_start_with_subway.getParents()[j].first.first.getSubway_Taxi_Line();
+                        for (int j = 0; j < N; j++)
+                        {
+                            second_copy_parents[j] = intermediate_start_with_subway.getParents()[j];
+                        }
+                        time_to_destination = intermediate_start_with_subway.getParents()[destination].first.second ;
+                        // cout << intermediate_start_with_subway.getParents()[destination].first.second << " time intermediate subway" << '\n';
+                    }
+                    
+                    
+                }
+            
+                
+            // }
+            if (bus_status_to_i == bus_status_to_destination && 
+                bus_line_to_i == bus_line_to_destination && bus_line_to_i != "" 
+                && bus_line_to_destination != "")
             {
-                parent[k].first.setOrigin(costMatrix[min][k].getOrigin());
-                parent[k].first.setDestination(costMatrix[min][k].getDestination());
-                parent[k].first.setVehicle(costMatrix[min][k].getVehicle());
-                parent[k].first.setLine(costMatrix[min][k].getLine());
-                parent[k].second.first = findDistance(p,costMatrix[min][k].getOrigin(),costMatrix[min][k].getDestination()); 
-                parent[k].second.second = min;
-
-                if (min == source)  
+                // cout << (*stations)[i].GetName()<< " " << cost_to_i << " " << cost_to_destination << " in bus" << endl;
+                if (((cost_to_i + cost_to_destination) - bus.getCost_for_each_line()) < min_cost)
                 {
-                    if (dijkstraList[min] + costMatrix[min][k].getMinimumCost() < dijkstraList[k])
-                        dijkstraList[k] = dijkstraList[min] + costMatrix[min][k].getMinimumCost();
+                    min_cost = (cost_to_i + cost_to_destination) - bus.getCost_for_each_line();
+                    index_min_cost = i;
+                    min_time = time_to_i + time_to_destination;
+                    for (int j = 0; j < N; j++)
+                    {
+                        third_copy_parents[j] = first_copy_parents[j];
+                    }
+                    for (int j = 0; j < N; j++)
+                    {
+                        forth_copy_parents[j] = second_copy_parents[j];
+                    }
                 }
-                else if (costMatrix[parent[min].second.second][min].getLine() == costMatrix[min][k].getLine())
+                else if (((cost_to_i + cost_to_destination) - bus.getCost_for_each_line()) == min_cost && 
+                (time_to_i + time_to_destination) < min_time && (time_to_i + time_to_destination)!= 0)
                 {
-                    if (parent[min].second.second != source)
-                        dijkstraList[k] = dijkstraList[min];
-                    else
-                        dijkstraList[k] = costMatrix[parent[min].second.second][min].getMinimumCost();
+                    min_cost = (cost_to_i + cost_to_destination) - bus.getCost_for_each_line();
+                    index_min_cost = i;
+                    min_time = time_to_i + time_to_destination;
+                    for (int j = 0; j < N; j++)
+                    {
+                        third_copy_parents[j] = first_copy_parents[j];
+                    }
+                    for (int j = 0; j < N; j++)
+                    {
+                        forth_copy_parents[j] = second_copy_parents[j];
+                    }
                 }
-                else if((costMatrix[parent[min].second.second][min].getLine() != costMatrix[min][k].getLine()))
+            }
+            else if (subway_status_to_i == subway_status_to_destination && 
+            subway_taxi_line_to_i == subway_taxi_line_to_destination
+            && subway_taxi_line_to_i != "" && subway_taxi_line_to_destination != ""
+            )
+            {
+                // cout << subway_taxi_line_to_i << subway_taxi_line_to_destination << " ";
+                // cout<< (*stations)[i].GetName()<< " " << cost_to_i << " " << cost_to_destination << " in subway"<< endl;
+                if (((cost_to_i + cost_to_destination) - subway.getCost_for_each_line()) < min_cost)
                 {
-                    if (dijkstraList[min] + costMatrix[min][k].getMinimumCost() < dijkstraList[k])
-                        dijkstraList[k] = dijkstraList[min] + costMatrix[min][k].getMinimumCost();
+                    min_cost = (cost_to_i + cost_to_destination )- subway.getCost_for_each_line();
+                    index_min_cost = i;       
+                    min_time = time_to_i + time_to_destination;       
+                    for (int j = 0; j < N; j++)
+                    {
+                        third_copy_parents[j] = first_copy_parents[j];
+                    }
+                    for (int j = 0; j < N; j++)
+                    {
+                        forth_copy_parents[j] = second_copy_parents[j];
+                    }
                 }
-            }       
-        }
-    }
-}
-
-//-------------------------------------------------------------
-/* prints only the path from source to destination */
-void City::printPath(int source,int destination)
-{
-    if (destination == source)
-        return;
-
-    printPath(source,parent[destination].second.second);
-    path.push_back(parent[destination]);
-    cout << parent[destination].first.getDestination() << " (";
-    cout << parent[destination].first.getVehicle() <<  ", Line";
-    cout << parent[destination].first.getLine() << ")\n";
-}
-
-//-------------------------------------------------------------
-/* prints some basics and printPath and calculateTime functions */
-void City::print(int source, int destination, vector<Station>*S)
-{
-    cout << endl << endl << endl;
-    cout << (*S)[source].GetName() << " -> " << parent[destination].first.getDestination() << "    ";
-    cout << "Low-Cost : " << dijkstraList[destination] << endl;
-    //printPath(source,destination); 
-    cout << endl;
-    calculateTime();
-    
-}
-
-//-------------------------------------------------------------
-/* finds the distance between to stations in vector path */
-int City::findDistance(vector<Path>* p, string origin, string destination)
-{
-    int distance = 0;
-    for (int i = 0; i < (*p).size(); i++)
-    {
-        if (((*p)[i].getFirstST() == origin and (*p)[i].getSecondST() == destination) or ((*p)[i].getFirstST() == destination and (*p)[i].getSecondST() == origin))
-        {
-            if ((*p)[i].getBusDistance() < (*p)[i].getTrainTaxiDistance())
-                distance  = (*p)[i].getBusDistance();
+                else if (((cost_to_i + cost_to_destination) - subway.getCost_for_each_line()) == min_cost&& 
+                (time_to_i + time_to_destination) < min_time&&(time_to_i + time_to_destination)!=0)
+                {
+                    min_cost = (cost_to_i + cost_to_destination )- subway.getCost_for_each_line();
+                    index_min_cost = i;       
+                    min_time = time_to_i + time_to_destination;       
+                    for (int j = 0; j < N; j++)
+                    {
+                        third_copy_parents[j] = first_copy_parents[j];
+                    }
+                    for (int j = 0; j < N; j++)
+                    {
+                        forth_copy_parents[j] = second_copy_parents[j];
+                    }
+                }
+                
+            }
             else
-                distance = (*p)[i].getTrainTaxiDistance();
-        }
-    }
-    return distance;
-}
-
-//-------------------------------------------------------------
-/* calculates the arriving time when user reach destination */
-void City::calculateTime()
-{
-    int i = 0;
-    int size = path.size()-1;
-    for (i = 0; i < size; i++)
-    {
-        if (stoi(arriving_time.getHour()) >= 6 and stoi(arriving_time.getHour()) <=8)
-        {
-            if (path[i].first.getLine() == path[i+1].first.getLine())
-            {   
-                if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "metro")
-                    arriving_time = arriving_time + (path[i].second.first);
-
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first*8);
-
-                else if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first) + 30;
-
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "metro")
-                    arriving_time = arriving_time + (path[i].second.first*8) + 24;
+            {
+                // cout << (*stations)[i].GetName()<< " "<< cost_to_i << " " << cost_to_destination<< " in else" << endl;
+                if ((cost_to_i + cost_to_destination) < min_cost)
+                {
+                    min_cost = cost_to_i + cost_to_destination;
+                    index_min_cost = i;
+                    min_time = time_to_i + time_to_destination;
+                    for (int j = 0; j < N; j++)
+                    {
+                        third_copy_parents[j] = first_copy_parents[j];
+                    }
+                    for (int j = 0; j < N; j++)
+                    {
+                        forth_copy_parents[j] = second_copy_parents[j];
+                    }           
+                }
+                else if ((cost_to_i + cost_to_destination) == min_cost&& (time_to_i + time_to_destination) < min_time
+                &&(time_to_i + time_to_destination)!=0)
+                {
+                    min_cost = cost_to_i + cost_to_destination;
+                    index_min_cost = i;
+                    min_time = time_to_i + time_to_destination;
+                    for (int j = 0; j < N; j++)
+                    {
+                        third_copy_parents[j] = first_copy_parents[j];
+                    }
+                    for (int j = 0; j < N; j++)
+                    {
+                        forth_copy_parents[j] = second_copy_parents[j];
+                    }      
+                }
+                
+                // else if ((cost_to_i + cost_to_destination) == min_cost && i == origin)
+                // {
+                //     min_cost = cost_to_i + cost_to_destination;
+                //     index_min_cost = i;
+                //     for (int j = 0; j < N; j++)
+                //     {
+                //         third_copy_parents[j] = first_copy_parents[j];
+                //     }
+                //     for (int j = 0; j < N; j++)
+                //     {
+                //         forth_copy_parents[j] = second_copy_parents[j];
+                //     }
+                // }    
             }
-            else if(path[i].first.getLine() != path[i+1].first.getLine())
-            {
-                if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "metro")  
-                    arriving_time = arriving_time + (path[i].second.first) + 24;
-                
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first*8) + 30;
-                
-                else if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first) + 30;
-                
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "metro")
-                    arriving_time = arriving_time + (path[i].second.first*8) + 24;
-            }   
+        // cout << "time " << time_to_i << " "<< time_to_destination << '\n';
         }
-        else
-        {
-            if (path[i].first.getLine() == path[i+1].first.getLine())
-            {
-                if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "metro")
-                    arriving_time = arriving_time + (path[i].second.first);
-
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first*4);
-
-                else if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first) + 15;
-
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "metro")
-                    arriving_time = arriving_time + (path[i].second.first*4) + 8;
-            }
-            else if(path[i].first.getLine() != path[i+1].first.getLine())
-            {
-                if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "metro")  
-                    arriving_time = arriving_time + (path[i].second.first) + 8;
-                
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first*4) + 15;
-                
-                else if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first) + 15;
-                
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "metro")
-                    arriving_time = arriving_time + (path[i].second.first*4) + 8;
-            } 
-        }
+        // std::cout <<min_time <<" "<< min_cost << " " << index_min_cost << '\n'; 
+        
     }
-    if (stoi(arriving_time.getHour()) >= 6 and stoi(arriving_time.getHour()) <=8)
-    {
-        if (path[i].first.getVehicle() == "metro") 
-            arriving_time = arriving_time + (path[i].second.first); 
-        else
-            arriving_time = arriving_time + (path[i].second.first*8);                 
-    }
-    else
-    {
-        if (path[i].first.getVehicle() == "metro") 
-            arriving_time = arriving_time + (path[i].second.first); 
-        else
-            arriving_time = arriving_time + (path[i].second.first*4); 
-    }
+    // cout << (*stations)[index_min_cost].GetName() <<"  " <<min_cost << " time : " << min_time<<'\n' ;
+    cout << "\n" << (*stations)[origin].GetName() << " -> ";
+    cout << (*stations)[destination].GetName() << "   Lowest-Cost : "  
+    << min_cost << '\n'<< '\n';
+    LowestCost temp;
+    temp.print_cost(index_min_cost,stations,third_copy_parents);
+    temp.print_cost(destination,stations,forth_copy_parents);
+    cout << '\n';
     cout << "Arriving Time : ";
-    arriving_time.printTime();
+    (time + min_time).printTime();
+    // primary_start_with_bus.print_cost(index_min_cost,stations,third_copy_parents);
+    // primary_start_with_bus.print_cost(destination,stations,forth_copy_parents);
 }
 
 void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stations,std::vector<Path>* path,Time t)
@@ -644,44 +900,302 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
     start_with_bus.FillAdjMatrix(stations,path);
     start_with_taxi.FillAdjMatrix(stations,path);
     start_with_subway.FillAdjMatrix(stations,path);
-    int bestTime_start_bus = 0 ;
-    int bestTime_start_taxi = 0 ;
-    int bestTime_start_subway = 0 ;
+    
+    
+    Besttime intermediate_start_with_taxi;
+    Besttime intermediate_start_with_subway;
+    Besttime intermediate_start_with_bus;
+    intermediate_start_with_bus.FillAdjMatrix(stations,path);
+    intermediate_start_with_taxi.setArrivingTime(t);
+    intermediate_start_with_subway.setArrivingTime(t);
+    intermediate_start_with_taxi.FillAdjMatrix(stations,path);
+    intermediate_start_with_subway.FillAdjMatrix(stations,path);
+    
     if ((*stations)[source].GetBusStatus())
     {
-        start_with_bus.Dijkstra(source,"bus");
-        bestTime_start_bus = start_with_bus.getDijkstraList()[destination];
-    }
-    else
-    {
-        bestTime_start_bus = INT_MAX;
+        start_with_bus.Dijkstra(source);
     }
     if((*stations)[source].GetTaxi_SubwayStatus())
     {
         start_with_taxi.Dijkstra(source,"taxi");
-        start_with_subway.Dijkstra(source,"subway");
-        bestTime_start_taxi = start_with_taxi.getDijkstraList()[destination];
-        bestTime_start_subway = start_with_subway.getDijkstraList()[destination];
-        
+        start_with_subway.Dijkstra(source,"subway");        
     }
-    else
+    // intermediate_start_with_subway.Dijkstra(source,"bus");
+    // cout << "1 finish " << '\n';
+    // intermediate_start_with_subway.Dijkstra(source);
+    // cout << intermediate_start_with_subway.getDijkstraList()[destination];
+    // intermediate_start_with_subway.printDijkstra(stations);
+    // intermediate_start_with_subway.PrintPath(stations,source,destination);
+    // cout << "  2 finish " << '\n'<< '\n'<< '\n'<< '\n'<< '\n';
+    // intermediate_start_with_taxi.Dijkstra(2,"bus");
+    // cout << "3 finish " << '\n'<< '\n'<< '\n'<< '\n'<< '\n';
+    // intermediate_start_with_taxi.Dijkstra(3,"bus");
+    // cout << "4 finish " << '\n';
+    // intermediate_start_with_subway.Dijkstra(6,"bus");
+    // cout << "5 finish " << '\n';
+    // intermediate_start_with_subway.Dijkstra(7,"bus");
+    // cout << "6 finish " << '\n';
+    // intermediate_start_with_subway.Dijkstra(8,"bus");
+    // cout << "7 finish " << '\n';
+    // cout << start_with_bus.getDijkstraList()[destination] << '\n';
+    // cout << start_with_taxi.getDijkstraList()[destination] << '\n';
+    // cout << start_with_subway.getDijkstraList()[destination] << '\n';
+    pair<pair<TimedPath,int>,pair<bool,int>> first_copy_parents[N];
+    pair<pair<TimedPath,int>,pair<bool,int>> second_copy_parents[N];
+    pair<pair<TimedPath,int>,pair<bool,int>> third_copy_parents[N];
+    pair<pair<TimedPath,int>,pair<bool,int>> forth_copy_parents[N];
+    int min_time = INT_MAX;
+    int index_min_time = -1;
+    for (int i = 0; i < N; i++)
     {
-        bestTime_start_taxi = INT_MAX;
-        bestTime_start_subway = INT_MAX;
-    }
-    if(bestTime_start_bus < bestTime_start_taxi && bestTime_start_bus < bestTime_start_subway)
-    {
-        start_with_bus.PrintPath(stations,source,destination);
-    }
-    if (bestTime_start_taxi < bestTime_start_bus && bestTime_start_taxi < bestTime_start_subway) 
-    {
-        start_with_taxi.PrintPath(stations,source,destination);
+        int bestTime_start_bus = 0 ;
+        int bestTime_start_taxi = 0 ;
+        int bestTime_start_subway = 0 ;
+        int time_to_i = 0 ;
 
+        bool bus_status_to_i;
+        bool taxi_status_to_i;
+        bool subway_status_to_i ;
+        std::string bus_line_to_i ;
+        std::string subway_taxi_line_to_i ;
+        
+        int intermediate_bestTime_start_bus = 0 ;
+        int intermediate_bestTime_start_taxi = 0 ;
+        int intermediate_bestTime_start_subway = 0 ;
+        int time_to_destination = 0 ;
+
+        bool bus_status_to_destination;
+        bool taxi_status_to_destination;
+        bool subway_status_to_destination ;
+        std::string bus_line_to_destination ;
+        std::string subway_taxi_line_to_destination ;
+        if (i != destination)
+        {
+            if ((*stations)[source].GetBusStatus())
+            {
+                bestTime_start_bus = start_with_bus.getDijkstraList()[i];
+            }
+            else
+            {
+                bestTime_start_bus = INT_MAX;
+            }
+            if((*stations)[source].GetTaxi_SubwayStatus())
+            {
+                bestTime_start_taxi = start_with_taxi.getDijkstraList()[i];
+                bestTime_start_subway = start_with_subway.getDijkstraList()[i];
+                
+            }
+            else
+            {
+                bestTime_start_taxi = INT_MAX;
+                bestTime_start_subway = INT_MAX;
+            }
+            if(bestTime_start_bus <= bestTime_start_taxi && bestTime_start_bus <= bestTime_start_subway)
+            {
+                time_to_i = bestTime_start_bus;
+                bus_status_to_i = start_with_bus.getParents()[i].first.first.getBusStatus();
+                taxi_status_to_i = start_with_bus.getParents()[i].first.first.getTaxiStatus();
+                subway_status_to_i = start_with_bus.getParents()[i].first.first.getSubwayStatus();
+                bus_line_to_i = start_with_bus.getParents()[i].first.first.getBus_Line();
+                subway_taxi_line_to_i = start_with_bus.getParents()[i].first.first.getSubway_Taxi_Line();
+                for (int j = 0; j < N; j++)
+                {
+                    first_copy_parents[j] = start_with_bus.getParents()[j];
+                }
+            }
+            if (bestTime_start_taxi <= bestTime_start_bus && bestTime_start_taxi <= bestTime_start_subway) 
+            {
+                time_to_i = bestTime_start_taxi;
+                bus_status_to_i = start_with_taxi.getParents()[i].first.first.getBusStatus();
+                taxi_status_to_i = start_with_taxi.getParents()[i].first.first.getTaxiStatus();
+                subway_status_to_i = start_with_taxi.getParents()[i].first.first.getSubwayStatus();
+                bus_line_to_i = start_with_taxi.getParents()[i].first.first.getBus_Line();
+                subway_taxi_line_to_i = start_with_taxi.getParents()[i].first.first.getSubway_Taxi_Line();
+                for (int j = 0; j < N; j++)
+                {
+                    first_copy_parents[j] = start_with_taxi.getParents()[j];
+                }
+            }
+            if (bestTime_start_subway <= bestTime_start_bus && bestTime_start_subway <= bestTime_start_taxi)
+            {
+                time_to_i = bestTime_start_subway;
+                bus_status_to_i = start_with_subway.getParents()[i].first.first.getBusStatus();
+                taxi_status_to_i = start_with_subway.getParents()[i].first.first.getTaxiStatus();
+                subway_status_to_i = start_with_subway.getParents()[i].first.first.getSubwayStatus();
+                bus_line_to_i = start_with_subway.getParents()[i].first.first.getBus_Line();
+                subway_taxi_line_to_i = start_with_subway.getParents()[i].first.first.getSubway_Taxi_Line();
+                for (int j = 0; j < N; j++)
+                {
+                    first_copy_parents[j] = start_with_subway.getParents()[j];
+                }
+            }
+            // cout << "Best " << bestTime_start_bus << " " <<bestTime_start_taxi << " " << bestTime_start_subway<<'\n';
+            int j;
+
+            if ((*stations)[i].GetBusStatus())
+            {
+                // intermediate_start_with_bus.setArrivingTime(t);
+                if (bestTime_start_bus < bestTime_start_taxi && bestTime_start_bus == bestTime_start_subway)
+                {
+                    intermediate_start_with_bus.setArrivingTime(t + bestTime_start_bus);
+
+                }
+                else if (bestTime_start_taxi < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
+                {
+                    intermediate_start_with_bus.setArrivingTime(t + bestTime_start_bus);
+
+                }
+                else if (bestTime_start_subway < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
+                {
+                    intermediate_start_with_bus.setArrivingTime(t + bestTime_start_subway);
+                }
+                else
+                {
+                    intermediate_start_with_bus.setArrivingTime(t + time_to_i);
+                }
+                // intermediate_start_with_bus.setArrivingTime(t + time_to_i);
+                intermediate_start_with_bus.Dijkstra(i);
+                intermediate_bestTime_start_bus = intermediate_start_with_bus.getDijkstraList()[destination];
+            }
+            else
+            {
+                intermediate_bestTime_start_bus = INT_MAX;
+            }
+            if((*stations)[i].GetTaxi_SubwayStatus())
+            {
+                if (bestTime_start_bus < bestTime_start_taxi && bestTime_start_bus == bestTime_start_subway)
+                {
+                    intermediate_start_with_taxi.setArrivingTime(t + bestTime_start_bus);
+
+                }
+                else if (bestTime_start_taxi < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
+                {
+                    intermediate_start_with_taxi.setArrivingTime(t + bestTime_start_bus);
+
+                }
+                else if (bestTime_start_subway < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
+                {
+                    intermediate_start_with_taxi.setArrivingTime(t + bestTime_start_subway);
+                }
+                else
+                {
+                    intermediate_start_with_taxi.setArrivingTime(t + time_to_i);
+                }
+                // intermediate_start_with_taxi.setArrivingTime(t+time_to_i);
+                intermediate_start_with_taxi.Dijkstra(i,"taxi");
+                intermediate_bestTime_start_taxi = intermediate_start_with_taxi.getDijkstraList()[destination];
+    
+            }
+            else
+            {
+                intermediate_bestTime_start_taxi = INT_MAX;
+                
+            }
+            if ((*stations)[i].GetTaxi_SubwayStatus())
+            {
+                if (bestTime_start_bus < bestTime_start_taxi && bestTime_start_bus == bestTime_start_subway)
+                {
+                    intermediate_start_with_subway.setArrivingTime(t + bestTime_start_bus);
+
+                }
+                else if (bestTime_start_taxi < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
+                {
+                    intermediate_start_with_subway.setArrivingTime(t + bestTime_start_bus);
+
+                }
+                else if (bestTime_start_subway < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
+                {
+                    intermediate_start_with_subway.setArrivingTime(t + bestTime_start_subway);
+                }
+                else
+                {
+                    intermediate_start_with_subway.setArrivingTime(t + time_to_i);
+                }
+                // intermediate_start_with_subway.setArrivingTime(t+time_to_i);
+                intermediate_start_with_subway.Dijkstra(i,"subway");
+                intermediate_bestTime_start_subway = intermediate_start_with_subway.getDijkstraList()[destination];
+                // cout << intermediate_bestTime_start_subway;
+            }
+            else
+            {
+                intermediate_bestTime_start_subway = INT_MAX;
+            }
+            
+            if(intermediate_bestTime_start_bus <= intermediate_bestTime_start_taxi
+            && intermediate_bestTime_start_bus <= intermediate_bestTime_start_subway)
+            {
+                time_to_destination = intermediate_bestTime_start_bus;
+                j = intermediate_start_with_bus.getIndexFromParents(i,destination);
+                bus_status_to_destination = intermediate_start_with_bus.getParents()[j].first.first.getBusStatus();
+                taxi_status_to_destination = intermediate_start_with_bus.getParents()[j].first.first.getTaxiStatus();
+                subway_status_to_destination = intermediate_start_with_bus.getParents()[j].first.first.getSubwayStatus();
+                bus_line_to_destination = intermediate_start_with_bus.getParents()[j].first.first.getBus_Line();
+                subway_taxi_line_to_destination = intermediate_start_with_bus.getParents()[j].first.first.getSubway_Taxi_Line();
+                for (int j = 0; j < N; j++)
+                {
+                    second_copy_parents[j] = intermediate_start_with_bus.getParents()[j];
+                }
+            }
+            if (intermediate_bestTime_start_taxi <= intermediate_bestTime_start_bus
+            && intermediate_bestTime_start_taxi <= intermediate_bestTime_start_subway) 
+            {
+                time_to_destination = intermediate_bestTime_start_taxi;
+                j = intermediate_start_with_taxi.getIndexFromParents(i,destination);
+                bus_status_to_destination = intermediate_start_with_taxi.getParents()[j].first.first.getBusStatus();
+                taxi_status_to_destination = intermediate_start_with_taxi.getParents()[j].first.first.getTaxiStatus();
+                subway_status_to_destination = intermediate_start_with_taxi.getParents()[j].first.first.getSubwayStatus();
+                bus_line_to_destination = intermediate_start_with_taxi.getParents()[j].first.first.getBus_Line();
+                subway_taxi_line_to_destination = intermediate_start_with_taxi.getParents()[j].first.first.getSubway_Taxi_Line();
+                for (int j = 0; j < N; j++)
+                {
+                    second_copy_parents[j] = intermediate_start_with_taxi.getParents()[j];
+                }
+            }
+            if (intermediate_bestTime_start_subway <= intermediate_bestTime_start_bus
+            && intermediate_bestTime_start_subway <= intermediate_bestTime_start_taxi)
+            {
+                time_to_destination = intermediate_bestTime_start_subway;
+                j = intermediate_start_with_subway.getIndexFromParents(i,destination);
+                bus_status_to_destination = intermediate_start_with_subway.getParents()[j].first.first.getBusStatus();
+                taxi_status_to_destination = intermediate_start_with_subway.getParents()[j].first.first.getTaxiStatus();
+                subway_status_to_destination = intermediate_start_with_subway.getParents()[j].first.first.getSubwayStatus();
+                bus_line_to_destination = intermediate_start_with_subway.getParents()[j].first.first.getBus_Line();
+                subway_taxi_line_to_destination = intermediate_start_with_subway.getParents()[j].first.first.getSubway_Taxi_Line();
+                for (int j = 0; j < N; j++)
+                {
+                    second_copy_parents[j] = intermediate_start_with_subway.getParents()[j];
+                }
+            }
+            // cout << (*stations)[i].GetName() << " "<< min_time << " " << time_to_i << " " << time_to_destination << '\n';
+            if ((time_to_i + time_to_destination) < min_time && (time_to_i + time_to_destination) != 0)
+            {
+                min_time = (time_to_i + time_to_destination);
+                index_min_time = i;
+                for (int j = 0; j < N; j++)
+                {
+                    third_copy_parents[j] = first_copy_parents[j];
+                }
+                for (int j = 0; j < N; j++)
+                {
+                    forth_copy_parents[j] = second_copy_parents[j];
+                }
+                
+            }
+        // cout << (*stations)[i].GetName()<< " " 
+        // << time_to_i << " " << time_to_destination << '\n';
+        
+        // <<"     "<<intermediate_bestTime_start_taxi<< endl;
+        }
     }
-    if (bestTime_start_subway < bestTime_start_bus && bestTime_start_subway < bestTime_start_taxi)
-    {
-        start_with_subway.PrintPath(stations,source,destination);
-    }
+    cout << "\n" << (*stations)[source].GetName() << " -> ";
+    cout << (*stations)[destination].GetName() << "   Best-Time : "  
+    << min_time<<" minutes" << '\n'<< '\n';
+    Besttime bt;
+    bt.Print(stations,index_min_time,third_copy_parents);
+    bt.Print(stations,destination,forth_copy_parents);
+    std::cout << '\n';
+    cout << "Arriving Time : ";
+    (t+min_time).printTime();
     
     
 }

@@ -16,20 +16,24 @@ using namespace std;
 class Besttime
 {
 public:
+    Besttime();
+    ~Besttime();
+    void Dijkstra(int source);
     void FillAdjMatrix(std::vector <Station>*,std::vector<Path>*);
     void PrintAdjMatrix(std::vector <Station>*);
     void Dijkstra(int,string);
     void printDijkstra(std::vector <Station>*);
-    void Print(std::vector<Station>* ,int,int);
+    void Print(std::vector<Station>* ,int,pair<pair<TimedPath,int>,pair<bool,int>>*);
     void PrintPath(std::vector<Station> *, int, int);
     int* getDijkstraList ();
     void setArrivingTime(Time);
     Time getArrivingTime();
     pair<pair<TimedPath,int>,pair<bool,int>> * getParents();
+    int getIndexFromParents(int,int);
 private:
     std::vector<std::vector<TimedPath>> adjMatrix;
     int dijkstraList[N];
-    pair<pair<TimedPath,int>,pair<bool,int>> parents[N];
+    pair<pair<TimedPath,int>,pair<bool,int>>* parents;
     Time arriving_time;
 };
 

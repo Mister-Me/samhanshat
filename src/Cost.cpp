@@ -1,122 +1,99 @@
-#include <iostream>
-#include <fstream>
-
 #include "../include/Cost.hpp"
-#include "../include/Station.hpp"
 
-/* =========================================================================== Sets ===========================================================================*/
-/* sets the origin of user's path */
-void Cost::setOrigin(std::string origin)
-{
-    this->origin = origin;
+void Cost::setFirstST(std::string firstst)
+{   
+    firstST = firstst;
 }
-
-//-----------------------------------------------------
-/* sets the destination of user's path */
-void Cost::setDestination(std::string destination)
+void Cost::setSecondST(std::string secondst)
 {
-    this->destination = destination;
+    secondST = secondst;
 }
-
-//-----------------------------------------------------
-/* sets the vehicle used between two stations */
-void Cost::setVehicle(std::string vehicle)
+std::string Cost::getFirstST()
 {
-    this->vehicle = vehicle;
+    return firstST;
 }
-
-//-----------------------------------------------------
-/* sets the line between a single origin and destination */
-void Cost::setLine(unsigned int line)
+std::string Cost::getSecondST()
 {
-    this->line = line;
-}                                                                                
-
-//-----------------------------------------------------
-/* sets the minimum cost between two stations */
-void Cost::setMinimumCost(double cost)
-{
-    this->minimumCost = cost;
+    return secondST;
 }
-
-/* =========================================================================== Gets ===========================================================================*/
-/* returns the origin of user's path */
-std::string Cost::getOrigin() const
+void Cost::setSubway_Taxi_Line(std::string line)
 {
-    return (this->origin);
+    subway_taxi_line = line;
 }
-
-//-----------------------------------------------------
-/* returns the destination of user's path */
-std::string Cost::getDestination() const
+void Cost::setBus_Line(std::string line)
 {
-    return (this->destination);
+    bus_line = line;
 }
-
-//-----------------------------------------------------
-/* returns the vehicle used between two stations */
-std::string Cost::getVehicle() const
+std::string Cost::getSubway_Taxi_Line()
 {
-    return (this->vehicle);
+    return subway_taxi_line;
 }
-
-//-----------------------------------------------------
-/* returns the line between a single origin and destination */
-unsigned int Cost::getLine() const
+std::string Cost::getBus_Line()
 {
-    return (this->line);
+    return bus_line;
+}
+void Cost::setSubwayCost(unsigned int cost)
+{
+    subway_cost = cost;
+}
+void Cost::setTaxiCost(unsigned int cost)
+{
+    taxi_cost = cost;
+}               
+void Cost::setBusCost(unsigned int cost)
+{
+    bus_cost = cost;
+}
+unsigned int Cost::getSubwayCost()
+{
+    return subway_cost;
+}
+unsigned int Cost::getTaxiCost()
+{
+    return taxi_cost;
+}          
+unsigned int Cost::getBusCost()
+{
+    return bus_cost;
 } 
-
-//-----------------------------------------------------
-/* returns the minimum cost between two stations */
-double Cost::getMinimumCost() const
+void Cost::setBusStatus(bool status)
 {
-    return (this->minimumCost);
-}
-
-
-/* =========================================================================== General ===========================================================================*/
-/* seprates the words from a line of cost file and fill the cost vector */
-void Cost::wordSeparator(std::string line, char delimeter, std::vector<Cost> *cost)
+    bus_status = status;
+} 
+void Cost::setTaxiStatus(bool status)
 {
-    std::vector<std::string> seprate; 
-    std::string word = ""; Cost temp;
-
-    for (int i = 0; i < line.length(); i++)
-    {
-        if (line[i] != delimeter)
-            word += line[i];
-        else 
-            seprate.push_back(word), word = "";
-    }
-
-    temp.setOrigin(seprate[0]);
-    temp.setDestination(seprate[1]);
-    temp.setMinimumCost(stod(seprate[2]));
-    temp.setLine(stoi(seprate[3]));
-    temp.setVehicle(seprate[4]);
-
-    cost->push_back(temp);
+    taxi_status = status;
 }
-
-//-----------------------------------------------------
-/* reads a line from file and calls wordSeparator function */
-void Cost::readFromFile(std::vector<Cost> *cost, std::string filename)
+void Cost::setSubwayStatus(bool status)
 {
-    try
-    {
-        std::ifstream myfile(filename);
-        std::string line = "";
-
-        if (!myfile.is_open() and filename == "cost.txt") {
-            throw ("Could not open Cost.txt file");
-        } 
-        while (getline(myfile, line)) {
-            wordSeparator(line,'_',cost);
-        }
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
+    subway_status = status;
 }
+bool Cost::getBusStatus()
+{
+    return bus_status;
+} 
+bool Cost::getTaxiStatus()
+{
+    return taxi_status;
+}
+bool Cost::getSubwayStatus()
+{
+    return subway_status;
+}
+void Cost::setTrainTaxiDistance(unsigned int distance) 
+{
+    this->trainTaxiDistance = distance;
+}     
+
+void Cost::setBusDistance(unsigned int distance) 
+{
+    this->busDistance = distance;
+}  
+unsigned int Cost::getTrainTaxiDistance() const 
+{
+    return (this->trainTaxiDistance);
+} 
+unsigned int Cost::getBusDistance() const 
+{
+    return (this->busDistance);
+}  
