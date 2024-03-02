@@ -2,6 +2,7 @@
 #define CITY_HPP
 #define N 59 
 #define taxi_cost_coefficient_traffic 1.5
+#define taxi_cost_coefficient_traffic 1.5
 #include <string>
 #include <vector>
 #include <limits.h>

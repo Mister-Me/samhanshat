@@ -8,18 +8,19 @@ void Cost::setSecondST(std::string secondst)
 {
     secondST = secondst;
 }
-std::string Cost::getFirstST()
-{
-    return firstST;
-}
 std::string Cost::getSecondST()
 {
     return secondST;
+}
+std::string Cost::getFirstST()
+{
+    return firstST;
 }
 void Cost::setSubway_Taxi_Line(std::string line)
 {
     subway_taxi_line = line;
 }
+
 void Cost::setBus_Line(std::string line)
 {
     bus_line = line;
@@ -28,6 +29,7 @@ std::string Cost::getSubway_Taxi_Line()
 {
     return subway_taxi_line;
 }
+
 std::string Cost::getBus_Line()
 {
     return bus_line;
@@ -43,15 +45,16 @@ void Cost::setTaxiCost(unsigned int cost)
 void Cost::setBusCost(unsigned int cost)
 {
     bus_cost = cost;
-}
+}               
 unsigned int Cost::getSubwayCost()
 {
     return subway_cost;
 }
+
 unsigned int Cost::getTaxiCost()
 {
     return taxi_cost;
-}          
+}                  
 unsigned int Cost::getBusCost()
 {
     return bus_cost;
@@ -96,4 +99,4 @@ unsigned int Cost::getTrainTaxiDistance() const
 unsigned int Cost::getBusDistance() const 
 {
     return (this->busDistance);
-}  
+}
