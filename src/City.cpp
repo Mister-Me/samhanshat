@@ -171,11 +171,6 @@ void City::Dijkstra(int source)
             int subway_taxiDistance = adjMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance();
             busDistance = busDistance != 0 ? busDistance : INT_MAX;
             subway_taxiDistance = subway_taxiDistance != 0 ? subway_taxiDistance : INT_MAX;
-            if (nearestVertex == source)
-            {
-                cout << "bus distance " << busDistance << endl;
-            }
-            
             if(busDistance != INT_MAX && busDistance < subway_taxiDistance)
             {
                     
@@ -407,231 +402,663 @@ int City::GetShortestDistance(int destination)
 
 /*========================================================================== Cost ==========================================================================*/
 /* filling adjacency matrix for calculating the best cost path */
-void City::fillCostMatrix(std::vector <Station>* station, std::vector<Cost>* cost)
+void City::fillCostMatrix(std::vector <Station>* stations, std::vector<Path>* path)
 { 
-    for (int i = 0; i < (station->size()); i++)
+    for (int i = 0; i < stations->size(); i++)
     {
-        std::vector<Cost> row;
-        for (int j = 0; j < (station->size()); j++)
+        std::vector <Cost> row;
+        for (int j = 0; j < stations->size(); j++)
         {
-            Cost temp_1;
-            if (i == j)
+            Cost tempPath;
+            if(i == j)
             {
-                temp_1.setOrigin((*station)[i].GetName());
-                temp_1.setDestination((*station)[i].GetName());
-                temp_1.setLine(0);
-                temp_1.setVehicle("non");
-                temp_1.setMinimumCost(0.0);
-                row.push_back(temp_1);
+                tempPath.setFirstST((*stations)[i].GetName());
+                tempPath.setSecondST((*stations)[i].GetName());
+                tempPath.setBusCost(0);
+                tempPath.setSubwayCost(0);
+                tempPath.setTaxiCost(0);
+                tempPath.setBusDistance(0);
+                tempPath.setTrainTaxiDistance(0);
+                row.push_back(tempPath);
+                
             }
             else
             {
-                Cost temp_2;
-                for (int k = 0; k < (cost->size()); k++)
+                Cost temp;
+                Bus bus;
+                Taxi taxi;
+                Subway subway;
+                //searching in path vector for matching the station's name
+                for (int k = 0; k < path->size(); k++)
                 {
-                    if(((*cost)[k].getOrigin() == (*station)[i].GetName() && (*cost)[k].getDestination() == (*station)[j].GetName())
-                    ||((*cost)[k].getOrigin() == (*station)[j].GetName() && (*cost)[k].getDestination() == (*station)[i].GetName()))
+                    if(((*path)[k].getFirstST()==(*stations)[i].GetName() && (*path)[k].getSecondST()==(*stations)[j].GetName())
+                    ||((*path)[k].getFirstST()==(*stations)[j].GetName() && (*path)[k].getSecondST()==(*stations)[i].GetName()))
                     {
-                        temp_2.setOrigin((*station)[i].GetName());
-                        temp_2.setDestination((*station)[j].GetName());
-                        temp_2.setLine((*cost)[k].getLine());
-                        temp_2.setVehicle((*cost)[k].getVehicle());
-                        temp_2.setMinimumCost((*cost)[k].getMinimumCost());
+                        temp.setFirstST((*stations)[i].GetName());
+                        temp.setSecondST((*stations)[j].GetName());
+                        if((*path)[k].getBusDistance() > 0)
+                        {
+                            temp.setBusCost(bus.getCost_for_each_line());
+                        }
+                        else
+                        {
+                            temp.setBusCost(0);
+                        }
+                        if((*path)[k].getTrainTaxiDistance() > 0)
+                        {
+                            temp.setTaxiCost(((*path)[k].getTrainTaxiDistance())*taxi.getCost_for_each_line());
+                            temp.setSubwayCost(subway.getCost_for_each_line());
+                        }
+                        else
+                        {
+                            temp.setTaxiCost(0);
+                            temp.setSubwayCost(0);
+                        }
+                        if((*path)[k].getBusDistance() >= 0 ||(*path)[k].getTrainTaxiDistance() >= 0)
+                        {
+                            temp.setBusDistance((*path)[k].getBusDistance());
+                            temp.setTrainTaxiDistance((*path)[k].getTrainTaxiDistance());
+                        }
+                        else
+                        {
+                            temp.setBusDistance(0);
+                            temp.setTrainTaxiDistance(0);
+                        }
+                        temp.setSubway_Taxi_Line((*path)[k].getSubway_Taxi_Line());
+                        temp.setBus_Line((*path)[k].getBus_Line());
                     }
                 }
-                row.push_back(temp_2);
-            }
+                row.push_back(temp);
+            }    
         }
         costMatrix.push_back(row);
-    }  
+    }
 }
 
+void City::printCostMatrix(std::vector <Station>* stations)
+{
+    for (int i = 0; i < adjMatrix.size(); i++)
+    {
+        std::cout << (*stations)[i].GetName() <<'\n';
+        for (int j = 0; j < adjMatrix.size(); j++)
+        {
+            cout <<"firstST : "<<costMatrix[i][j].getFirstST() << "  secondST : " << costMatrix[i][j].getSecondST()
+             << "   " << costMatrix[i][j].getSubwayCost() << " , "<<costMatrix[i][j].getTaxiCost()<<" , "<<
+             costMatrix[i][j].getBusCost()<<"     "<<costMatrix[i][j].getSubway_Taxi_Line() 
+             <<" , " << costMatrix[i][j].getBus_Line()<<'\n';
+        }
+        std::cout << '\n';
+    }
+}
 //-------------------------------------------------------------
 /* dijkstra implementation for the best cost path and invoks the print function */
-void City::dijkstraOnCost(int source, int destination,vector<Path>* p)
+void City::dijkstraOnCost(int source)
+{
+    /*added[i] will true if vertex i is included in shortest path tree or shortest distance from src to
+    i is finalized*/
+    std::vector<bool> added(N);
+    Time time_during_dijkstra = arriving_time;
+    // Initialize all distances as
+    // INFINITE and added[] as false
+    for (int vertexIndex = 0; vertexIndex < N;
+         vertexIndex++) {
+        costDijkstraList[vertexIndex] = INT_MAX;
+        added[vertexIndex] = false;
+    }
+ 
+    // Distance of source vertex from
+    // itself is always 0
+    Bus bus;
+    Taxi taxi;
+    Subway subway;
+
+    costDijkstraList[source] = 0;
+ 
+    // The starting vertex does not
+    // have a parent
+    parents[source].second.second = -1;
+    parents[source].first.second = 0;
+    // Find shortest path for all
+    // vertices
+    for (int i = 1; i < N; i++) {
+        /*Pick the minimum distance vertex from the set of vertices not yet processed.
+        nearestVertex is always equal to startNode in first iteration.*/
+        int nearestVertex = -1;
+        int lowestCost = INT_MAX;
+        for (int vertexIndex = 0; vertexIndex < N;
+             vertexIndex++) {
+            if (!added[vertexIndex] && costDijkstraList[vertexIndex] <lowestCost) 
+            {
+                nearestVertex = vertexIndex;
+                lowestCost = costDijkstraList[vertexIndex];
+            }
+        }
+        /* Mark the picked vertex as processed*/
+        added[nearestVertex] = true;
+ 
+        /* Update dist value of the adjacent vertices of the picked vertex.*/ 
+        for (int vertexIndex = 0; vertexIndex < N; vertexIndex++) 
+        {
+            int weight=0;
+            bool flag = false; // check existing path
+            bool by_bus = false;
+            bool by_subway = false;
+            bool by_taxi = false;
+            bool traffic_time = false;
+            int minute_passed = 0;
+            std::string line="";
+            int busCost = costMatrix[nearestVertex][vertexIndex].getBusCost();
+            int taxiCost = costMatrix[nearestVertex][vertexIndex].getTaxiCost();
+            int subwayCost = costMatrix[nearestVertex][vertexIndex].getSubwayCost();
+
+            if(nearestVertex == source)
+            {
+                if(busCost != 0)
+                {
+                    if (stoi(time_during_dijkstra.getHour()) >= 6 && stoi(time_during_dijkstra.getHour())<=8)
+                    {
+                        busCost = bus.getCost_for_each_line_Traffic();
+                    }
+                }
+
+                if(subwayCost != 0)
+                {
+                    if (stoi(time_during_dijkstra.getHour()) >= 6 && stoi(time_during_dijkstra.getHour())<=8)
+                    {
+                        subwayCost = subway.getCost_for_each_line_Traffic();
+                    }
+                }
+                if(taxiCost != 0)
+                {
+                    
+                    if (stoi(time_during_dijkstra.getHour()) >= 18 && stoi(time_during_dijkstra.getHour())<=20)
+                    {
+                        taxiCost = taxiCost * taxi_cost_coefficient_traffic;
+                    }
+                }
+                busCost = busCost != 0 ? busCost : INT_MAX;
+                taxiCost = taxiCost != 0 ? taxiCost : INT_MAX;
+                subwayCost = subwayCost != 0 ? subwayCost : INT_MAX;
+                if (busCost != INT_MAX && busCost < taxiCost && busCost < subwayCost)
+                {
+                    if (stoi(time_during_dijkstra.getHour()) >= 6 && stoi(time_during_dijkstra.getHour())<=8)
+                    {
+                        minute_passed += bus.getMinute_gettingOn_gettingOff_Traffic();
+                        minute_passed += (costMatrix[nearestVertex][vertexIndex].getBusDistance() * bus.getMinute_per_km_Traffic());
+                        traffic_time = true;
+                    }
+                    else
+                    {
+                        minute_passed += bus.getMinute_gettingOn_gettingOff();
+                        if (stoi((time_during_dijkstra+ bus.getMinute_gettingOn_gettingOff()).getHour() ) >= 6 && stoi((time_during_dijkstra+ bus.getMinute_gettingOn_gettingOff()).getHour())<=8)
+                        {
+                            minute_passed += (costMatrix[nearestVertex][vertexIndex].getBusDistance() * bus.getMinute_per_km_Traffic());
+                            traffic_time = true;
+                        }
+                        else
+                        {
+                            minute_passed += (costMatrix[nearestVertex][vertexIndex].getBusDistance() * bus.getMinute_per_km());
+                            traffic_time  = false;
+                        }
+
+                    }
+                    weight = busCost;
+                    flag= true;
+                    by_bus = true;
+                    by_taxi = false;
+                    by_subway = false;
+                    line = costMatrix[nearestVertex][vertexIndex].getBus_Line();
+                }
+                if (taxiCost != INT_MAX && taxiCost < busCost && taxiCost < subwayCost)
+                {
+                    if (stoi(time_during_dijkstra.getHour()) >= 18 && stoi(time_during_dijkstra.getHour())<=20)
+                    {
+                        minute_passed += taxi.getMinute_gettingOn_gettingOff_Traffic();
+                        minute_passed += (costMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() * taxi.getMinute_per_km_Traffic());
+                        traffic_time = true;
+                    }
+                    else
+                    {
+                        minute_passed += taxi.getMinute_gettingOn_gettingOff();
+                        if (stoi((time_during_dijkstra+ taxi.getMinute_gettingOn_gettingOff()).getHour() ) >= 18 && stoi((time_during_dijkstra+ taxi.getMinute_gettingOn_gettingOff()).getHour())<=20)
+                        {
+                            minute_passed += (costMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() * taxi.getMinute_per_km_Traffic());
+                            traffic_time = true;
+                        }
+                        else
+                        {
+                            minute_passed += (costMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() * taxi.getMinute_per_km());
+                            traffic_time  = false;
+                        }
+
+                    }
+                    weight = taxiCost;
+                    flag= true;
+                    by_bus = false;
+                    by_taxi = true;
+                    by_subway = false;
+                    line = costMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line();
+                }
+                if (subwayCost != INT_MAX && subwayCost < taxiCost && subwayCost < busCost)
+                {
+                    if (stoi(time_during_dijkstra.getHour()) >= 6 && stoi(time_during_dijkstra.getHour())<=8)
+                    {
+                        minute_passed += subway.getMinute_gettingOn_gettingOff_Traffic();
+                        minute_passed += (costMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() * subway.getMinute_per_km_Traffic());
+                        traffic_time = true;
+                    }
+                    else
+                    {
+                        minute_passed += subway.getMinute_gettingOn_gettingOff();
+                        if (stoi((time_during_dijkstra+ subway.getMinute_gettingOn_gettingOff()).getHour() ) >= 6 && stoi((time_during_dijkstra+ subway.getMinute_gettingOn_gettingOff()).getHour())<=8)
+                        {
+                            minute_passed += (costMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() * subway.getMinute_per_km_Traffic());
+                            traffic_time = true;
+                        }
+                        else
+                        {
+                            minute_passed += (costMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance() * subway.getMinute_per_km());
+                            traffic_time  = false;
+                        }
+
+                    }
+                    weight = subwayCost;
+                    flag= true;
+                    by_bus = false;
+                    by_taxi = false;
+                    by_subway = true;
+                    line = costMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line();
+                }
+                
+                
+            }
+            else
+            {
+                //time_during_dijkstra  arriving_time + shortestTime;
+                busCost = busCost != 0 ? busCost : INT_MAX;
+                taxiCost = taxiCost != 0 ? taxiCost : INT_MAX;
+                subwayCost = subwayCost != 0 ? subwayCost : INT_MAX;
+                if(busCost != INT_MAX)
+                {
+                    
+                    if(parents[nearestVertex].first.first.getBusStatus()
+                    && costMatrix[nearestVertex][vertexIndex].getBus_Line() == parents[nearestVertex].first.first.getBus_Line())
+                    {
+                        if(parents[nearestVertex].second.first == true)
+                        {
+                            busCost = 0;
+                            traffic_time = true;
+                        }
+                        else
+                        {
+                            traffic_time = false;
+                            busCost = 0;
+                        }
+                    }
+                    else if (costMatrix[nearestVertex][vertexIndex].getBus_Line() != parents[nearestVertex].first.first.getBus_Line())
+                    {
+                        if (stoi((time_during_dijkstra + parents[nearestVertex].first.second).getHour()) >= 6 && stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour())<=8)
+                        {
+                            busCost = bus.getCost_for_each_line_Traffic();
+                            //busTime  busTime + bus.getMinute_gettingOn_gettingOff_Traffic();
+                            traffic_time = true;
+                        }
+                        else
+                        {
+                            if (stoi((time_during_dijkstra + bus.getMinute_gettingOn_gettingOff() + parents[nearestVertex].first.second).getHour()) >= 6 
+                            && stoi((time_during_dijkstra+bus.getMinute_gettingOn_gettingOff()+ parents[nearestVertex].first.second).getHour())<=8)
+                            {
+                                busCost = bus.getCost_for_each_line_Traffic();
+                                //busTime  busTime + bus.getMinute_gettingOn_gettingOff();
+                                traffic_time  = true;
+                            }
+                            else
+                            {
+                                busCost = bus.getCost_for_each_line();
+                                traffic_time  = false;
+                            }
+                        }                        
+                        
+                    }
+                }
+                if (subwayCost!= INT_MAX)
+                {
+                    if(parents[nearestVertex].first.first.getSubwayStatus()
+                    && costMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line() == parents[nearestVertex].first.first.getSubway_Taxi_Line())
+                    {
+                        if(parents[nearestVertex].second.first == true)
+                        {
+                            subwayCost = 0;
+                            traffic_time = true;
+                        }
+                        else
+                        {
+                            traffic_time = false;
+                            subwayCost = 0;
+                        }
+                    }
+                    else if(parents[nearestVertex].first.first.getTaxiStatus()
+                    && costMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line() == parents[nearestVertex].first.first.getSubway_Taxi_Line())
+                    {
+                        if (stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour()) >= 6 && stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour())<=8)
+                        {
+                            subwayCost = subway.getCost_for_each_line_Traffic();
+                            traffic_time = true;
+                        }
+                        else
+                        {
+                            if (stoi((time_during_dijkstra + subway.getMinute_gettingOn_gettingOff()+ parents[nearestVertex].first.second).getHour()) >= 6 
+                            && stoi((time_during_dijkstra+subway.getMinute_gettingOn_gettingOff()+ parents[nearestVertex].first.second).getHour())<=8)
+                            {
+                                subwayCost = subway.getCost_for_each_line_Traffic();
+                                traffic_time  = true;
+                            }
+                            else
+                            {
+                                subwayCost = subway.getCost_for_each_line();
+                                traffic_time  = false;
+                            }
+                        }                        
+                    }
+                    else if (costMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line() != parents[nearestVertex].first.first.getSubway_Taxi_Line())
+                    {
+                        if (stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour()) >= 6 && stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour())<=8)
+                        {
+                            subwayCost = subway.getCost_for_each_line_Traffic();
+                            traffic_time = true;
+                        }
+                        else
+                        {
+                            if (stoi((time_during_dijkstra + subway.getMinute_gettingOn_gettingOff()+ parents[nearestVertex].first.second).getHour()) >= 6 
+                            && stoi((time_during_dijkstra+subway.getMinute_gettingOn_gettingOff()+ parents[nearestVertex].first.second).getHour())<=8)
+                            {
+                                subwayCost = subway.getCost_for_each_line_Traffic();
+                                traffic_time  = true;
+                            }
+                            else
+                            {
+                                subwayCost = subway.getCost_for_each_line();
+                                traffic_time  = false;
+                            }
+                        }                        
+                        
+                    }
+                }
+                if(taxiCost != INT_MAX)
+                {
+                    
+                    if(parents[nearestVertex].first.first.getTaxiStatus()
+                    && costMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line() == parents[nearestVertex].first.first.getSubway_Taxi_Line())
+                    {
+                        if(parents[nearestVertex].second.first == true)
+                        {
+                            taxiCost = taxiCost * taxi_cost_coefficient_traffic;
+                            traffic_time = true;
+                        }
+                        else
+                        {
+                            traffic_time = false;
+                            taxiCost = taxiCost;
+                        }
+                    }
+                    else if(parents[nearestVertex].first.first.getSubwayStatus()
+                    && costMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line() == parents[nearestVertex].first.first.getSubway_Taxi_Line())
+                    {
+                        if (stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour()) >= 18 && stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour())<=20)
+                        {
+                            taxiCost = taxiCost * taxi_cost_coefficient_traffic;
+                            //taxiCost = taxiTime + taxi.getMinute_gettingOn_gettingOff_Traffic();
+                            traffic_time = true;
+                        }
+                        else
+                        {
+                            if (stoi((time_during_dijkstra + taxi.getMinute_gettingOn_gettingOff()+ parents[nearestVertex].first.second).getHour()) >= 18 
+                            && stoi((time_during_dijkstra+taxi.getMinute_gettingOn_gettingOff()+ parents[nearestVertex].first.second).getHour())<=20)
+                            {
+                                taxiCost = taxiCost * taxi_cost_coefficient_traffic;
+                                //taxiTime = taxiTime + taxi.getMinute_gettingOn_gettingOff();
+                                traffic_time  = true;
+                            }
+                            else
+                            {
+                                taxiCost = taxiCost;
+                                traffic_time  = false;
+                            }
+                        }  
+                    }
+                    else if (costMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line() != 
+                    parents[nearestVertex].first.first.getSubway_Taxi_Line())
+                    {
+                        if (stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour()) >= 18 && stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour())<=20)
+                        {
+                            taxiCost = taxiCost * taxi_cost_coefficient_traffic;
+                            //taxiTime = taxiTime + taxi.getMinute_gettingOn_gettingOff_Traffic();
+                            traffic_time = true;
+                        }
+                        else
+                        {
+                            if (stoi((time_during_dijkstra + taxi.getMinute_gettingOn_gettingOff()+ parents[nearestVertex].first.second).getHour()) >= 18 
+                            && stoi((time_during_dijkstra+taxi.getMinute_gettingOn_gettingOff()+ parents[nearestVertex].first.second).getHour())<=20)
+                            {
+                                taxiCost = taxiCost * taxi_cost_coefficient_traffic;
+                                //taxiTime = taxiTime + taxi.getMinute_gettingOn_gettingOff();
+                                traffic_time  = true;
+                            }
+                            else
+                            {
+                                //taxiCost = taxiTime + taxi.getMinute_gettingOn_gettingOff();
+                                traffic_time  = false;
+                            }
+                        }                        
+                        
+                    }
+                }
+                if(busCost != INT_MAX && busCost < taxiCost && busCost < subwayCost)
+                {                    
+                    weight = busCost;
+                    flag= true;
+                    by_bus = true;
+                    by_taxi = false;
+                    by_subway = false;
+                    line = costMatrix[nearestVertex][vertexIndex].getBus_Line();
+                }
+                else if (taxiCost!= INT_MAX && taxiCost < busCost && taxiCost < subwayCost)// equal conditions must be checked
+                {
+                    weight = taxiCost;
+                    flag = true;
+                    by_bus = false;
+                    by_taxi = true;
+                    by_subway = false;
+                    line = costMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line();
+                }
+                else if (subwayCost != INT_MAX && subwayCost < busCost && subwayCost < taxiCost)
+                {
+                    
+                    weight = subwayCost;
+                    flag = true;
+                    by_bus = false;
+                    by_taxi = false;
+                    by_subway = true;
+                    line = costMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line();
+                }
+                // else if (busTime != INT_MAX && busTime == taxiTime && busTime < subwayTime)
+                // {
+                //     weight = busTime;
+                //     flag= true;
+                //     by_bus = true;
+                //     by_taxi = false;
+                //     by_subway = false;
+                //     line = adjMatrix[nearestVertex][vertexIndex].getBus_Line();
+                // }
+                // else if (busTime != INT_MAX && busTime < taxiTime && busTime == subwayTime)
+                // {
+                //     weight = busTime;
+                //     flag= true;
+                //     by_bus = true;
+                //     by_taxi = false;
+                //     by_subway = false;
+                //     line = adjMatrix[nearestVertex][vertexIndex].getBus_Line();
+                // }
+                // else if (taxiTime != INT_MAX && taxiTime < busTime && taxiTime == subwayTime)
+                // {
+                //     weight = taxiTime;
+                //     flag = true;
+                //     by_bus = false;
+                //     by_taxi = true;
+                //     by_subway = false;
+                //     line = adjMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line();
+                // }
+                // else if (subwayTime != INT_MAX && subwayTime == busTime && subwayTime == taxiTime)
+                // {
+                //     weight = subwayTime;
+                //     flag = true;
+                //     by_bus = false;
+                //     by_taxi = false;
+                //     by_subway = true;
+                //     line = adjMatrix[nearestVertex][vertexIndex].getSubway_Taxi_Line();
+                // }
+                
+
+            }
+            if (!added[vertexIndex]&& costDijkstraList[nearestVertex] != INT_MAX && flag
+             && ((lowestCost + weight) < costDijkstraList[vertexIndex])) 
+            {
+               // parents[vertexIndex].first.second = weight;
+                parents[vertexIndex].second.first = traffic_time;
+                parents[vertexIndex].second.second = nearestVertex;
+                parents[vertexIndex].first.first.setBusStatus(by_bus);
+                parents[vertexIndex].first.first.setTaxiStatus(by_taxi);
+                parents[vertexIndex].first.first.setSubwayStatus(by_subway);
+                if(by_bus)
+                {
+                    if (stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour()) >= 6 && stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour())<=8)
+                    {
+                        minute_passed += (costMatrix[nearestVertex][vertexIndex].getBusDistance()*bus.getMinute_per_km_Traffic());
+                        minute_passed+= bus.getMinute_gettingOn_gettingOff_Traffic();
+                    }
+                    else
+                    {
+                        minute_passed += bus.getMinute_gettingOn_gettingOff();
+                        if (stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour()) >= 6 && stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour())<=8)
+                        {
+                           minute_passed+= (costMatrix[nearestVertex][vertexIndex].getBusDistance()*bus.getMinute_per_km_Traffic());
+                        }
+                        else
+                        {
+                            minute_passed+= (costMatrix[nearestVertex][vertexIndex].getBusDistance()*bus.getMinute_per_km());
+                        }
+                    }
+                    parents[vertexIndex].first.first.setBus_Line(line);
+                    parents[vertexIndex].first.first.setSubway_Taxi_Line("");
+                    parents[vertexIndex].first.second = minute_passed+ parents[nearestVertex].first.second;
+                }
+                else if (by_taxi || by_subway)
+                {
+                    parents[vertexIndex].first.first.setBus_Line("");
+                    parents[vertexIndex].first.first.setSubway_Taxi_Line(line);
+                }
+                if (by_taxi)
+                {
+                    if (stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour()) >= 18 && stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour())<=20)
+                    {
+                        minute_passed += (costMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance()*taxi.getMinute_per_km_Traffic());
+                        minute_passed += taxi.getMinute_gettingOn_gettingOff_Traffic();
+                    }
+                    else
+                    {
+                        minute_passed += taxi.getMinute_gettingOn_gettingOff();
+                        if (stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour()) >= 18 && stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour())<=20)
+                        {
+                            minute_passed  += (costMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance()*taxi.getMinute_per_km_Traffic());
+                        }
+                        else
+                        {
+                            minute_passed += (costMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance()*taxi.getMinute_per_km());
+                        }
+                    }
+                    parents[vertexIndex].first.second = minute_passed + parents[nearestVertex].first.second;
+                }
+                if (by_subway)
+                {
+                    if (stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour()) >= 6 && stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour())<= 8)
+                    {
+                        minute_passed += (costMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance()*subway.getMinute_per_km_Traffic());
+                        minute_passed += subway.getMinute_gettingOn_gettingOff_Traffic();
+                    }
+                    else
+                    {
+                        minute_passed += subway.getMinute_gettingOn_gettingOff();
+                        if (stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour()) >= 6 && stoi((time_during_dijkstra+ parents[nearestVertex].first.second).getHour())<=8)
+                        {
+                            minute_passed += (costMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance()*subway.getMinute_per_km_Traffic());
+                        }
+                        else
+                        {
+                            minute_passed += (costMatrix[nearestVertex][vertexIndex].getTrainTaxiDistance()*subway.getMinute_per_km());
+                        }
+                    }
+                    parents[vertexIndex].first.second = minute_passed + parents[nearestVertex].first.second;
+                }
+                
+                costDijkstraList[vertexIndex] = lowestCost + weight;
+            }
+        }
+    }
+}
+
+void City::printDijkstraOnCost(std::vector <Station>* stations)
 {
     for (int i = 0; i < N; i++)
-        dijkstraList[i] = INT_MAX;
-    
-    std::vector<bool> finalized(N,false);
-    dijkstraList[source] = 0; int min = -1;
-    parent[source].second.second = -1;
-
-    for (int i = 0; i < N-1; i++)
     {
-        min = -1;
-        for (int j = 0; j < N; j++)
-        {
-            if (!finalized[j] and (min == -1 or dijkstraList[j] < dijkstraList[min]))
-                min = j;
-        }
-        finalized[min] = true;
-        for (int  k = 0; k < N; k++)
-        {
-            if ((costMatrix[min][k].getMinimumCost() != 0.0) and (!finalized[k]))
-            {
-                parent[k].first.setOrigin(costMatrix[min][k].getOrigin());
-                parent[k].first.setDestination(costMatrix[min][k].getDestination());
-                parent[k].first.setVehicle(costMatrix[min][k].getVehicle());
-                parent[k].first.setLine(costMatrix[min][k].getLine());
-                parent[k].second.first = findDistance(p,costMatrix[min][k].getOrigin(),costMatrix[min][k].getDestination()); 
-                parent[k].second.second = min;
-
-                if (min == source)  
-                {
-                    if (dijkstraList[min] + costMatrix[min][k].getMinimumCost() < dijkstraList[k])
-                        dijkstraList[k] = dijkstraList[min] + costMatrix[min][k].getMinimumCost();
-                }
-                else if (costMatrix[parent[min].second.second][min].getLine() == costMatrix[min][k].getLine())
-                {
-                    if (parent[min].second.second != source)
-                        dijkstraList[k] = dijkstraList[min];
-                    else
-                        dijkstraList[k] = costMatrix[parent[min].second.second][min].getMinimumCost();
-                }
-                else if((costMatrix[parent[min].second.second][min].getLine() != costMatrix[min][k].getLine()))
-                {
-                    if (dijkstraList[min] + costMatrix[min][k].getMinimumCost() < dijkstraList[k])
-                        dijkstraList[k] = dijkstraList[min] + costMatrix[min][k].getMinimumCost();
-                }
-            }       
-        }
+        cout << (*stations)[i].GetName() <<"    " << costDijkstraList[i]<<'\n';
     }
+    
 }
 
-//-------------------------------------------------------------
-/* prints only the path from source to destination */
-void City::printPath(int source,int destination)
+void City::print_cost(int currentVertex,int destination, vector<Station>* S)
 {
-    if (destination == source)
+    Bus bus;
+    Subway subway;
+    Taxi taxi;
+    if (currentVertex == -1) {
         return;
-
-    printPath(source,parent[destination].second.second);
-    path.push_back(parent[destination]);
-    cout << parent[destination].first.getDestination() << " (";
-    cout << parent[destination].first.getVehicle() <<  ", Line";
-    cout << parent[destination].first.getLine() << ")\n";
-}
-
-//-------------------------------------------------------------
-/* prints some basics and printPath and calculateTime functions */
-void City::print(int source, int destination, vector<Station>*S)
-{
-    cout << endl << endl << endl;
-    cout << (*S)[source].GetName() << " -> " << parent[destination].first.getDestination() << "    ";
-    cout << "Low-Cost : " << dijkstraList[destination] << endl;
-    //printPath(source,destination); 
-    cout << endl;
-    calculateTime();
-    
-}
-
-//-------------------------------------------------------------
-/* finds the distance between to stations in vector path */
-int City::findDistance(vector<Path>* p, string origin, string destination)
-{
-    int distance = 0;
-    for (int i = 0; i < (*p).size(); i++)
+    }
+    print_cost(parents[currentVertex].second.second,destination,S);
+    if(parents[currentVertex].first.first.getBusStatus())
     {
-        if (((*p)[i].getFirstST() == origin and (*p)[i].getSecondST() == destination) or ((*p)[i].getFirstST() == destination and (*p)[i].getSecondST() == origin))
-        {
-            if ((*p)[i].getBusDistance() < (*p)[i].getTrainTaxiDistance())
-                distance  = (*p)[i].getBusDistance();
-            else
-                distance = (*p)[i].getTrainTaxiDistance();
+        cout<<(*S)[currentVertex].GetName() << " ( "
+        <<parents[currentVertex].first.first.getBus_Line()<<" , Bus ) " << '\n';
+    }
+    else if(parents[currentVertex].first.first.getSubwayStatus())
+    {
+        cout<<(*S)[currentVertex].GetName() << " ( "
+        <<parents[currentVertex].first.first.getSubway_Taxi_Line()<<" , Subway ) "<<'\n';
+    }
+    else if(parents[currentVertex].first.first.getTaxiStatus())
+    {
+        cout<<(*S)[currentVertex].GetName() << " ( "
+        <<parents[currentVertex].first.first.getSubway_Taxi_Line()<<" , Taxi ) "<<'\n';
+    }
+}
+
+void City::print_path_cost(std::vector<Station> * S,int origin,int destination)
+{
+
+    for (int vertexIndex = 0; vertexIndex < N; vertexIndex++) 
+    {
+        if (vertexIndex != origin && vertexIndex == destination) {
+            cout << "\n" << (*S)[origin].GetName() << " -> ";
+            cout << (*S)[vertexIndex].GetName() << "   Shortest-Distance : "  
+            << costDijkstraList[vertexIndex] << '\n'<< '\n';
+            print_cost(vertexIndex,destination,S);
+            std::cout << '\n';
+            // cout << "Arriving Time : ";
+            //arriving_time.printTime();
         }
     }
-    return distance;
+
 }
 
-//-------------------------------------------------------------
-/* calculates the arriving time when user reach destination */
-void City::calculateTime()
-{
-    int i = 0;
-    int size = path.size()-1;
-    for (i = 0; i < size; i++)
-    {
-        if (stoi(arriving_time.getHour()) >= 6 and stoi(arriving_time.getHour()) <=8)
-        {
-            if (path[i].first.getLine() == path[i+1].first.getLine())
-            {   
-                if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "metro")
-                    arriving_time = arriving_time + (path[i].second.first);
-
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first*8);
-
-                else if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first) + 30;
-
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "metro")
-                    arriving_time = arriving_time + (path[i].second.first*8) + 24;
-            }
-            else if(path[i].first.getLine() != path[i+1].first.getLine())
-            {
-                if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "metro")  
-                    arriving_time = arriving_time + (path[i].second.first) + 24;
-                
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first*8) + 30;
-                
-                else if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first) + 30;
-                
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "metro")
-                    arriving_time = arriving_time + (path[i].second.first*8) + 24;
-            }   
-        }
-        else
-        {
-            if (path[i].first.getLine() == path[i+1].first.getLine())
-            {
-                if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "metro")
-                    arriving_time = arriving_time + (path[i].second.first);
-
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first*4);
-
-                else if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first) + 15;
-
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "metro")
-                    arriving_time = arriving_time + (path[i].second.first*4) + 8;
-            }
-            else if(path[i].first.getLine() != path[i+1].first.getLine())
-            {
-                if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "metro")  
-                    arriving_time = arriving_time + (path[i].second.first) + 8;
-                
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first*4) + 15;
-                
-                else if (path[i].first.getVehicle() == "metro" and  path[i+1].first.getVehicle() == "bus")
-                    arriving_time = arriving_time + (path[i].second.first) + 15;
-                
-                else if (path[i].first.getVehicle() == "bus" and  path[i+1].first.getVehicle() == "metro")
-                    arriving_time = arriving_time + (path[i].second.first*4) + 8;
-            } 
-        }
-    }
-    if (stoi(arriving_time.getHour()) >= 6 and stoi(arriving_time.getHour()) <=8)
-    {
-        if (path[i].first.getVehicle() == "metro") 
-            arriving_time = arriving_time + (path[i].second.first); 
-        else
-            arriving_time = arriving_time + (path[i].second.first*8);                 
-    }
-    else
-    {
-        if (path[i].first.getVehicle() == "metro") 
-            arriving_time = arriving_time + (path[i].second.first); 
-        else
-            arriving_time = arriving_time + (path[i].second.first*4); 
-    }
-    cout << "Arriving Time : ";
-    arriving_time.printTime();
-}
 
 void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stations,std::vector<Path>* path,Time t)
 {

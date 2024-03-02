@@ -3,38 +3,48 @@
 
 #include <iostream>
 #include <vector>
-#include "Station.hpp"
+#include <string>
 
 class Cost
 {
 public:
-/* ====================================================================== Sets ======================================================================*/
-
-    void setOrigin(std::string);                                                                                    /* sets the origin of user's path */
-    void setDestination(std::string);                                                                               /* sets the destination of user's path */
-    void setVehicle(std::string);                                                                                   /* sets the vehicle used between two stations */
-    void setLine(unsigned int);                                                                                     /* sets the line between a single origin and destination */
-    void setMinimumCost(double);                                                                                    /* sets the minimum cost between two stations */
-
-/* ====================================================================== Gets ======================================================================*/
-
-    std::string getOrigin() const;                                                                                  /* returns the origin of user's path */
-    std::string getDestination() const;                                                                             /* returns the destination of user's path */
-    std::string getVehicle() const;                                                                                 /* returns the vehicle used between two stations */
-    unsigned int getLine() const;                                                                                   /* returns the line between a single origin and destination */
-    double getMinimumCost() const;                                                                                  /* returns the minimum cost between two stations */
-
-/* ===================================================================== General ====================================================================*/
-
-    void readFromFile(std::vector<Cost> *, std::string);                                                            /* reads a line from file and calls wordSeparator function */
-    void wordSeparator(std::string, char, std::vector<Cost> *);                                                     /* seprates the words from a line of cost file and fill the cost vector */
-
+    void setFirstST(std::string firstst);
+    void setSecondST(std::string secondst);
+    std::string getFirstST();
+    std::string getSecondST();
+    void setSubway_Taxi_Line(std::string);
+    void setBus_Line(std::string);
+    std::string getSubway_Taxi_Line();
+    std::string getBus_Line();
+    void setSubwayCost(unsigned int);
+    void setTaxiCost(unsigned int);               
+    void setBusCost(unsigned int);
+    unsigned int getSubwayCost();
+    unsigned int getTaxiCost();               
+    unsigned int getBusCost();
+    void setBusStatus(bool); 
+    void setTaxiStatus(bool);  
+    void setSubwayStatus(bool);
+    bool getBusStatus();  
+    bool getTaxiStatus();  
+    bool getSubwayStatus(); 
+    void setTrainTaxiDistance(unsigned int);   
+    void setBusDistance(unsigned int);            
+    unsigned int getTrainTaxiDistance() const;       
+    unsigned int getBusDistance() const; 
 private:
-    std::string origin = "";                                                                                        /* the origin of user's path */
-    std::string destination = "";                                                                                   /* the destination of user's path */                                                                 
-    std::string vehicle = "";                                                                                       /* the vehicle used between two stations */
-    unsigned int line = 0;                                                                                          /* the line between a single origin and destination */
-    double minimumCost = 0.0;                                                                                       /* the minimum cost between two stations  */
+    std::string firstST="";
+    std::string secondST="";
+    std::string subway_taxi_line="";
+    std::string bus_line="";
+    unsigned int subway_cost = 0;
+    unsigned int taxi_cost = 0;
+    unsigned int bus_cost = 0;
+    bool taxi_status = false; //for detecting which vehicle is used               
+    bool subway_status = false;                
+    bool bus_status = false;   
+    unsigned int trainTaxiDistance=0;
+    unsigned int busDistance=0;             
 };
 
 #endif
