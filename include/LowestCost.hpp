@@ -28,10 +28,8 @@ public:
     void setArrivingTime(Time);
     Time getArrivingTime();
     int getIndexFromParents(int,int);
-    void printPath(int,int);/* prints only the path from source to destination */
     void print_cost(int,vector<Station>*,pair<pair<Cost,int>,pair<int,int>>*); /* prints some basics and printPath and calculateTime functions */
-    void print_path_cost(std::vector<Station> *, int, int);
-    int findDistance(vector<Path>*,string,string);  
+    void print_path_cost(std::vector<Station> *, int, int); 
 private:
 
     Time arriving_time;

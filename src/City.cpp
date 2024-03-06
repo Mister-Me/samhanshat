@@ -755,35 +755,72 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                 && bus_line_to_destination != "")
             {
                 // cout << (*stations)[i].GetName()<< " " << cost_to_i << " " << cost_to_destination << " in bus" << endl;
-                if (((cost_to_i + cost_to_destination) - bus.getCost_for_each_line()) < min_cost)
+                if (cost_to_i != 0 && i != origin)
                 {
-                    min_cost = (cost_to_i + cost_to_destination) - bus.getCost_for_each_line();
-                    index_min_cost = i;
-                    min_time = time_to_i + time_to_destination;
-                    for (int j = 0; j < N; j++)
+                    if (((cost_to_i + cost_to_destination) - bus.getCost_for_each_line()) < min_cost)
                     {
-                        third_copy_parents[j] = first_copy_parents[j];
+                        min_cost = (cost_to_i + cost_to_destination) - bus.getCost_for_each_line();
+                        index_min_cost = i;
+                        min_time = time_to_i + time_to_destination;
+                        for (int j = 0; j < N; j++)
+                        {
+                            third_copy_parents[j] = first_copy_parents[j];
+                        }
+                        for (int j = 0; j < N; j++)
+                        {
+                            forth_copy_parents[j] = second_copy_parents[j];
+                        }
                     }
-                    for (int j = 0; j < N; j++)
+                    else if (((cost_to_i + cost_to_destination) - bus.getCost_for_each_line()) == min_cost && 
+                    (time_to_i + time_to_destination) < min_time && (time_to_i + time_to_destination)!= 0)
                     {
-                        forth_copy_parents[j] = second_copy_parents[j];
+                        min_cost = (cost_to_i + cost_to_destination) - bus.getCost_for_each_line();
+                        index_min_cost = i;
+                        min_time = time_to_i + time_to_destination;
+                        for (int j = 0; j < N; j++)
+                        {
+                            third_copy_parents[j] = first_copy_parents[j];
+                        }
+                        for (int j = 0; j < N; j++)
+                        {
+                            forth_copy_parents[j] = second_copy_parents[j];
+                        }
                     }
                 }
-                else if (((cost_to_i + cost_to_destination) - bus.getCost_for_each_line()) == min_cost && 
-                (time_to_i + time_to_destination) < min_time && (time_to_i + time_to_destination)!= 0)
+                else if(i == origin)
                 {
-                    min_cost = (cost_to_i + cost_to_destination) - bus.getCost_for_each_line();
-                    index_min_cost = i;
-                    min_time = time_to_i + time_to_destination;
-                    for (int j = 0; j < N; j++)
+                    if (((cost_to_i + cost_to_destination) - bus.getCost_for_each_line()) < min_cost)
                     {
-                        third_copy_parents[j] = first_copy_parents[j];
+                        min_cost = (cost_to_i + cost_to_destination) - bus.getCost_for_each_line();
+                        index_min_cost = i;
+                        min_time = time_to_i + time_to_destination;
+                        for (int j = 0; j < N; j++)
+                        {
+                            third_copy_parents[j] = first_copy_parents[j];
+                        }
+                        for (int j = 0; j < N; j++)
+                        {
+                            forth_copy_parents[j] = second_copy_parents[j];
+                        }
                     }
-                    for (int j = 0; j < N; j++)
+                    else if (((cost_to_i + cost_to_destination) - bus.getCost_for_each_line()) == min_cost && 
+                    (time_to_i + time_to_destination) < min_time && (time_to_i + time_to_destination)!= 0)
                     {
-                        forth_copy_parents[j] = second_copy_parents[j];
+                        min_cost = (cost_to_i + cost_to_destination) - bus.getCost_for_each_line();
+                        index_min_cost = i;
+                        min_time = time_to_i + time_to_destination;
+                        for (int j = 0; j < N; j++)
+                        {
+                            third_copy_parents[j] = first_copy_parents[j];
+                        }
+                        for (int j = 0; j < N; j++)
+                        {
+                            forth_copy_parents[j] = second_copy_parents[j];
+                        }
                     }
+
                 }
+                
             }
             else if (subway_status_to_i == subway_status_to_destination && 
             subway_taxi_line_to_i == subway_taxi_line_to_destination
@@ -792,68 +829,142 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
             {
                 // cout << subway_taxi_line_to_i << subway_taxi_line_to_destination << " ";
                 // cout<< (*stations)[i].GetName()<< " " << cost_to_i << " " << cost_to_destination << " in subway"<< endl;
-                if (((cost_to_i + cost_to_destination) - subway.getCost_for_each_line()) < min_cost)
+                if (cost_to_i != 0 && i!= origin)
                 {
-                    min_cost = (cost_to_i + cost_to_destination )- subway.getCost_for_each_line();
-                    index_min_cost = i;       
-                    min_time = time_to_i + time_to_destination;       
-                    for (int j = 0; j < N; j++)
+                    if (((cost_to_i + cost_to_destination) - subway.getCost_for_each_line()) < min_cost)
                     {
-                        third_copy_parents[j] = first_copy_parents[j];
+                        min_cost = (cost_to_i + cost_to_destination )- subway.getCost_for_each_line();
+                        index_min_cost = i;       
+                        min_time = time_to_i + time_to_destination;       
+                        for (int j = 0; j < N; j++)
+                        {
+                            third_copy_parents[j] = first_copy_parents[j];
+                        }
+                        for (int j = 0; j < N; j++)
+                        {
+                            forth_copy_parents[j] = second_copy_parents[j];
+                        }
                     }
-                    for (int j = 0; j < N; j++)
+                    else if (((cost_to_i + cost_to_destination) - subway.getCost_for_each_line()) == min_cost&& 
+                    (time_to_i + time_to_destination) < min_time&&(time_to_i + time_to_destination)!=0)
                     {
-                        forth_copy_parents[j] = second_copy_parents[j];
+                        min_cost = (cost_to_i + cost_to_destination )- subway.getCost_for_each_line();
+                        index_min_cost = i;       
+                        min_time = time_to_i + time_to_destination;       
+                        for (int j = 0; j < N; j++)
+                        {
+                            third_copy_parents[j] = first_copy_parents[j];
+                        }
+                        for (int j = 0; j < N; j++)
+                        {
+                            forth_copy_parents[j] = second_copy_parents[j];
+                        }
+                    }
+                    
+                }
+                else if (i == origin)
+                {
+                    if (((cost_to_i + cost_to_destination) - subway.getCost_for_each_line()) < min_cost)
+                    {
+                        min_cost = (cost_to_i + cost_to_destination )- subway.getCost_for_each_line();
+                        index_min_cost = i;       
+                        min_time = time_to_i + time_to_destination;       
+                        for (int j = 0; j < N; j++)
+                        {
+                            third_copy_parents[j] = first_copy_parents[j];
+                        }
+                        for (int j = 0; j < N; j++)
+                        {
+                            forth_copy_parents[j] = second_copy_parents[j];
+                        }
+                    }
+                    else if (((cost_to_i + cost_to_destination) - subway.getCost_for_each_line()) == min_cost&& 
+                    (time_to_i + time_to_destination) < min_time&&(time_to_i + time_to_destination)!=0)
+                    {
+                        min_cost = (cost_to_i + cost_to_destination )- subway.getCost_for_each_line();
+                        index_min_cost = i;       
+                        min_time = time_to_i + time_to_destination;       
+                        for (int j = 0; j < N; j++)
+                        {
+                            third_copy_parents[j] = first_copy_parents[j];
+                        }
+                        for (int j = 0; j < N; j++)
+                        {
+                            forth_copy_parents[j] = second_copy_parents[j];
+                        }
                     }
                 }
-                else if (((cost_to_i + cost_to_destination) - subway.getCost_for_each_line()) == min_cost&& 
-                (time_to_i + time_to_destination) < min_time&&(time_to_i + time_to_destination)!=0)
-                {
-                    min_cost = (cost_to_i + cost_to_destination )- subway.getCost_for_each_line();
-                    index_min_cost = i;       
-                    min_time = time_to_i + time_to_destination;       
-                    for (int j = 0; j < N; j++)
-                    {
-                        third_copy_parents[j] = first_copy_parents[j];
-                    }
-                    for (int j = 0; j < N; j++)
-                    {
-                        forth_copy_parents[j] = second_copy_parents[j];
-                    }
-                }
+                
                 
             }
             else
             {
+
                 // cout << (*stations)[i].GetName()<< " "<< cost_to_i << " " << cost_to_destination<< " in else" << endl;
-                if ((cost_to_i + cost_to_destination) < min_cost)
+                if (cost_to_i != 0 && i != origin)
                 {
-                    min_cost = cost_to_i + cost_to_destination;
-                    index_min_cost = i;
-                    min_time = time_to_i + time_to_destination;
-                    for (int j = 0; j < N; j++)
+                    
+                    if ((cost_to_i + cost_to_destination) < min_cost)
                     {
-                        third_copy_parents[j] = first_copy_parents[j];
+                        min_cost = cost_to_i + cost_to_destination;
+                        index_min_cost = i;
+                        min_time = time_to_i + time_to_destination;
+                        for (int j = 0; j < N; j++)
+                        {
+                            third_copy_parents[j] = first_copy_parents[j];
+                        }
+                        for (int j = 0; j < N; j++)
+                        {
+                            forth_copy_parents[j] = second_copy_parents[j];
+                        }           
                     }
-                    for (int j = 0; j < N; j++)
+                    else if ((cost_to_i + cost_to_destination) == min_cost&& (time_to_i + time_to_destination) < min_time
+                    &&(time_to_i + time_to_destination)!=0)
                     {
-                        forth_copy_parents[j] = second_copy_parents[j];
-                    }           
+                        min_cost = cost_to_i + cost_to_destination;
+                        index_min_cost = i;
+                        min_time = time_to_i + time_to_destination;
+                        for (int j = 0; j < N; j++)
+                        {
+                            third_copy_parents[j] = first_copy_parents[j];
+                        }
+                        for (int j = 0; j < N; j++)
+                        {
+                            forth_copy_parents[j] = second_copy_parents[j];
+                        }      
+                    }
                 }
-                else if ((cost_to_i + cost_to_destination) == min_cost&& (time_to_i + time_to_destination) < min_time
-                &&(time_to_i + time_to_destination)!=0)
+                else if (i == origin)
                 {
-                    min_cost = cost_to_i + cost_to_destination;
-                    index_min_cost = i;
-                    min_time = time_to_i + time_to_destination;
-                    for (int j = 0; j < N; j++)
+                    if ((cost_to_i + cost_to_destination) < min_cost)
                     {
-                        third_copy_parents[j] = first_copy_parents[j];
+                        min_cost = cost_to_i + cost_to_destination;
+                        index_min_cost = i;
+                        min_time = time_to_i + time_to_destination;
+                        for (int j = 0; j < N; j++)
+                        {
+                            third_copy_parents[j] = first_copy_parents[j];
+                        }
+                        for (int j = 0; j < N; j++)
+                        {
+                            forth_copy_parents[j] = second_copy_parents[j];
+                        }           
                     }
-                    for (int j = 0; j < N; j++)
+                    else if ((cost_to_i + cost_to_destination) == min_cost&& (time_to_i + time_to_destination) < min_time
+                    &&(time_to_i + time_to_destination)!=0)
                     {
-                        forth_copy_parents[j] = second_copy_parents[j];
-                    }      
+                        min_cost = cost_to_i + cost_to_destination;
+                        index_min_cost = i;
+                        min_time = time_to_i + time_to_destination;
+                        for (int j = 0; j < N; j++)
+                        {
+                            third_copy_parents[j] = first_copy_parents[j];
+                        }
+                        for (int j = 0; j < N; j++)
+                        {
+                            forth_copy_parents[j] = second_copy_parents[j];
+                        }      
+                    }
                 }
                 
                 // else if ((cost_to_i + cost_to_destination) == min_cost && i == origin)
@@ -906,6 +1017,7 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
     Besttime intermediate_start_with_subway;
     Besttime intermediate_start_with_bus;
     intermediate_start_with_bus.FillAdjMatrix(stations,path);
+    intermediate_start_with_bus.setArrivingTime(t);
     intermediate_start_with_taxi.setArrivingTime(t);
     intermediate_start_with_subway.setArrivingTime(t);
     intermediate_start_with_taxi.FillAdjMatrix(stations,path);
@@ -920,6 +1032,9 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
         start_with_taxi.Dijkstra(source,"taxi");
         start_with_subway.Dijkstra(source,"subway");        
     }
+    // intermediate_start_with_taxi.Dijkstra(source,"taxi");
+    // cout << intermediate_start_with_taxi.getDijkstraList()[destination];
+    
     // intermediate_start_with_subway.Dijkstra(source,"bus");
     // cout << "1 finish " << '\n';
     // intermediate_start_with_subway.Dijkstra(source);
@@ -1040,9 +1155,13 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
                     intermediate_start_with_bus.setArrivingTime(t + bestTime_start_bus);
 
                 }
-                else if (bestTime_start_taxi < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
+                else if (bestTime_start_bus < bestTime_start_subway && bestTime_start_bus == bestTime_start_taxi)
                 {
                     intermediate_start_with_bus.setArrivingTime(t + bestTime_start_bus);
+                }
+                else if (bestTime_start_taxi < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
+                {
+                    intermediate_start_with_bus.setArrivingTime(t + bestTime_start_taxi);
 
                 }
                 else if (bestTime_start_subway < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
@@ -1068,9 +1187,14 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
                     intermediate_start_with_taxi.setArrivingTime(t + bestTime_start_bus);
 
                 }
-                else if (bestTime_start_taxi < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
+                else if (bestTime_start_bus < bestTime_start_subway && bestTime_start_bus == bestTime_start_taxi)
                 {
                     intermediate_start_with_taxi.setArrivingTime(t + bestTime_start_bus);
+
+                }
+                else if (bestTime_start_taxi < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
+                {
+                    intermediate_start_with_taxi.setArrivingTime(t + bestTime_start_taxi);
 
                 }
                 else if (bestTime_start_subway < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
@@ -1081,6 +1205,7 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
                 {
                     intermediate_start_with_taxi.setArrivingTime(t + time_to_i);
                 }
+                // intermediate_start_with_taxi.getArrivingTime().printTime();
                 // intermediate_start_with_taxi.setArrivingTime(t+time_to_i);
                 intermediate_start_with_taxi.Dijkstra(i,"taxi");
                 intermediate_bestTime_start_taxi = intermediate_start_with_taxi.getDijkstraList()[destination];
@@ -1098,9 +1223,14 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
                     intermediate_start_with_subway.setArrivingTime(t + bestTime_start_bus);
 
                 }
-                else if (bestTime_start_taxi < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
+                else if (bestTime_start_bus < bestTime_start_subway && bestTime_start_bus == bestTime_start_taxi)
                 {
                     intermediate_start_with_subway.setArrivingTime(t + bestTime_start_bus);
+
+                }
+                else if (bestTime_start_taxi < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
+                {
+                    intermediate_start_with_subway.setArrivingTime(t + bestTime_start_taxi);
 
                 }
                 else if (bestTime_start_subway < bestTime_start_bus && bestTime_start_taxi == bestTime_start_subway)
@@ -1111,6 +1241,7 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
                 {
                     intermediate_start_with_subway.setArrivingTime(t + time_to_i);
                 }
+                // intermediate_start_with_subway.getArrivingTime().printTime();
                 // intermediate_start_with_subway.setArrivingTime(t+time_to_i);
                 intermediate_start_with_subway.Dijkstra(i,"subway");
                 intermediate_bestTime_start_subway = intermediate_start_with_subway.getDijkstraList()[destination];
@@ -1166,6 +1297,7 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
                     second_copy_parents[j] = intermediate_start_with_subway.getParents()[j];
                 }
             }
+            // cout << intermediate_bestTime_start_bus << "  "<<intermediate_bestTime_start_taxi << "   "<<intermediate_bestTime_start_subway<<'\n';
             // cout << (*stations)[i].GetName() << " "<< min_time << " " << time_to_i << " " << time_to_destination << '\n';
             if ((time_to_i + time_to_destination) < min_time && (time_to_i + time_to_destination) != 0)
             {
