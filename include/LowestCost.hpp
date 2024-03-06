@@ -34,7 +34,10 @@ private:
 
     Time arriving_time;
     pair<pair<Cost,int>,pair<int,int>>* parents;                                                                                                                                                                                                                      
-    // parents.first.second is time
+    /*parents.first.second is time 
+    parents.second.first is traffic status
+    parents.second.second is parent index
+    */ 
     vector<pair<Cost,pair<int,int>>> path;
     std::vector<std::vector<Cost>> costMatrix;/* adjacency matrix for cost */   
     int costDijkstraList[N];
