@@ -2457,13 +2457,13 @@ Window {
         height: 40
         x: 50
         y: 650
-        color: "black"
+        color: "white"
 
-        background: Rectangle {
-            radius: 10
-            border.color: "#C9C9C9"
-            border.width: 1.5
-        }
+        // background: Rectangle {
+        //     radius: 10
+        //     border.color: "#C9C9C9"
+        //     border.width: 1.5
+        // }
         verticalAlignment: TextField.AlignVCenter
 
         font.pixelSize: 15
