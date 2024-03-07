@@ -5,8 +5,12 @@ import QtQuick.Controls 2.15
 
 Window {
     id:root
-    width: 1500
-    height: 1000
+    minimumWidth: 1500
+    minimumHeight: 1000
+    maximumWidth: minimumWidth
+    maximumHeight: minimumHeight
+    // width: 1500
+    // height: 1000
     visible: true
     title: qsTr("Map")
     color: "#f5f5f5"
@@ -2457,13 +2461,13 @@ Window {
         height: 40
         x: 50
         y: 650
-        color: "white"
+        color: "black"
 
-        // background: Rectangle {
-        //     radius: 10
-        //     border.color: "#C9C9C9"
-        //     border.width: 1.5
-        // }
+        background: Rectangle {
+            radius: 10
+            border.color: "#C9C9C9"
+            border.width: 1.5
+        }
         verticalAlignment: TextField.AlignVCenter
 
         font.pixelSize: 15
