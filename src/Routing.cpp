@@ -98,10 +98,10 @@ void Routing::runAlgorithm()
             {
                 Tehran.setArrivingTime(requests.front().GetTime());
                 Map.setArrivingTime(requests.front().GetTime());
+                Tehran.dijkstraOnTime(origin,destination,stations,path,requests.front().GetTime());
+                Map.Dijkstra_FloydWarshall(origin,destination,stations,path,requests.front().GetTime());
                 Tehran.Dijkstra(origin);
                 Tehran.PrintPath(stations,origin,destination);
-                Map.Dijkstra_FloydWarshall(origin,destination,stations,path,requests.front().GetTime());
-                Tehran.dijkstraOnTime(origin,destination,stations,path,requests.front().GetTime());
             }
         }
         else

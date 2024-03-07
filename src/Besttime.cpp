@@ -109,79 +109,17 @@ void Besttime::Dijkstra(int source)
     Bus bus;
     Taxi taxi;
     Subway subway;
-    // if(vehicle == "bus")
-    // {
-    //     if (stoi(time_during_dijkstra.getHour()) >= 6 && stoi(time_during_dijkstra.getHour())<8
-    //         || (stoi(time_during_dijkstra.getHour()) == 8 
-    //         && stoi(time_during_dijkstra.getMinute())==0))
-    //     {
-    //         parents[source].first.second = bus.getMinute_gettingOn_gettingOff_Traffic();
-    //         time_during_dijkstra = time_during_dijkstra + bus.getMinute_gettingOn_gettingOff_Traffic();
-    //         parents[source].second.first = true;
-    //     }
-    //     else
-    //     {
-    //         parents[source].first.second = bus.getMinute_gettingOn_gettingOff();
-    //         time_during_dijkstra = time_during_dijkstra + bus.getMinute_gettingOn_gettingOff();
-    //         parents[source].second.first = false;
-    //     }
-    //     parents[source].first.first.setBusStatus(true);
-    //     parents[source].first.first.setTaxiStatus(false);
-    //     parents[source].first.first.setSubwayStatus(false);
-        
-    // }
-    // else if(vehicle == "taxi")
-    // {
-    //     if (stoi(time_during_dijkstra.getHour()) >= 18 && stoi(time_during_dijkstra.getHour())<20
-    //         || (stoi(time_during_dijkstra.getHour()) == 20 
-    //         && stoi(time_during_dijkstra.getMinute())==0))
-    //     {
-    //         parents[source].first.second = taxi.getMinute_gettingOn_gettingOff_Traffic();
-    //         time_during_dijkstra = time_during_dijkstra + taxi.getMinute_gettingOn_gettingOff_Traffic();
-    //         parents[source].second.first = true;
-    //     }
-    //     else
-    //     {
-    //         parents[source].first.second = taxi.getMinute_gettingOn_gettingOff();
-    //         time_during_dijkstra = time_during_dijkstra + taxi.getMinute_gettingOn_gettingOff();
-    //         parents[source].second.first = false;
-    //     }
-    //     parents[source].first.first.setBusStatus(false);
-    //     parents[source].first.first.setTaxiStatus(true);
-    //     parents[source].first.first.setSubwayStatus(false);
-    // }
-    // else if (vehicle == "subway")
-    // {
-    //     if (stoi(time_during_dijkstra.getHour()) >= 6 && stoi(time_during_dijkstra.getHour())<8
-    //         || (stoi(time_during_dijkstra.getHour()) == 8 
-    //         && stoi(time_during_dijkstra.getMinute())==0))
-    //     {
-    //         parents[source].first.second = subway.getMinute_gettingOn_gettingOff_Traffic();
-    //         time_during_dijkstra = time_during_dijkstra + subway.getMinute_gettingOn_gettingOff_Traffic();
-    //         parents[source].second.first = true;
-    //     }
-    //     else
-    //     {
-    //         parents[source].first.second = subway.getMinute_gettingOn_gettingOff();
-    //         time_during_dijkstra = time_during_dijkstra + subway.getMinute_gettingOn_gettingOff();
-    //         parents[source].second.first = false;
-    //     }
-    //     parents[source].first.first.setBusStatus(false);
-    //     parents[source].first.first.setTaxiStatus(false);
-    //     parents[source].first.first.setSubwayStatus(true);
-    // }
+
     dijkstraList[source] = 0;
  
     // The starting vertex does not
     // have a parent
     parents[source].second.second = -1;
-    // cout << "hi "<< vehicle << '\n';
     // Find shortest path for all
     // vertices
     for (int i = 1; i < N; i++) {
         /*Pick the minimum distance vertex from the set of vertices not yet processed.
         nearestVertex is always equal to startNode in first iteration.*/
-        // cout << i << " i"<< '\n';
         int nearestVertex = -1;
         int shortestTime = INT_MAX;
         for (int vertexIndex = 0; vertexIndex < N;
@@ -211,14 +149,9 @@ void Besttime::Dijkstra(int source)
 
             if(nearestVertex == source)
             {
-                // cout << busTime << " bus Time " << '\n';
-                // cout << taxiTime << " taxi time " << '\n';         
-                // cout << subwayTime << " subway time " << '\n';         
-                // if (vehicle == "bus")
-                // {
+
                     if(busTime != 0)
                     {
-                        // busTime = busTime + parents[source].first.second;
                         if (stoi(time_during_dijkstra.getHour()) >= 6 && stoi(time_during_dijkstra.getHour())<8
                         || (stoi(time_during_dijkstra.getHour()) == 8 
                         && stoi(time_during_dijkstra.getMinute())==0))
@@ -258,12 +191,8 @@ void Besttime::Dijkstra(int source)
                         }
                         
                     }
-                // }
-                // else if (vehicle == "subway")
-                // {
                     if(subwayTime != 0)
                     {
-                        // subwayTime = subwayTime + parents[source].first.second;
                         if (stoi(time_during_dijkstra.getHour()) >= 6 && stoi(time_during_dijkstra.getHour())<8
                         || (stoi(time_during_dijkstra.getHour()) == 8 
                         && stoi(time_during_dijkstra.getMinute())==0))
@@ -301,12 +230,8 @@ void Besttime::Dijkstra(int source)
                         
                     }
                     
-                // }
-                // else if (vehicle == "taxi")
-                // {
                     if(taxiTime != 0)
                     {
-                        // taxiTime = taxiTime + parents[source].first.second;
                         if (stoi(time_during_dijkstra.getHour()) >= 18 && stoi(time_during_dijkstra.getHour())<20
                         || (stoi(time_during_dijkstra.getHour()) == 20 
                         && stoi(time_during_dijkstra.getMinute())==0))
@@ -346,13 +271,11 @@ void Besttime::Dijkstra(int source)
                         }
                     }
                     
-                // }
                 busTime = busTime != 0 ? busTime : INT_MAX;
                 taxiTime = taxiTime != 0 ? taxiTime : INT_MAX;
                 subwayTime = subwayTime != 0 ? subwayTime : INT_MAX;
                 if(busTime != INT_MAX && busTime < taxiTime && busTime < subwayTime)
                 {
-                    // cout << " in " << '\n';
                     weight = busTime;
                     flag= true;
                     by_bus = true;
@@ -362,7 +285,6 @@ void Besttime::Dijkstra(int source)
                 }
                 else if (taxiTime != INT_MAX && taxiTime < busTime && taxiTime < subwayTime)// equal conditions must be checked
                 {
-                    // cout << " in " << '\n';
                     weight = taxiTime;
                     flag = true;
                     by_bus = false;
@@ -372,7 +294,6 @@ void Besttime::Dijkstra(int source)
                 }
                 else if (subwayTime != INT_MAX && subwayTime < busTime && subwayTime < taxiTime)
                 {
-                    // cout << " in " << '\n';
                     weight = subwayTime;
                     flag = true;
                     by_bus = false;
@@ -382,7 +303,6 @@ void Besttime::Dijkstra(int source)
                 }
                 else if (busTime != INT_MAX && busTime == taxiTime && busTime < subwayTime)
                 {
-                    // cout << " in " << '\n';
                     weight = busTime;
                     flag= true;
                     by_bus = true;
@@ -392,7 +312,6 @@ void Besttime::Dijkstra(int source)
                 }
                 else if (busTime != INT_MAX && busTime < taxiTime && busTime == subwayTime)
                 {
-                    // cout << " in " << '\n';
                     weight = busTime;
                     flag= true;
                     by_bus = true;
@@ -402,7 +321,6 @@ void Besttime::Dijkstra(int source)
                 }
                 else if (taxiTime != INT_MAX && taxiTime < busTime && taxiTime == subwayTime)
                 {
-                    // cout << " in " << '\n';
                     weight = taxiTime;
                     flag = true;
                     by_bus = false;
@@ -412,7 +330,6 @@ void Besttime::Dijkstra(int source)
                 }
                 else if (subwayTime != INT_MAX && subwayTime == busTime && subwayTime == taxiTime)
                 {
-                    // cout << " in " << '\n';
                     weight = subwayTime;
                     flag = true;
                     by_bus = false;
@@ -722,15 +639,9 @@ void Besttime::Dijkstra(int source)
                         
                     }
                 }
-                // if (nearestVertex == 0)
-                // {
-                    /* code */
-                //     cout << busTime << ' ' << taxiTime << ' ' << subwayTime << '\n';
-                // }
                 
                 if(busTime != INT_MAX && busTime < taxiTime && busTime < subwayTime)
                 {
-                    // cout << " in " << '\n';
                     weight = busTime;
                     flag= true;
                     by_bus = true;
@@ -740,7 +651,6 @@ void Besttime::Dijkstra(int source)
                 }
                 else if (taxiTime != INT_MAX && taxiTime < busTime && taxiTime < subwayTime)// equal conditions must be checked
                 {
-                    // cout << " in " << '\n';
                     weight = taxiTime;
                     flag = true;
                     by_bus = false;
@@ -750,7 +660,6 @@ void Besttime::Dijkstra(int source)
                 }
                 else if (subwayTime != INT_MAX && subwayTime < busTime && subwayTime < taxiTime)
                 {
-                    // cout << " in " << '\n';
                     weight = subwayTime;
                     flag = true;
                     by_bus = false;
@@ -760,7 +669,6 @@ void Besttime::Dijkstra(int source)
                 }
                 else if (busTime != INT_MAX && busTime == taxiTime && busTime < subwayTime)
                 {
-                    // cout << " in " << '\n';
                     weight = busTime;
                     flag= true;
                     by_bus = true;
@@ -770,7 +678,6 @@ void Besttime::Dijkstra(int source)
                 }
                 else if (busTime != INT_MAX && busTime < taxiTime && busTime == subwayTime)
                 {
-                    // cout << " in " << '\n';
                     weight = busTime;
                     flag= true;
                     by_bus = true;
@@ -780,7 +687,6 @@ void Besttime::Dijkstra(int source)
                 }
                 else if (taxiTime != INT_MAX && taxiTime < busTime && taxiTime == subwayTime)
                 {
-                    // cout << " in " << '\n';
                     weight = taxiTime;
                     flag = true;
                     by_bus = false;
@@ -790,7 +696,6 @@ void Besttime::Dijkstra(int source)
                 }
                 else if (subwayTime != INT_MAX && subwayTime == busTime && subwayTime == taxiTime)
                 {
-                    // cout << " in " << '\n';
                     weight = subwayTime;
                     flag = true;
                     by_bus = false;
@@ -807,7 +712,6 @@ void Besttime::Dijkstra(int source)
             if (!added[vertexIndex]&& dijkstraList[nearestVertex] != INT_MAX && flag
              && ((shortestTime + weight) < dijkstraList[vertexIndex])) 
             {
-                // cout << " after " << '\n';
                 parents[vertexIndex].first.second = weight;
                 parents[vertexIndex].second.first = traffic_time;
                 parents[vertexIndex].second.second=nearestVertex;
@@ -1411,15 +1315,9 @@ void Besttime::Dijkstra(int source,string vehicle)
                         
                     }
                 }
-                // if (nearestVertex == 0)
-                // {
-                    /* code */
-                //     cout << busTime << ' ' << taxiTime << ' ' << subwayTime << '\n';
-                // }
                 
                 if(busTime != INT_MAX && busTime < taxiTime && busTime < subwayTime)
                 {
-                    // cout << " in " << '\n';
                     weight = busTime;
                     flag= true;
                     by_bus = true;
@@ -1429,7 +1327,6 @@ void Besttime::Dijkstra(int source,string vehicle)
                 }
                 else if (taxiTime != INT_MAX && taxiTime < busTime && taxiTime < subwayTime)// equal conditions must be checked
                 {
-                    // cout << " in " << '\n';
                     weight = taxiTime;
                     flag = true;
                     by_bus = false;
@@ -1439,7 +1336,6 @@ void Besttime::Dijkstra(int source,string vehicle)
                 }
                 else if (subwayTime != INT_MAX && subwayTime < busTime && subwayTime < taxiTime)
                 {
-                    // cout << " in " << '\n';
                     weight = subwayTime;
                     flag = true;
                     by_bus = false;
@@ -1449,7 +1345,6 @@ void Besttime::Dijkstra(int source,string vehicle)
                 }
                 else if (busTime != INT_MAX && busTime == taxiTime && busTime < subwayTime)
                 {
-                    // cout << " in " << '\n';
                     weight = busTime;
                     flag= true;
                     by_bus = true;
@@ -1459,7 +1354,6 @@ void Besttime::Dijkstra(int source,string vehicle)
                 }
                 else if (busTime != INT_MAX && busTime < taxiTime && busTime == subwayTime)
                 {
-                    // cout << " in " << '\n';
                     weight = busTime;
                     flag= true;
                     by_bus = true;
@@ -1469,7 +1363,6 @@ void Besttime::Dijkstra(int source,string vehicle)
                 }
                 else if (taxiTime != INT_MAX && taxiTime < busTime && taxiTime == subwayTime)
                 {
-                    // cout << " in " << '\n';
                     weight = taxiTime;
                     flag = true;
                     by_bus = false;
@@ -1479,7 +1372,6 @@ void Besttime::Dijkstra(int source,string vehicle)
                 }
                 else if (subwayTime != INT_MAX && subwayTime == busTime && subwayTime == taxiTime)
                 {
-                    // cout << " in " << '\n';
                     weight = subwayTime;
                     flag = true;
                     by_bus = false;
@@ -1496,7 +1388,6 @@ void Besttime::Dijkstra(int source,string vehicle)
             if (!added[vertexIndex]&& dijkstraList[nearestVertex] != INT_MAX && flag
              && ((shortestTime + weight) < dijkstraList[vertexIndex])) 
             {
-                // cout << " after " << '\n';
                 parents[vertexIndex].first.second = weight;
                 parents[vertexIndex].second.first = traffic_time;
                 parents[vertexIndex].second.second=nearestVertex;

@@ -408,7 +408,6 @@ int City::GetShortestDistance(int destination)
 
 void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Station>* stations,std::vector<Path>* path,Time time)
 {
-    //arriving_Time
     
     LowestCost primary_start_with_bus;
     LowestCost primary_start_with_taxi;
@@ -434,7 +433,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
     intermediate_start_with_taxi.setArrivingTime(time);
     intermediate_start_with_subway.setArrivingTime(time);
 
-    // intermediate.dijkstra(2);
     pair<pair<Cost,int>,pair<int,int>> first_copy_parents[N];
     pair<pair<Cost,int>,pair<int,int>> second_copy_parents[N];
     pair<pair<Cost,int>,pair<int,int>> third_copy_parents[N];
@@ -445,9 +443,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
     int min_cost = INT_MAX;
     int min_time = INT_MAX;
     int index_min_cost = -1;
-    // intermediate.dijkstraOnCost(14,"subway");
-    // intermediate.printDijkstraOnCost(stations);
-    // intermediate.print_cost(51,stations,intermediate.getParents());
     if ((*stations)[origin].GetBusStatus())
     {
         primary_start_with_bus.dijkstraOnCost(origin,"bus");
@@ -457,7 +452,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
         primary_start_with_taxi.dijkstraOnCost(origin,"taxi");
         primary_start_with_subway.dijkstraOnCost(origin,"subway");
     }
-    // cout << "out " << primary_start_with_subway.getParents()[44].first.second << " time " << '\n';
     
     for (int i = 0; i < N; i++)
     {
@@ -489,8 +483,7 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
             int LowestCost_destination= 0 ;
             int LowestCost_start_taxi_destination = 0 ;
             int LowestCost_start_subway_destination = 0 ;
-            // if (i != origin)
-            // {
+
                 if ((*stations)[origin].GetBusStatus())
                 {
                     LowestCost_start_bus = primary_start_with_bus.getCostDijkstraList()[i];
@@ -509,7 +502,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                     LowestCost_start_taxi = INT_MAX;
                     LowestCost_start_subway = INT_MAX;
                 }
-                // cout << LowestCost_start_bus << " " << LowestCost_start_taxi << " " << LowestCost_start_subway<< '\n';
                 if(LowestCost_start_bus < LowestCost_start_taxi && LowestCost_start_bus < LowestCost_start_subway)
                 {
                     cost_to_i = LowestCost_start_bus;
@@ -523,7 +515,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                         first_copy_parents[j] = primary_start_with_bus.getParents()[j];
                     }
                     time_to_i = primary_start_with_bus.getParents()[i].first.second;
-                    // cout << primary_start_with_bus.getParents()[i].first.second << " time primary bus" << '\n';
                 }
                 if (LowestCost_start_taxi < LowestCost_start_bus && LowestCost_start_taxi < LowestCost_start_subway) 
                 {
@@ -538,7 +529,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                         first_copy_parents[j] = primary_start_with_taxi.getParents()[j];
                     }
                     time_to_i = primary_start_with_taxi.getParents()[i].first.second;
-                    // cout << primary_start_with_taxi.getParents()[i].first.second << " time primary taxi" << '\n';
                 }
                 if (LowestCost_start_subway < LowestCost_start_bus && LowestCost_start_subway < LowestCost_start_taxi)
                 {
@@ -553,22 +543,7 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                         first_copy_parents[j] = primary_start_with_subway.getParents()[j];
                     }
                     time_to_i = primary_start_with_subway.getParents()[i].first.second;
-                    // cout << primary_start_with_subway.getParents()[i].first.second << " time primary subway" << '\n';
                 }
-                
-                //arriving time must update for new dijkstra
-
-                // LowestCost intermediate;
-                // intermediate.fillCostMatrix(stations,path);
-                // intermediate.setArrivingTime(time);
-                // intermediate.dijkstra(i);
-                // cost_to_destination = intermediate.getCostDijkstraList()[destination];
-                // int j = intermediate.getIndexFromParents(i,destination);
-                // bus_status_to_destination = intermediate.getParents()[j].first.first.getBusStatus();
-                // taxi_status_to_destination = intermediate.getParents()[j].first.first.getTaxiStatus();
-                // subway_status_to_destination = intermediate.getParents()[j].first.first.getSubwayStatus();
-                // bus_line_to_destination = intermediate.getParents()[j].first.first.getBus_Line();
-                // subway_taxi_line_to_destination = intermediate.getParents()[j].first.first.getSubway_Taxi_Line();
                 int j;
                 if ((*stations)[i].GetBusStatus())
                 {
@@ -581,11 +556,8 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                     {
                         intermediate.setArrivingTime(time + time_to_i);
                     }
-                    // intermediate.getArrivingTime().printTime();
-                    // cout  << "arriving time" << '\n';
                     intermediate.dijkstra(i);
                     LowestCost_destination = intermediate.getCostDijkstraList()[destination];
-                    // cout << intermediate.getParents()[destination].first.second << "intermediate dijkstra" << '\n';
                 }
                 else
                 {
@@ -602,11 +574,8 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                     {
                         intermediate_start_with_subway.setArrivingTime(time + time_to_i);
                     }
-                    // intermediate_start_with_subway.getArrivingTime().printTime();
-                    // cout  << "arriving time" << '\n';
                     intermediate_start_with_subway.dijkstraOnCost(i,"subway");
                     LowestCost_start_subway_destination = intermediate_start_with_subway.getCostDijkstraList()[destination];
-                    // cout << intermediate_start_with_subway.getParents()[destination].first.second << "intermediate subway dijkstra" << '\n';
                 }
                 else
                 {
@@ -615,11 +584,8 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                 if ((*stations)[i].GetTaxi_SubwayStatus())
                 {
                     intermediate_start_with_taxi.setArrivingTime(time + time_to_i);
-                    // intermediate_start_with_taxi.getArrivingTime().printTime();
-                    // cout  << "arriving time" << '\n';
                     intermediate_start_with_taxi.dijkstraOnCost(i,"taxi");
                     LowestCost_start_taxi_destination = intermediate_start_with_taxi.getCostDijkstraList()[destination];
-                    // cout << intermediate_start_with_taxi.getParents()[destination].first.second << "intermediate taxi dijkstra" << '\n';
                 }
                 else
                 {
@@ -640,7 +606,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                         second_copy_parents[j] = intermediate.getParents()[j];
                     }
                     time_to_destination = intermediate.getParents()[destination].first.second;
-                    // cout << intermediate.getParents()[destination].first.second <<" j : "<<j<< " time intermediate" << '\n';
                 }
                 else if (LowestCost_start_taxi_destination < LowestCost_destination 
                 && LowestCost_start_taxi_destination < LowestCost_start_subway_destination) 
@@ -657,7 +622,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                         second_copy_parents[j] = intermediate_start_with_taxi.getParents()[j];
                     }
                     time_to_destination = intermediate_start_with_taxi.getParents()[destination].first.second;
-                    // cout << intermediate_start_with_taxi.getParents()[destination].first.second << " time intermediate taxi" << '\n';
                 }
                 else if (LowestCost_start_subway_destination < LowestCost_destination
                  && LowestCost_start_subway_destination < LowestCost_start_taxi_destination)
@@ -674,7 +638,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                         second_copy_parents[j] = intermediate_start_with_subway.getParents()[j];
                     }
                     time_to_destination = intermediate_start_with_subway.getParents()[destination].first.second;
-                    // cout << intermediate_start_with_subway.getParents()[destination].first.second << " time intermediate subway" << '\n';
                 }
                 if (LowestCost_start_bus < LowestCost_start_taxi && LowestCost_start_bus == LowestCost_start_subway)
                 {
@@ -691,7 +654,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                             first_copy_parents[j] = primary_start_with_bus.getParents()[j];
                         }
                         time_to_i = primary_start_with_bus.getParents()[i].first.second;
-                        // cout << primary_start_with_bus.getParents()[i].first.second << " time primary bus" << '\n';
                     }
                     if (subway_status_to_destination)
                     {
@@ -706,7 +668,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                             first_copy_parents[j] = primary_start_with_subway.getParents()[j];
                         }
                         time_to_i = primary_start_with_subway.getParents()[i].first.second;
-                        // cout << primary_start_with_subway.getParents()[i].first.second << " time primary subway" << '\n';
                     }
                 }
                 if(LowestCost_destination < LowestCost_start_taxi_destination && 
@@ -726,7 +687,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                             second_copy_parents[j] = intermediate.getParents()[j];
                         }
                         time_to_destination = intermediate.getParents()[destination].first.second;
-                        // cout << intermediate.getParents()[destination].first.second << " time intermediate" << '\n';
                     }
                     if (subway_status_to_i)
                     {
@@ -742,7 +702,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                             second_copy_parents[j] = intermediate_start_with_subway.getParents()[j];
                         }
                         time_to_destination = intermediate_start_with_subway.getParents()[destination].first.second ;
-                        // cout << intermediate_start_with_subway.getParents()[destination].first.second << " time intermediate subway" << '\n';
                     }
                     
                     
@@ -754,7 +713,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                 bus_line_to_i == bus_line_to_destination && bus_line_to_i != "" 
                 && bus_line_to_destination != "")
             {
-                // cout << (*stations)[i].GetName()<< " " << cost_to_i << " " << cost_to_destination << " in bus" << endl;
                 if (cost_to_i != 0 && i != origin)
                 {
                     if (((cost_to_i + cost_to_destination) - bus.getCost_for_each_line()) < min_cost)
@@ -827,8 +785,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
             && subway_taxi_line_to_i != "" && subway_taxi_line_to_destination != ""
             )
             {
-                // cout << subway_taxi_line_to_i << subway_taxi_line_to_destination << " ";
-                // cout<< (*stations)[i].GetName()<< " " << cost_to_i << " " << cost_to_destination << " in subway"<< endl;
                 if (cost_to_i != 0 && i!= origin)
                 {
                     if (((cost_to_i + cost_to_destination) - subway.getCost_for_each_line()) < min_cost)
@@ -900,7 +856,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
             else
             {
 
-                // cout << (*stations)[i].GetName()<< " "<< cost_to_i << " " << cost_to_destination<< " in else" << endl;
                 if (cost_to_i != 0 && i != origin)
                 {
                     
@@ -966,27 +921,11 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
                         }      
                     }
                 }
-                
-                // else if ((cost_to_i + cost_to_destination) == min_cost && i == origin)
-                // {
-                //     min_cost = cost_to_i + cost_to_destination;
-                //     index_min_cost = i;
-                //     for (int j = 0; j < N; j++)
-                //     {
-                //         third_copy_parents[j] = first_copy_parents[j];
-                //     }
-                //     for (int j = 0; j < N; j++)
-                //     {
-                //         forth_copy_parents[j] = second_copy_parents[j];
-                //     }
-                // }    
+                  
             }
-        // cout << "time " << time_to_i << " "<< time_to_destination << '\n';
         }
-        // std::cout <<min_time <<" "<< min_cost << " " << index_min_cost << '\n'; 
         
     }
-    // cout << (*stations)[index_min_cost].GetName() <<"  " <<min_cost << " time : " << min_time<<'\n' ;
     cout << "\n" << (*stations)[origin].GetName() << " -> ";
     cout << (*stations)[destination].GetName() << "   Lowest-Cost : "  
     << min_cost << '\n'<< '\n';
@@ -996,8 +935,6 @@ void City::Dijkstra_FloydWarshall(int origin,int destination,std::vector <Statio
     cout << '\n';
     cout << "Arriving Time : ";
     (time + min_time).printTime();
-    // primary_start_with_bus.print_cost(index_min_cost,stations,third_copy_parents);
-    // primary_start_with_bus.print_cost(destination,stations,forth_copy_parents);
 }
 
 void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stations,std::vector<Path>* path,Time t)
@@ -1032,29 +969,7 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
         start_with_taxi.Dijkstra(source,"taxi");
         start_with_subway.Dijkstra(source,"subway");        
     }
-    // intermediate_start_with_taxi.Dijkstra(source,"taxi");
-    // cout << intermediate_start_with_taxi.getDijkstraList()[destination];
-    
-    // intermediate_start_with_subway.Dijkstra(source,"bus");
-    // cout << "1 finish " << '\n';
-    // intermediate_start_with_subway.Dijkstra(source);
-    // cout << intermediate_start_with_subway.getDijkstraList()[destination];
-    // intermediate_start_with_subway.printDijkstra(stations);
-    // intermediate_start_with_subway.PrintPath(stations,source,destination);
-    // cout << "  2 finish " << '\n'<< '\n'<< '\n'<< '\n'<< '\n';
-    // intermediate_start_with_taxi.Dijkstra(2,"bus");
-    // cout << "3 finish " << '\n'<< '\n'<< '\n'<< '\n'<< '\n';
-    // intermediate_start_with_taxi.Dijkstra(3,"bus");
-    // cout << "4 finish " << '\n';
-    // intermediate_start_with_subway.Dijkstra(6,"bus");
-    // cout << "5 finish " << '\n';
-    // intermediate_start_with_subway.Dijkstra(7,"bus");
-    // cout << "6 finish " << '\n';
-    // intermediate_start_with_subway.Dijkstra(8,"bus");
-    // cout << "7 finish " << '\n';
-    // cout << start_with_bus.getDijkstraList()[destination] << '\n';
-    // cout << start_with_taxi.getDijkstraList()[destination] << '\n';
-    // cout << start_with_subway.getDijkstraList()[destination] << '\n';
+
     pair<pair<TimedPath,int>,pair<bool,int>> first_copy_parents[N];
     pair<pair<TimedPath,int>,pair<bool,int>> second_copy_parents[N];
     pair<pair<TimedPath,int>,pair<bool,int>> third_copy_parents[N];
@@ -1144,12 +1059,10 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
                     first_copy_parents[j] = start_with_subway.getParents()[j];
                 }
             }
-            // cout << "Best " << bestTime_start_bus << " " <<bestTime_start_taxi << " " << bestTime_start_subway<<'\n';
             int j;
 
             if ((*stations)[i].GetBusStatus())
             {
-                // intermediate_start_with_bus.setArrivingTime(t);
                 if (bestTime_start_bus < bestTime_start_taxi && bestTime_start_bus == bestTime_start_subway)
                 {
                     intermediate_start_with_bus.setArrivingTime(t + bestTime_start_bus);
@@ -1172,7 +1085,6 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
                 {
                     intermediate_start_with_bus.setArrivingTime(t + time_to_i);
                 }
-                // intermediate_start_with_bus.setArrivingTime(t + time_to_i);
                 intermediate_start_with_bus.Dijkstra(i);
                 intermediate_bestTime_start_bus = intermediate_start_with_bus.getDijkstraList()[destination];
             }
@@ -1205,8 +1117,6 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
                 {
                     intermediate_start_with_taxi.setArrivingTime(t + time_to_i);
                 }
-                // intermediate_start_with_taxi.getArrivingTime().printTime();
-                // intermediate_start_with_taxi.setArrivingTime(t+time_to_i);
                 intermediate_start_with_taxi.Dijkstra(i,"taxi");
                 intermediate_bestTime_start_taxi = intermediate_start_with_taxi.getDijkstraList()[destination];
     
@@ -1241,11 +1151,8 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
                 {
                     intermediate_start_with_subway.setArrivingTime(t + time_to_i);
                 }
-                // intermediate_start_with_subway.getArrivingTime().printTime();
-                // intermediate_start_with_subway.setArrivingTime(t+time_to_i);
                 intermediate_start_with_subway.Dijkstra(i,"subway");
                 intermediate_bestTime_start_subway = intermediate_start_with_subway.getDijkstraList()[destination];
-                // cout << intermediate_bestTime_start_subway;
             }
             else
             {
@@ -1297,8 +1204,6 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
                     second_copy_parents[j] = intermediate_start_with_subway.getParents()[j];
                 }
             }
-            // cout << intermediate_bestTime_start_bus << "  "<<intermediate_bestTime_start_taxi << "   "<<intermediate_bestTime_start_subway<<'\n';
-            // cout << (*stations)[i].GetName() << " "<< min_time << " " << time_to_i << " " << time_to_destination << '\n';
             if ((time_to_i + time_to_destination) < min_time && (time_to_i + time_to_destination) != 0)
             {
                 min_time = (time_to_i + time_to_destination);
@@ -1313,10 +1218,6 @@ void City::dijkstraOnTime(int source,int destination,std::vector<Station> * stat
                 }
                 
             }
-        // cout << (*stations)[i].GetName()<< " " 
-        // << time_to_i << " " << time_to_destination << '\n';
-        
-        // <<"     "<<intermediate_bestTime_start_taxi<< endl;
         }
     }
     cout << "\n" << (*stations)[source].GetName() << " -> ";

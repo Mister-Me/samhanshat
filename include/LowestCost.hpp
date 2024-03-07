@@ -8,7 +8,6 @@
 #include <limits.h>
 
 #include "Time.hpp"
-#include "PricedPath.hpp"
 #include "Station.hpp"
 #include "Vehicle.hpp"
 #include "Path.hpp"
@@ -29,7 +28,6 @@ public:
     Time getArrivingTime();
     int getIndexFromParents(int,int);
     void print_cost(int,vector<Station>*,pair<pair<Cost,int>,pair<int,int>>*); /* prints some basics and printPath and calculateTime functions */
-    void print_path_cost(std::vector<Station> *, int, int); 
 private:
 
     Time arriving_time;
